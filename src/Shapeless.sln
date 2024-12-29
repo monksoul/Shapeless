@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35605.110
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shapeless", "Shapeless\src\Shapeless.csproj", "{8CEE613A-6904-9F74-90DE-EB65CE49E694}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shapeless.Tests", "Shapeless\test\Shapeless.Tests.csproj", "{5B00064B-F40E-409D-A88D-12271C8C001B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8CEE613A-6904-9F74-90DE-EB65CE49E694}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CEE613A-6904-9F74-90DE-EB65CE49E694}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CEE613A-6904-9F74-90DE-EB65CE49E694}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CEE613A-6904-9F74-90DE-EB65CE49E694}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B00064B-F40E-409D-A88D-12271C8C001B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B00064B-F40E-409D-A88D-12271C8C001B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B00064B-F40E-409D-A88D-12271C8C001B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B00064B-F40E-409D-A88D-12271C8C001B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1A24BEA6-1FF2-41B7-BD5F-DE285AD92FF0}
+	EndGlobalSection
+EndGlobal
