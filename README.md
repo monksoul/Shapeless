@@ -9,6 +9,8 @@ performance characteristics.
 
 ## Features
 
+Pending...
+
 ## Installation
 
 ```powershell
@@ -20,7 +22,7 @@ dotnet add package Shapeless
 We have many examples on our [homepage](https://furion.net/docs/shapeless/). Here's your first one to get you started:
 
 ```cs
-dynamic clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+dynamic clay = Clay.Parse("""{"id":1,"name":"furion"}""");
 clay.id = 100;
 clay.name = "shapeless";
 clay.author = "百小僧";

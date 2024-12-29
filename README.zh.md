@@ -6,6 +6,8 @@ Shapeless 是一个高性能的 C# 开源库，提供类似 JavaScript JSON 的�
 
 ## 特性
 
+待补充
+
 ## 安装
 
 ```powershell
@@ -17,7 +19,7 @@ dotnet add package Shapeless
 我们在[主页](https://furion.net/docs/shapeless/)上有不少例子，这是让您入门的第一个：
 
 ```cs
-dynamic clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+dynamic clay = Clay.Parse("""{"id":1,"name":"furion"}""");
 clay.id = 100;
 clay.name = "shapeless";
 clay.author = "百小僧";
