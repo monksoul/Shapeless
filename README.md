@@ -9,7 +9,14 @@ performance characteristics.
 
 ## Features
 
-Pending...
+- **Flexible `JSON` Manipulation**: Offers functionalities for adding, deleting, querying, and modifying similar to `JavaScript`, with compatibility for `Linq` and `Lambda` expressions.
+- **`Web` Development Friendly**: Seamlessly integrates with `ASP.NET Core WebAPI` and `MVC`, simplifying `HTTP` request handling and `API` development processes.
+- **Dynamic Data Processing**: Supports dynamic object construction and type conversion, featuring an efficient built-in data validation mechanism.
+- **Serialization Support**: Provides fast `JSON` serialization and deserialization capabilities, suitable for data exchange and storage needs.
+- **Architectural Design**: The design is flexible, making it easy to use and extend.
+- **Cross-platform Without Dependencies**: Supports cross-platform execution without requiring external dependencies.
+- **High-quality Code Assurance**: Adheres to high-standard coding norms, boasting unit test and integration test coverage as high as `98%`.
+- **`.NET 8+` Compatibility**: Can be deployed and used in environments running `.NET 8` and higher versions.
 
 ## Installation
 
