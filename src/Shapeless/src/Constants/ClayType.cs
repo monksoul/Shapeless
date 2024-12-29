@@ -5,7 +5,7 @@
 namespace Shapeless;
 
 /// <summary>
-///     粘土对象的基本类型
+///     流变对象的基本类型
 /// </summary>
 /// <remarks>用于区分是单一对象还是集合（数组）形式。</remarks>
 public enum ClayType

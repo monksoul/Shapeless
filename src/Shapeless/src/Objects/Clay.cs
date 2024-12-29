@@ -7,7 +7,7 @@ using Binder = Microsoft.CSharp.RuntimeBinder.Binder;
 namespace Shapeless;
 
 /// <summary>
-///     粘土对象
+///     流变对象
 /// </summary>
 public sealed partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, object?>>
 {
@@ -67,7 +67,7 @@ public sealed partial class Clay : DynamicObject, IEnumerable<KeyValuePair<objec
     /// <summary>
     ///     JSON 格式的画布
     /// </summary>
-    /// <remarks>用于作为粘土对象的核心数据容器。</remarks>
+    /// <remarks>用于作为 <see cref="Clay"/> 的核心数据容器。</remarks>
     internal JsonNode JsonCanvas { get; private set; }
 
     /// <summary>

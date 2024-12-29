@@ -5,7 +5,7 @@
 namespace Shapeless;
 
 /// <summary>
-///     粘土对象
+///     流变对象
 /// </summary>
 public sealed partial class Clay
 {
