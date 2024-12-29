@@ -41,6 +41,6 @@ Console.WriteLine(clay.ToJsonString());
 
 ## 许可证
 
-HttpAgent 采用 [MIT](./LICENSE) 开源许可证。
+Shapeless 采用 [MIT](./LICENSE) 开源许可证。
 
 [![](./assets/baiqian.svg)](https://baiqian.com)
