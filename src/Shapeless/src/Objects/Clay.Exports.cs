@@ -216,8 +216,21 @@ public sealed partial class Clay
     /// <returns>
     ///     <see cref="string" />
     /// </returns>
-    public string ToJsonString(JsonSerializerOptions? jsonSerializerOptions = null) =>
-        JsonCanvas.ToJsonString(jsonSerializerOptions ?? Options.JsonSerializerOptions);
+    public string ToJsonString(JsonSerializerOptions? jsonSerializerOptions = null)
+    {
+        // 获取提供的 JSON 序列化选项或默认选项
+        var serializerOptions = jsonSerializerOptions ?? Options.JsonSerializerOptions;
+
+        // 如果指定了命名策略，则对 JsonCanvas 进行键名转换；否则直接使用原 JsonCanvas
+        var jsonCanvasToSerialize = serializerOptions.PropertyNamingPolicy is not null
+            ? JsonCanvas.TransformKeysWithNamingPolicy(serializerOptions.PropertyNamingPolicy)
+            : JsonCanvas;
+
+        // 空检查
+        ArgumentNullException.ThrowIfNull(jsonCanvasToSerialize);
+
+        return jsonCanvasToSerialize.ToJsonString(serializerOptions);
+    }
 
     /// <summary>
     ///     将 <see cref="Clay" /> 输出为 XML 格式字符串

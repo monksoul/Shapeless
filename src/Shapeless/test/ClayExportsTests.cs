@@ -534,6 +534,19 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.Equal("[1,2,3]", clay2.ToJsonString());
         Assert.Equal("[\r\n  1,\r\n  2,\r\n  3\r\n]",
             clay2.ToJsonString(new JsonSerializerOptions { PropertyNamingPolicy = null, WriteIndented = true }));
+
+        var clay3 = Clay.Parse("{\"Id\":1,\"Name\":\"furion\"}");
+        Assert.Equal("{\"Id\":1,\"Name\":\"furion\"}", clay3.ToJsonString());
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}",
+            clay3.ToJsonString(new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }));
+
+        var clay4 = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay4.ToJsonString());
+        Assert.Equal("{\r\n  \"Id\": 1,\r\n  \"Name\": \"furion\"\r\n}",
+            clay4.ToJsonString(new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = new PascalCaseNamingPolicy(), WriteIndented = true
+            }));
     }
 
     [Fact]
@@ -906,5 +919,15 @@ public class ClayExportsTests(ITestOutputHelper output)
         clay.Options.AutoExpandArrayWithNulls = true;
         Assert.True(clay.TryInsert(7, 7));
         Assert.Equal("[0,4,1,2,5,3,null,7]", clay.ToJsonString());
+    }
+
+    [Fact]
+    public void ToDictionary()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        var dictionary = clay.ToDictionary(u => u.Key, u => u.Value);
+        Assert.NotNull(dictionary);
+        Assert.True(dictionary.ContainsKey("id"));
+        Assert.True(dictionary.ContainsKey("name"));
     }
 }

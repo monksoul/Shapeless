@@ -154,4 +154,56 @@ internal static class JsonExtensions
         throw new InvalidCastException(
             $"The value `{jsonValue.ToJsonString()}` cannot be converted to a supported numeric type.");
     }
+
+    /// <summary>
+    ///     根据提供的命名策略转换 JSON 节点中的对象键名
+    /// </summary>
+    /// <param name="jsonNode">
+    ///     <see cref="JsonNode" />
+    /// </param>
+    /// <param name="jsonNamingPolicy">
+    ///     <see cref="JsonNamingPolicy" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="JsonNode" />
+    /// </returns>
+    internal static JsonNode? TransformKeysWithNamingPolicy(this JsonNode? jsonNode, JsonNamingPolicy jsonNamingPolicy)
+    {
+        // 空检查
+        ArgumentNullException.ThrowIfNull(jsonNamingPolicy);
+
+        switch (jsonNode)
+        {
+            // 处理 JsonObject 类型
+            case JsonObject jsonObject:
+                // 初始化新的 JsonObject 实例
+                var transformedObject = new JsonObject();
+
+                // 遍历原对象的所有属性，并对每个属性的键名应用命名策略转换
+                foreach (var property in jsonObject)
+                {
+                    // 根据命名策略转换键名
+                    var transformedKey = jsonNamingPolicy.ConvertName(property.Key);
+
+                    transformedObject[transformedKey] = property.Value.TransformKeysWithNamingPolicy(jsonNamingPolicy);
+                }
+
+                return transformedObject;
+            // 处理 JsonArray 类型
+            case JsonArray jsonArray:
+                // 初始化新的 JsonArray 实例
+                var transformedArray = new JsonArray();
+
+                // 遍历数组中的每一项并处理可能存在的嵌套对象或数组情况
+                foreach (var item in jsonArray)
+                {
+                    transformedArray.Add(item.TransformKeysWithNamingPolicy(jsonNamingPolicy));
+                }
+
+                return transformedArray;
+            // 其他类型直接返回
+            default:
+                return jsonNode?.DeepClone();
+        }
+    }
 }

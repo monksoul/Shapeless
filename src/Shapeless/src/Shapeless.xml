@@ -96,6 +96,20 @@
             </returns>
             <exception cref="T:System.InvalidOperationException"></exception>
         </member>
+        <member name="M:Shapeless.Core.Extensions.JsonExtensions.TransformKeysWithNamingPolicy(System.Text.Json.Nodes.JsonNode,System.Text.Json.JsonNamingPolicy)">
+            <summary>
+                根据提供的命名策略转换 JSON 节点中的对象键名
+            </summary>
+            <param name="jsonNode">
+                <see cref="T:System.Text.Json.Nodes.JsonNode" />
+            </param>
+            <param name="jsonNamingPolicy">
+                <see cref="T:System.Text.Json.JsonNamingPolicy" />
+            </param>
+            <returns>
+                <see cref="T:System.Text.Json.Nodes.JsonNode" />
+            </returns>
+        </member>
         <member name="T:Shapeless.Core.Extensions.TypeExtensions">
             <summary>
                 <see cref="T:System.Type" /> 拓展类
@@ -822,6 +836,91 @@
             <summary>
                 JSON 序列化配置
             </summary>
+        </member>
+        <member name="T:Shapeless.PascalCaseNamingPolicy">
+            <summary>
+                帕斯卡（大驼峰）命名策略
+            </summary>
+        </member>
+        <member name="F:Shapeless.PascalCaseNamingPolicy._splitter">
+            <summary>
+                用于分割字符串中的单词的正则表达式
+            </summary>
+        </member>
+        <member name="M:Shapeless.PascalCaseNamingPolicy.ConvertName(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Shapeless.PascalCaseNamingPolicy.WordBoundaryRegex">
+            <remarks>
+            Pattern:<br/>
+            <code>(?&lt;=[A-Z])(?=[A-Z][a-z])|(?&lt;=[^A-Z])(?=[A-Z])|(?&lt;=[A-Za-z])(?=[^A-Za-z])|(?&lt;=\\d)(?=\\D)|(?&lt;=\\D)(?=\\d)</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match with 5 alternative expressions, atomically.<br/>
+                ○ Match a sequence of expressions.<br/>
+                    ○ Zero-width positive lookbehind.<br/>
+                        ○ Match a character in the set [A-Z] right-to-left.<br/>
+                    ○ Zero-width positive lookahead.<br/>
+                        ○ Match a character in the set [A-Z].<br/>
+                        ○ Match a character in the set [a-z].<br/>
+                ○ Match a sequence of expressions.<br/>
+                    ○ Zero-width positive lookbehind.<br/>
+                        ○ Match a character in the set [^A-Z] right-to-left.<br/>
+                    ○ Zero-width positive lookahead.<br/>
+                        ○ Match a character in the set [A-Z].<br/>
+                ○ Match a sequence of expressions.<br/>
+                    ○ Zero-width positive lookbehind.<br/>
+                        ○ Match a character in the set [A-Za-z] right-to-left.<br/>
+                    ○ Zero-width positive lookahead.<br/>
+                        ○ Match a character in the set [^A-Za-z].<br/>
+                ○ Match a sequence of expressions.<br/>
+                    ○ Zero-width positive lookbehind.<br/>
+                        ○ Match a Unicode digit right-to-left.<br/>
+                    ○ Zero-width positive lookahead.<br/>
+                        ○ Match any character other than a Unicode digit.<br/>
+                ○ Match a sequence of expressions.<br/>
+                    ○ Zero-width positive lookbehind.<br/>
+                        ○ Match any character other than a Unicode digit right-to-left.<br/>
+                    ○ Zero-width positive lookahead.<br/>
+                        ○ Match a Unicode digit.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.WordBoundaryRegex_0">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the WordBoundaryRegex method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.WordBoundaryRegex_0.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.WordBoundaryRegex_0.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.WordBoundaryRegex_0.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.WordBoundaryRegex_0.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.WordBoundaryRegex_0.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.WordBoundaryRegex_0.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.WordBoundaryRegex_0.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.Utilities">
+            <summary>Helper methods used by generated <see cref="T:System.Text.RegularExpressions.Regex"/>-derived implementations.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout">
+            <summary>Default timeout value set in <see cref="T:System.AppContext"/>, or <see cref="F:System.Text.RegularExpressions.Regex.InfiniteMatchTimeout"/> if none was set.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
+            <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
         </member>
     </members>
 </doc>
