@@ -2,7 +2,8 @@
 
 [![license](https://img.shields.io/badge/license-MIT-orange?cacheSeconds=10800)](https://gitee.com/dotnetchina/Shapeless/blob/master/LICENSE) [![nuget](https://img.shields.io/nuget/v/Shapeless.svg?cacheSeconds=10800)](https://www.nuget.org/packages/Shapeless) [![dotNET China](https://img.shields.io/badge/organization-dotNET%20China-yellow?cacheSeconds=10800)](https://gitee.com/dotnetchina)
 
-Shapeless 是一个高性能的 C# 开源库，提供类似 JavaScript JSON 的灵活操作体验，支持动态的增删查改和 Linq、Lambda 表达式查询，极大地简化了运行时对象的构建与操作，同时保持了简洁性和强大的性能表现。
+Shapeless 是一个高性能的 C# 开源库，提供类似 JavaScript JSON 的灵活操作体验，支持动态的增删查改和 Linq、Lambda
+表达式查询，极大地简化了运行时对象的构建与操作，同时保持了简洁性和强大的性能表现。
 
 ## 特性
 
@@ -26,10 +27,9 @@ dotnet add package Shapeless
 我们在[主页](https://furion.net/docs/shapeless/)上有不少例子，这是让您入门的第一个：
 
 ```cs
-dynamic clay = Clay.Parse("""{"id":1,"name":"furion"}""");
-clay.id = 100;
-clay.name = "shapeless";
+dynamic clay = Clay.Parse("""{"id":1,"name":"shapeless"}""");
 clay.author = "百小僧";
+clay["company"] = "百签科技";
 clay.homepage = new[] { "https://furion.net/", "https://baiqian.com" };
 
 Console.WriteLine(clay.ToJsonString());

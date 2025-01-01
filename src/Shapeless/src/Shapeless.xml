@@ -191,7 +191,7 @@
             <summary>
                 JSON 格式的画布
             </summary>
-            <remarks>用于作为 <see cref="T:Shapeless.Clay"/> 的核心数据容器。</remarks>
+            <remarks>用于作为 <see cref="T:Shapeless.Clay" /> 的核心数据容器。</remarks>
         </member>
         <member name="M:Shapeless.Clay.GetValue(System.Object)">
             <summary>

@@ -9,13 +9,18 @@ performance characteristics.
 
 ## Features
 
-- **Flexible `JSON` Manipulation**: Offers functionalities for adding, deleting, querying, and modifying similar to `JavaScript`, with compatibility for `Linq` and `Lambda` expressions.
-- **`Web` Development Friendly**: Seamlessly integrates with `ASP.NET Core WebAPI` and `MVC`, simplifying `HTTP` request handling and `API` development processes.
-- **Dynamic Data Processing**: Supports dynamic object construction and type conversion, featuring an efficient built-in data validation mechanism.
-- **Serialization Support**: Provides fast `JSON` serialization and deserialization capabilities, suitable for data exchange and storage needs.
+- **Flexible `JSON` Manipulation**: Offers functionalities for adding, deleting, querying, and modifying similar to
+  `JavaScript`, with compatibility for `Linq` and `Lambda` expressions.
+- **`Web` Development Friendly**: Seamlessly integrates with `ASP.NET Core WebAPI` and `MVC`, simplifying `HTTP` request
+  handling and `API` development processes.
+- **Dynamic Data Processing**: Supports dynamic object construction and type conversion, featuring an efficient built-in
+  data validation mechanism.
+- **Serialization Support**: Provides fast `JSON` serialization and deserialization capabilities, suitable for data
+  exchange and storage needs.
 - **Architectural Design**: The design is flexible, making it easy to use and extend.
 - **Cross-platform Without Dependencies**: Supports cross-platform execution without requiring external dependencies.
-- **High-quality Code Assurance**: Adheres to high-standard coding norms, boasting unit test and integration test coverage as high as `98%`.
+- **High-quality Code Assurance**: Adheres to high-standard coding norms, boasting unit test and integration test
+  coverage as high as `98%`.
 - **`.NET 8+` Compatibility**: Can be deployed and used in environments running `.NET 8` and higher versions.
 
 ## Installation
@@ -29,10 +34,9 @@ dotnet add package Shapeless
 We have many examples on our [homepage](https://furion.net/docs/shapeless/). Here's your first one to get you started:
 
 ```cs
-dynamic clay = Clay.Parse("""{"id":1,"name":"furion"}""");
-clay.id = 100;
-clay.name = "shapeless";
+dynamic clay = Clay.Parse("""{"id":1,"name":"shapeless"}""");
 clay.author = "百小僧";
+clay["company"] = "百签科技";
 clay.homepage = new[] { "https://furion.net/", "https://baiqian.com" };
 
 Console.WriteLine(clay.ToJsonString());
