@@ -35,7 +35,7 @@ public sealed partial class PascalCaseNamingPolicy : JsonNamingPolicy
         // 将字符串按非字母数字字符、大小写字母变化处分割成多个部分
         var parts = _splitter.Split(name);
 
-        // 遍历多个部分逐个处理
+        // 遍历并逐个处理各个部分
         foreach (var part in parts)
         {
             // 空检查
