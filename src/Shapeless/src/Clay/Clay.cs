@@ -2,8 +2,6 @@
 // 
 // 此源代码遵循位于源代码树根目录中的 LICENSE 文件的许可证。
 
-using Binder = Microsoft.CSharp.RuntimeBinder.Binder;
-
 namespace Shapeless;
 
 /// <summary>
@@ -11,24 +9,6 @@ namespace Shapeless;
 /// </summary>
 public sealed partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, object?>>
 {
-    /// <summary>
-    ///     获取 <see cref="InvokeMemberBinder" /> 类型的 <c>TypeArguments</c> 属性访问器
-    /// </summary>
-    /// <remarks>实际上获取的是内部类型 <c>CSharpInvokeMemberBinder</c> 的 <c>TypeArguments</c> 属性访问器。</remarks>
-    internal static readonly Lazy<Func<object, object?>> _getCSharpInvokeMemberBinderTypeArguments = new(() =>
-    {
-        // 获取内部的 CSharpInvokeMemberBinder 类型
-        var csharpInvokeMemberBinderType =
-            typeof(Binder).Assembly.GetType("Microsoft.CSharp.RuntimeBinder.CSharpInvokeMemberBinder")!;
-
-        // 获取 TypeArguments 属性对象
-        var typeArgumentsProperty =
-            csharpInvokeMemberBinderType.GetProperty("TypeArguments", BindingFlags.Public | BindingFlags.Instance)!;
-
-        // 创建 TypeArguments 属性访问器
-        return csharpInvokeMemberBinderType.CreatePropertyGetter(typeArgumentsProperty);
-    });
-
     /// <summary>
     ///     <inheritdoc cref="Clay" />
     /// </summary>
