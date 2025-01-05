@@ -7,16 +7,14 @@ namespace Shapeless;
 /// <summary>
 ///     键或索引移除之前事件数据
 /// </summary>
-public sealed class ClayIndexRemovingEventArgs : EventArgs
+public sealed class ClayIndexRemovingEventArgs : ClayEventArgs
 {
     /// <summary>
     ///     <inheritdoc cref="ClayIndexRemovingEventArgs" />
     /// </summary>
     /// <param name="keyOrIndex">键或索引</param>
-    internal ClayIndexRemovingEventArgs(object keyOrIndex) => KeyOrIndex = keyOrIndex;
-
-    /// <summary>
-    ///     键或索引
-    /// </summary>
-    public object KeyOrIndex { get; }
+    internal ClayIndexRemovingEventArgs(object keyOrIndex)
+        : base(keyOrIndex)
+    {
+    }
 }

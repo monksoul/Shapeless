@@ -377,7 +377,7 @@ public sealed partial class Clay
     public Clay DeepClone(ClayOptions? options = null) => new Clay(JsonCanvas.DeepClone()).Rebuilt(options);
 
     /// <summary>
-    ///     删除所有元素
+    ///     删除所有键或索引
     /// </summary>
     public void Clear()
     {

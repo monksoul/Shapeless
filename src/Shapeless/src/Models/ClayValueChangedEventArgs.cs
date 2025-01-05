@@ -7,16 +7,14 @@ namespace Shapeless;
 /// <summary>
 ///     值变更之后事件数据
 /// </summary>
-public sealed class ClayValueChangedEventArgs : EventArgs
+public sealed class ClayValueChangedEventArgs : ClayEventArgs
 {
     /// <summary>
     ///     <inheritdoc cref="ClayValueChangedEventArgs" />
     /// </summary>
     /// <param name="keyOrIndex">键或索引</param>
-    internal ClayValueChangedEventArgs(object keyOrIndex) => KeyOrIndex = keyOrIndex;
-
-    /// <summary>
-    ///     键或索引
-    /// </summary>
-    public object KeyOrIndex { get; }
+    internal ClayValueChangedEventArgs(object keyOrIndex)
+        : base(keyOrIndex)
+    {
+    }
 }

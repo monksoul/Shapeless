@@ -528,7 +528,7 @@
         </member>
         <member name="M:Shapeless.Clay.Clear">
             <summary>
-                删除所有元素
+                删除所有键或索引
             </summary>
         </member>
         <member name="M:Shapeless.Clay.WriteTo(System.Text.Json.Utf8JsonWriter,System.Text.Json.JsonSerializerOptions)">
@@ -827,6 +827,22 @@
                 <see cref="T:System.String" />
             </returns>
         </member>
+        <member name="T:Shapeless.ClayEventArgs">
+            <summary>
+                <see cref="T:Shapeless.Clay" /> 对象事件数据
+            </summary>
+        </member>
+        <member name="M:Shapeless.ClayEventArgs.#ctor(System.Object)">
+            <summary>
+                <inheritdoc cref="T:Shapeless.ClayEventArgs" />
+            </summary>
+            <param name="keyOrIndex">键或索引</param>
+        </member>
+        <member name="P:Shapeless.ClayEventArgs.KeyOrIndex">
+            <summary>
+                键或索引
+            </summary>
+        </member>
         <member name="T:Shapeless.ClayIndexRemovedEventArgs">
             <summary>
                 键或索引移除之后事件数据
@@ -837,11 +853,6 @@
                 <inheritdoc cref="T:Shapeless.ClayIndexRemovedEventArgs" />
             </summary>
             <param name="keyOrIndex">键或索引</param>
-        </member>
-        <member name="P:Shapeless.ClayIndexRemovedEventArgs.KeyOrIndex">
-            <summary>
-                键或索引
-            </summary>
         </member>
         <member name="T:Shapeless.ClayIndexRemovingEventArgs">
             <summary>
@@ -854,11 +865,6 @@
             </summary>
             <param name="keyOrIndex">键或索引</param>
         </member>
-        <member name="P:Shapeless.ClayIndexRemovingEventArgs.KeyOrIndex">
-            <summary>
-                键或索引
-            </summary>
-        </member>
         <member name="T:Shapeless.ClayValueChangedEventArgs">
             <summary>
                 值变更之后事件数据
@@ -870,11 +876,6 @@
             </summary>
             <param name="keyOrIndex">键或索引</param>
         </member>
-        <member name="P:Shapeless.ClayValueChangedEventArgs.KeyOrIndex">
-            <summary>
-                键或索引
-            </summary>
-        </member>
         <member name="T:Shapeless.ClayValueChangingEventArgs">
             <summary>
                 值变更之前事件数据
@@ -885,11 +886,6 @@
                 <inheritdoc cref="T:Shapeless.ClayValueChangingEventArgs" />
             </summary>
             <param name="keyOrIndex">键或索引</param>
-        </member>
-        <member name="P:Shapeless.ClayValueChangingEventArgs.KeyOrIndex">
-            <summary>
-                键或索引
-            </summary>
         </member>
         <member name="T:Shapeless.Utf8StringWriter">
             <summary>
