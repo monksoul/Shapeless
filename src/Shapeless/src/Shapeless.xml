@@ -18,40 +18,28 @@
                 流变对象
             </summary>
         </member>
-        <member name="F:Shapeless.Clay._getCSharpInvokeMemberBinderTypeArguments">
-            <summary>
-                获取
-                <see cref="T:System.Dynamic.InvokeMemberBinder"/>
-                类型的 <c>TypeArguments</c> 属性访问器
-            </summary>
-            <remarks>实际上获取的是内部类型 <c>CSharpInvokeMemberBinder</c> 的 <c>TypeArguments</c> 属性访问器。
-            </remarks>
-        </member>
         <member name="M:Shapeless.Clay.#ctor(System.Text.Json.Nodes.JsonNode,Shapeless.ClayOptions)">
             <summary>
-                <inheritdoc cref="T:Shapeless.Clay"/>
+                <inheritdoc cref="T:Shapeless.Clay" />
             </summary>
             <param name="jsonNode">
-                <see cref="T:System.Text.Json.Nodes.JsonNode"/>
+                <see cref="T:System.Text.Json.Nodes.JsonNode" />
             </param>
             <param name="options">
-                <see cref="T:Shapeless.ClayOptions"/>
+                <see cref="T:Shapeless.ClayOptions" />
             </param>
             <exception cref="T:System.NotSupportedException"></exception>
         </member>
         <member name="P:Shapeless.Clay.Options">
             <summary>
-                <inheritdoc cref="T:Shapeless.ClayOptions"/>
+                <inheritdoc cref="T:Shapeless.ClayOptions" />
             </summary>
         </member>
         <member name="P:Shapeless.Clay.JsonCanvas">
             <summary>
                 JSON 格式的画布
             </summary>
-            <remarks>用于作为
-                <see cref="T:Shapeless.Clay"/>
-                的核心数据容器。
-            </remarks>
+            <remarks>用于作为 <see cref="T:Shapeless.Clay" /> 的核心数据容器。</remarks>
         </member>
         <member name="M:Shapeless.Clay.GetValue(System.Object)">
             <summary>
@@ -59,7 +47,7 @@
             </summary>
             <param name="keyOrIndex">键或索引</param>
             <returns>
-                <see cref="T:System.Object"/>
+                <see cref="T:System.Object" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.SetValue(System.Object,System.Object)">
@@ -69,7 +57,7 @@
             <param name="keyOrIndex">键或索引</param>
             <param name="value">值</param>
             <returns>
-                <see cref="T:System.Boolean"/>
+                <see cref="T:System.Boolean" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.RemoveValue(System.Object)">
@@ -78,137 +66,117 @@
             </summary>
             <param name="keyOrIndex">键或索引</param>
             <returns>
-                <see cref="T:System.Boolean"/>
+                <see cref="T:System.Boolean" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.FindNode(System.Object)">
             <summary>
-                根据键或索引查找
-                <see cref="T:System.Text.Json.Nodes.JsonNode"/>
-                节点
+                根据键或索引查找 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 节点
             </summary>
             <param name="keyOrIndex">键或索引</param>
             <returns>
-                <see cref="T:System.Text.Json.Nodes.JsonNode"/>
+                <see cref="T:System.Text.Json.Nodes.JsonNode" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.GetNodeFromObject(System.Object)">
             <summary>
-                根据键获取
-                <see cref="T:System.Text.Json.Nodes.JsonNode"/>
-                节点
+                根据键获取 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 节点
             </summary>
             <param name="key">键</param>
             <returns>
-                <see cref="T:System.Text.Json.Nodes.JsonNode"/>
+                <see cref="T:System.Text.Json.Nodes.JsonNode" />
             </returns>
             <exception cref="T:System.Collections.Generic.KeyNotFoundException"></exception>
         </member>
         <member name="M:Shapeless.Clay.GetNodeFromArray(System.Object)">
             <summary>
-                根据索引获取
-                <see cref="T:System.Text.Json.Nodes.JsonNode"/>
-                节点
+                根据索引获取 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 节点
             </summary>
             <param name="index">索引</param>
             <returns>
-                <see cref="T:System.Text.Json.Nodes.JsonNode"/>
+                <see cref="T:System.Text.Json.Nodes.JsonNode" />
             </returns>
             <exception cref="T:System.ArgumentOutOfRangeException"></exception>
         </member>
         <member name="M:Shapeless.Clay.SetNodeInObject(System.Object,System.Object,System.Object@)">
             <summary>
-                根据键设置
-                <see cref="T:System.Text.Json.Nodes.JsonNode"/>
-                节点
+                根据键设置 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 节点
             </summary>
             <param name="key">键</param>
             <param name="value">属性值</param>
             <param name="finalKey">最终设置键</param>
             <returns>
-                <see cref="T:System.Boolean"/>
+                <see cref="T:System.Boolean" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.SetNodeInArray(System.Object,System.Object,System.Object@)">
             <summary>
-                根据索引设置
-                <see cref="T:System.Text.Json.Nodes.JsonNode"/>
-                节点
+                根据索引设置 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 节点
             </summary>
             <param name="index">索引</param>
             <param name="value">元素值</param>
             <param name="finalIndex">最终设置索引</param>
             <returns>
-                <see cref="T:System.Boolean"/>
+                <see cref="T:System.Boolean" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.RemoveNodeFromObject(System.Object,System.Object@)">
             <summary>
-                根据键删除
-                <see cref="T:System.Text.Json.Nodes.JsonNode"/>
-                节点
+                根据键删除 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 节点
             </summary>
             <param name="key">键</param>
             <param name="finalKey">最终移除键</param>
             <returns>
-                <see cref="T:System.Boolean"/>
+                <see cref="T:System.Boolean" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.RemoveNodeFromArray(System.Object,System.Object@)">
             <summary>
-                根据索引删除
-                <see cref="T:System.Text.Json.Nodes.JsonNode"/>
-                节点
+                根据索引删除 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 节点
             </summary>
             <param name="index">索引</param>
             <param name="finalIndex">最终移除索引</param>
             <returns>
-                <see cref="T:System.Boolean"/>
+                <see cref="T:System.Boolean" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.SerializeToNode(System.Object,Shapeless.ClayOptions)">
             <summary>
-                将对象序列化成
-                <see cref="T:System.Text.Json.Nodes.JsonNode"/>
-                实例
+                将对象序列化成 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 实例
             </summary>
             <param name="obj">
-                <see cref="T:System.Object"/>
+                <see cref="T:System.Object" />
             </param>
             <param name="options">
-                <see cref="T:Shapeless.ClayOptions"/>
+                <see cref="T:Shapeless.ClayOptions" />
             </param>
             <returns>
-                <see cref="T:System.Text.Json.Nodes.JsonNode"/>
+                <see cref="T:System.Text.Json.Nodes.JsonNode" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.DeserializeNode(System.Text.Json.Nodes.JsonNode,Shapeless.ClayOptions)">
             <summary>
-                将
-                <see cref="T:System.Text.Json.Nodes.JsonNode"/>
-                转换为对象实例
+                将 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 转换为对象实例
             </summary>
             <param name="jsonNode">
-                <see cref="T:System.Text.Json.Nodes.JsonNode"/>
+                <see cref="T:System.Text.Json.Nodes.JsonNode" />
             </param>
             <param name="options">
-                <see cref="T:Shapeless.ClayOptions"/>
+                <see cref="T:Shapeless.ClayOptions" />
             </param>
             <returns>
-                <see cref="T:System.Object"/>
+                <see cref="T:System.Object" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.Rebuilt(Shapeless.ClayOptions)">
             <summary>
-                重建
-                <see cref="T:Shapeless.Clay"/>
-                实例
+                重建 <see cref="T:Shapeless.Clay" /> 实例
             </summary>
             <param name="options">
-                <see cref="T:Shapeless.ClayOptions"/>
+                <see cref="T:Shapeless.ClayOptions" />
             </param>
             <returns>
-                <see cref="T:Shapeless.Clay"/>
+                <see cref="T:Shapeless.Clay" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.ProcessNestedNullPropagationIndexKey(System.String)">
@@ -217,27 +185,23 @@
             </summary>
             <param name="indexKey">索引键</param>
             <returns>
-                <see cref="T:System.String"/>
+                <see cref="T:System.String" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.EnumerateObject">
             <summary>
-                枚举
-                <see cref="P:Shapeless.Clay.JsonCanvas"/>
-                作为对象时的键值对
+                枚举 <see cref="P:Shapeless.Clay.JsonCanvas" /> 作为对象时的键值对
             </summary>
             <returns>
-                <see cref="T:System.Collections.Generic.IEnumerable`1"/>
+                <see cref="T:System.Collections.Generic.IEnumerable`1" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.EnumerateArray">
             <summary>
-                枚举
-                <see cref="P:Shapeless.Clay.JsonCanvas"/>
-                作为数组时的元素
+                枚举 <see cref="P:Shapeless.Clay.JsonCanvas" /> 作为数组时的元素
             </summary>
             <returns>
-                <see cref="T:System.Collections.Generic.IEnumerable`1"/>
+                <see cref="T:System.Collections.Generic.IEnumerable`1" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.ThrowIfOutOfRange(System.Int32,System.Int32)">
@@ -252,10 +216,7 @@
             <summary>
                 检查数组索引合法性
             </summary>
-            <param name="index">
-                <see cref="T:System.Object"/>
-                类型索引
-            </param>
+            <param name="index"><see cref="T:System.Object" /> 类型索引</param>
             <param name="intIndex">整数索引</param>
             <exception cref="T:System.InvalidOperationException"></exception>
             <exception cref="T:System.ArgumentOutOfRangeException"></exception>
@@ -320,21 +281,21 @@
         </member>
         <member name="M:Shapeless.Clay.#ctor(Shapeless.ClayOptions)">
             <summary>
-                <inheritdoc cref="T:Shapeless.Clay"/>
+                <inheritdoc cref="T:Shapeless.Clay" />
             </summary>
             <param name="options">
-                <see cref="T:Shapeless.ClayOptions"/>
+                <see cref="T:Shapeless.ClayOptions" />
             </param>
         </member>
         <member name="M:Shapeless.Clay.#ctor(Shapeless.ClayType,Shapeless.ClayOptions)">
             <summary>
-                <inheritdoc cref="T:Shapeless.Clay"/>
+                <inheritdoc cref="T:Shapeless.Clay" />
             </summary>
             <param name="clayType">
-                <see cref="T:Shapeless.ClayType"/>
+                <see cref="T:Shapeless.ClayType" />
             </param>
             <param name="options">
-                <see cref="T:Shapeless.ClayOptions"/>
+                <see cref="T:Shapeless.ClayOptions" />
             </param>
         </member>
         <member name="P:Shapeless.Clay.Item(System.String)">
@@ -386,80 +347,70 @@
             </summary>
         </member>
         <member name="M:Shapeless.Clay.System#Collections#IEnumerable#GetEnumerator">
-            <inheritdoc/>
+            <inheritdoc />
         </member>
         <member name="M:Shapeless.Clay.GetEnumerator">
             <summary>
                 返回循环访问元素的枚举数
             </summary>
             <returns>
-                <see cref="T:System.Collections.Generic.IEnumerator`1"/>
+                <see cref="T:System.Collections.Generic.IEnumerator`1" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.EmptyObject(Shapeless.ClayOptions)">
             <summary>
-                创建空对象类型的
-                <see cref="T:Shapeless.Clay"/>
-                实例
+                创建空对象类型的 <see cref="T:Shapeless.Clay" /> 实例
             </summary>
             <param name="options">
-                <see cref="T:Shapeless.ClayOptions"/>
+                <see cref="T:Shapeless.ClayOptions" />
             </param>
             <returns>
-                <see cref="T:Shapeless.Clay"/>
+                <see cref="T:Shapeless.Clay" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.EmptyArray(Shapeless.ClayOptions)">
             <summary>
-                创建空数组类型的
-                <see cref="T:Shapeless.Clay"/>
-                实例
+                创建空数组类型的 <see cref="T:Shapeless.Clay" /> 实例
             </summary>
             <param name="options">
-                <see cref="T:Shapeless.ClayOptions"/>
+                <see cref="T:Shapeless.ClayOptions" />
             </param>
             <returns>
-                <see cref="T:Shapeless.Clay"/>
+                <see cref="T:Shapeless.Clay" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.Parse(System.Object,Shapeless.ClayOptions,System.Text.Json.JsonDocumentOptions)">
             <summary>
-                将对象转换为
-                <see cref="T:Shapeless.Clay"/>
-                实例
+                将对象转换为 <see cref="T:Shapeless.Clay" /> 实例
             </summary>
             <param name="obj">
-                <see cref="T:System.Object"/>
+                <see cref="T:System.Object" />
             </param>
             <param name="options">
-                <see cref="T:Shapeless.ClayOptions"/>
+                <see cref="T:Shapeless.ClayOptions" />
             </param>
             <param name="jsonDocumentOptions">
-                <see cref="T:System.Text.Json.JsonDocumentOptions"/>
+                <see cref="T:System.Text.Json.JsonDocumentOptions" />
             </param>
             <returns>
-                <see cref="T:Shapeless.Clay"/>
+                <see cref="T:Shapeless.Clay" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.Parse(System.Text.Json.Utf8JsonReader@,Shapeless.ClayOptions,System.Text.Json.JsonDocumentOptions)">
             <summary>
-                将
-                <see cref="T:System.Text.Json.Utf8JsonReader"/>
-                转换为
-                <see cref="T:Shapeless.Clay"/>
-                实例
+                将 <see cref="T:System.Text.Json.Utf8JsonReader" /> 转换为 <see cref="T:Shapeless.Clay" /> 实例
             </summary>
             <param name="utf8JsonReader">
-                <see cref="T:System.Text.Json.Utf8JsonReader"/>
+                <see cref="T:System.Text.Json.Utf8JsonReader" />
             </param>
             <param name="options">
-                <see cref="T:Shapeless.ClayOptions"/>
+                <see cref="T:Shapeless.ClayOptions" />
             </param>
             <param name="jsonDocumentOptions">
-                <see cref="T:System.Text.Json.JsonDocumentOptions"/>
+                <see cref="T:System.Text.Json.JsonDocumentOptions" />
             </param>
             <returns>
-                <see cref="T:Shapeless.Clay"/>
+                <see cref="T:Shapeless.Clay" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.Contains(System.Object)">
@@ -468,7 +419,7 @@
             </summary>
             <param name="keyOrIndex">键或索引</param>
             <returns>
-                <see cref="T:System.Boolean"/>
+                <see cref="T:System.Boolean" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.Get(System.Object)">
@@ -477,7 +428,7 @@
             </summary>
             <param name="keyOrIndex">键或索引</param>
             <returns>
-                <see cref="T:System.Object"/>
+                <see cref="T:System.Object" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.Get(System.Object,System.Type,System.Text.Json.JsonSerializerOptions)">
@@ -487,10 +438,10 @@
             <param name="keyOrIndex">键或索引</param>
             <param name="resultType">转换的目标类型</param>
             <param name="jsonSerializerOptions">
-                <see cref="T:System.Text.Json.JsonSerializerOptions"/>
+                <see cref="T:System.Text.Json.JsonSerializerOptions" />
             </param>
             <returns>
-                <see cref="T:System.Object"/>
+                <see cref="T:System.Object" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.Get``1(System.Object,System.Text.Json.JsonSerializerOptions)">
@@ -499,22 +450,20 @@
             </summary>
             <param name="keyOrIndex">键或索引</param>
             <param name="jsonSerializerOptions">
-                <see cref="T:System.Text.Json.JsonSerializerOptions"/>
+                <see cref="T:System.Text.Json.JsonSerializerOptions" />
             </param>
             <typeparam name="TResult">转换的目标类型</typeparam>
             <returns>
-                <typeparamref name="TResult"/>
+                <typeparamref name="TResult" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.GetNode(System.Object)">
             <summary>
-                获取
-                <see cref="T:System.Text.Json.Nodes.JsonNode"/>
-                实例
+                获取 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 实例
             </summary>
             <param name="keyOrIndex">键或索引</param>
             <returns>
-                <see cref="T:System.Text.Json.Nodes.JsonNode"/>
+                <see cref="T:System.Text.Json.Nodes.JsonNode" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.Set(System.Object,System.Object)">
@@ -528,10 +477,7 @@
             <summary>
                 在指定索引处插入值
             </summary>
-            <remarks>当
-                <see cref="P:Shapeless.Clay.IsArray"/>
-                为 <c>true</c> 时有效。
-            </remarks>
+            <remarks>当 <see cref="P:Shapeless.Clay.IsArray" /> 为 <c>true</c> 时有效。</remarks>
             <param name="index">索引</param>
             <param name="value">值</param>
             <exception cref="T:System.NotSupportedException"></exception>
@@ -542,35 +488,31 @@
             </summary>
             <param name="keyOrIndex">键或索引</param>
             <returns>
-                <see cref="T:System.Boolean"/>
+                <see cref="T:System.Boolean" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.As(System.Type,System.Text.Json.JsonSerializerOptions)">
             <summary>
-                将
-                <see cref="T:Shapeless.Clay"/>
-                转换为目标类型
+                将 <see cref="T:Shapeless.Clay" /> 转换为目标类型
             </summary>
             <param name="resultType">转换的目标类型</param>
             <param name="jsonSerializerOptions">
-                <see cref="T:System.Text.Json.JsonSerializerOptions"/>
+                <see cref="T:System.Text.Json.JsonSerializerOptions" />
             </param>
             <returns>
-                <see cref="T:System.Object"/>
+                <see cref="T:System.Object" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.As``1(System.Text.Json.JsonSerializerOptions)">
             <summary>
-                将
-                <see cref="T:Shapeless.Clay"/>
-                转换为目标类型
+                将 <see cref="T:Shapeless.Clay" /> 转换为目标类型
             </summary>
             <param name="jsonSerializerOptions">
-                <see cref="T:System.Text.Json.JsonSerializerOptions"/>
+                <see cref="T:System.Text.Json.JsonSerializerOptions" />
             </param>
             <typeparam name="TResult">转换的目标类型</typeparam>
             <returns>
-                <typeparamref name="TResult"/>
+                <typeparamref name="TResult" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.DeepClone(Shapeless.ClayOptions)">
@@ -578,10 +520,10 @@
                 深度克隆
             </summary>
             <param name="options">
-                <see cref="T:Shapeless.ClayOptions"/>
+                <see cref="T:Shapeless.ClayOptions" />
             </param>
             <returns>
-                <see cref="T:Shapeless.Clay"/>
+                <see cref="T:Shapeless.Clay" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.Clear">
@@ -591,15 +533,13 @@
         </member>
         <member name="M:Shapeless.Clay.WriteTo(System.Text.Json.Utf8JsonWriter,System.Text.Json.JsonSerializerOptions)">
             <summary>
-                写入提供的
-                <see cref="T:System.Text.Json.Utf8JsonWriter"/>
-                作为 JSON
+                写入提供的 <see cref="T:System.Text.Json.Utf8JsonWriter" /> 作为 JSON
             </summary>
             <param name="writer">
-                <see cref="T:System.Text.Json.Utf8JsonWriter"/>
+                <see cref="T:System.Text.Json.Utf8JsonWriter" />
             </param>
             <param name="jsonSerializerOptions">
-                <see cref="T:System.Text.Json.JsonSerializerOptions"/>
+                <see cref="T:System.Text.Json.JsonSerializerOptions" />
             </param>
         </member>
         <member name="M:Shapeless.Clay.TryGet(System.Object,System.Object@)">
@@ -609,7 +549,7 @@
             <param name="keyOrIndex">键或索引</param>
             <param name="value">值</param>
             <returns>
-                <see cref="T:System.Boolean"/>
+                <see cref="T:System.Boolean" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.TryGet(System.Object,System.Type,System.Object@,System.Text.Json.JsonSerializerOptions)">
@@ -620,10 +560,10 @@
             <param name="resultType">转换的目标类型</param>
             <param name="value">值</param>
             <param name="jsonSerializerOptions">
-                <see cref="T:System.Text.Json.JsonSerializerOptions"/>
+                <see cref="T:System.Text.Json.JsonSerializerOptions" />
             </param>
             <returns>
-                <see cref="T:System.Boolean"/>
+                <see cref="T:System.Boolean" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.TryGet``1(System.Object,``0@,System.Text.Json.JsonSerializerOptions)">
@@ -633,11 +573,11 @@
             <param name="keyOrIndex">键或索引</param>
             <param name="value">值</param>
             <param name="jsonSerializerOptions">
-                <see cref="T:System.Text.Json.JsonSerializerOptions"/>
+                <see cref="T:System.Text.Json.JsonSerializerOptions" />
             </param>
             <typeparam name="TResult">转换的目标类型</typeparam>
             <returns>
-                <see cref="T:System.Boolean"/>
+                <see cref="T:System.Boolean" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.TrySet(System.Object,System.Object)">
@@ -647,7 +587,7 @@
             <param name="keyOrIndex">键或索引</param>
             <param name="value">值</param>
             <returns>
-                <see cref="T:System.Boolean"/>
+                <see cref="T:System.Boolean" />
             </returns>
             <exception cref="T:System.Text.Json.JsonException"></exception>
         </member>
@@ -655,14 +595,11 @@
             <summary>
                 尝试在指定索引处插入值
             </summary>
-            <remarks>当
-                <see cref="P:Shapeless.Clay.IsArray"/>
-                为 <c>true</c> 时有效。
-            </remarks>
+            <remarks>当 <see cref="P:Shapeless.Clay.IsArray" /> 为 <c>true</c> 时有效。</remarks>
             <param name="index">索引</param>
             <param name="value">值</param>
             <returns>
-                <see cref="T:System.Boolean"/>
+                <see cref="T:System.Boolean" />
             </returns>
             <exception cref="T:System.NotSupportedException"></exception>
             <exception cref="T:System.Text.Json.JsonException"></exception>
@@ -673,62 +610,61 @@
             </summary>
             <param name="keyOrIndex">键或索引</param>
             <returns>
-                <see cref="T:System.Boolean"/>
+                <see cref="T:System.Boolean" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.ToString">
-            <inheritdoc/>
+            <inheritdoc />
         </member>
         <member name="M:Shapeless.Clay.ToJsonString(System.Text.Json.JsonSerializerOptions)">
             <summary>
-                将
-                <see cref="T:Shapeless.Clay"/>
-                输出为 JSON 格式字符串
+                将 <see cref="T:Shapeless.Clay" /> 输出为 JSON 格式字符串
             </summary>
-            <remarks>性能通常比
-                <see cref="M:Shapeless.Clay.ToString"/>
-                方式略高。
-            </remarks>
+            <remarks>性能通常比 <see cref="M:Shapeless.Clay.ToString" /> 方式略高。</remarks>
             <param name="jsonSerializerOptions">
-                <see cref="T:System.Text.Json.JsonSerializerOptions"/>
+                <see cref="T:System.Text.Json.JsonSerializerOptions" />
             </param>
             <returns>
-                <see cref="T:System.String"/>
+                <see cref="T:System.String" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.ToXmlString(System.Xml.XmlWriterSettings)">
             <summary>
-                将
-                <see cref="T:Shapeless.Clay"/>
-                输出为 XML 格式字符串
+                将 <see cref="T:Shapeless.Clay" /> 输出为 XML 格式字符串
             </summary>
             <param name="xmlWriterSettings">
-                <see cref="T:System.Xml.XmlWriterSettings"/>
+                <see cref="T:System.Xml.XmlWriterSettings" />
             </param>
             <returns>
-                <see cref="T:System.String"/>
+                <see cref="T:System.String" />
             </returns>
         </member>
+        <member name="F:Shapeless.Clay._getCSharpInvokeMemberBinderTypeArguments">
+            <summary>
+                获取 <see cref="T:System.Dynamic.InvokeMemberBinder" /> 类型的 <c>TypeArguments</c> 属性访问器
+            </summary>
+            <remarks>实际上获取的是内部类型 <c>CSharpInvokeMemberBinder</c> 的 <c>TypeArguments</c> 属性访问器。</remarks>
+        </member>
         <member name="M:Shapeless.Clay.TryGetMember(System.Dynamic.GetMemberBinder,System.Object@)">
-            <inheritdoc/>
+            <inheritdoc />
         </member>
         <member name="M:Shapeless.Clay.TrySetMember(System.Dynamic.SetMemberBinder,System.Object)">
-            <inheritdoc/>
+            <inheritdoc />
         </member>
         <member name="M:Shapeless.Clay.TryGetIndex(System.Dynamic.GetIndexBinder,System.Object[],System.Object@)">
-            <inheritdoc/>
+            <inheritdoc />
         </member>
         <member name="M:Shapeless.Clay.TrySetIndex(System.Dynamic.SetIndexBinder,System.Object[],System.Object)">
-            <inheritdoc/>
+            <inheritdoc />
         </member>
         <member name="M:Shapeless.Clay.TryInvoke(System.Dynamic.InvokeBinder,System.Object[],System.Object@)">
-            <inheritdoc/>
+            <inheritdoc />
         </member>
         <member name="M:Shapeless.Clay.TryInvokeMember(System.Dynamic.InvokeMemberBinder,System.Object[],System.Object@)">
-            <inheritdoc/>
+            <inheritdoc />
         </member>
         <member name="M:Shapeless.Clay.TryConvert(System.Dynamic.ConvertBinder,System.Object@)">
-            <inheritdoc/>
+            <inheritdoc />
         </member>
         <member name="T:Shapeless.ClayType">
             <summary>
@@ -749,20 +685,18 @@
         </member>
         <member name="T:Shapeless.ClayJsonConverter">
             <summary>
-                <see cref="T:Shapeless.Clay"/>
-                JSON 序列化转换器
+                <see cref="T:Shapeless.Clay" /> JSON 序列化转换器
             </summary>
         </member>
         <member name="M:Shapeless.ClayJsonConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
-            <inheritdoc/>
+            <inheritdoc />
         </member>
         <member name="M:Shapeless.ClayJsonConverter.Write(System.Text.Json.Utf8JsonWriter,Shapeless.Clay,System.Text.Json.JsonSerializerOptions)">
-            <inheritdoc/>
+            <inheritdoc />
         </member>
         <member name="T:Shapeless.Core.Extensions.EventHandlerExtensions">
             <summary>
-                <see cref="T:System.EventHandler`1"/>
-                拓展类
+                <see cref="T:System.EventHandler`1" /> 拓展类
             </summary>
         </member>
         <member name="M:Shapeless.Core.Extensions.EventHandlerExtensions.TryInvoke``1(System.EventHandler{``0},System.Object,``0)">
@@ -770,20 +704,19 @@
                 尝试执行事件处理程序
             </summary>
             <param name="handler">
-                <see cref="T:System.EventHandler`1"/>
+                <see cref="T:System.EventHandler`1" />
             </param>
             <param name="sender">
-                <see cref="T:System.Object"/>
+                <see cref="T:System.Object" />
             </param>
             <param name="args">
-                <typeparamref name="TEventArgs"/>
+                <typeparamref name="TEventArgs" />
             </param>
             <typeparam name="TEventArgs">事件参数</typeparam>
         </member>
         <member name="T:Shapeless.Core.Extensions.ICollectionExtensions">
             <summary>
-                <see cref="T:System.Collections.Generic.ICollection`1"/>
-                拓展类
+                <see cref="T:System.Collections.Generic.ICollection`1" /> 拓展类
             </summary>
         </member>
         <member name="M:Shapeless.Core.Extensions.ICollectionExtensions.IsNullOrEmpty``1(System.Collections.Generic.ICollection{``0})">
@@ -792,10 +725,10 @@
             </summary>
             <typeparam name="T">对象类型</typeparam>
             <param name="collection">
-                <see cref="T:System.Collections.Generic.ICollection`1"/>
+                <see cref="T:System.Collections.Generic.ICollection`1" />
             </param>
             <returns>
-                <see cref="T:System.Boolean"/>
+                <see cref="T:System.Boolean" />
             </returns>
         </member>
         <member name="T:Shapeless.Core.Extensions.JsonExtensions">
@@ -805,49 +738,43 @@
         </member>
         <member name="M:Shapeless.Core.Extensions.JsonExtensions.As``1(System.Text.Json.Nodes.JsonNode,System.Text.Json.JsonSerializerOptions)">
             <summary>
-                将
-                <see cref="T:System.Text.Json.Nodes.JsonNode"/>
-                转换为目标类型
+                将 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 转换为目标类型
             </summary>
             <param name="jsonNode">
-                <see cref="T:System.Text.Json.Nodes.JsonNode"/>
+                <see cref="T:System.Text.Json.Nodes.JsonNode" />
             </param>
             <param name="jsonSerializerOptions">
-                <see cref="T:System.Text.Json.JsonSerializerOptions"/>
+                <see cref="T:System.Text.Json.JsonSerializerOptions" />
             </param>
             <typeparam name="TResult">转换的目标类型</typeparam>
             <returns>
-                <typeparamref name="TResult"/>
+                <typeparamref name="TResult" />
             </returns>
         </member>
         <member name="M:Shapeless.Core.Extensions.JsonExtensions.As(System.Text.Json.Nodes.JsonNode,System.Type,System.Text.Json.JsonSerializerOptions)">
             <summary>
-                将
-                <see cref="T:System.Text.Json.Nodes.JsonNode"/>
-                转换为目标类型
+                将 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 转换为目标类型
             </summary>
             <param name="jsonNode">
-                <see cref="T:System.Text.Json.Nodes.JsonNode"/>
+                <see cref="T:System.Text.Json.Nodes.JsonNode" />
             </param>
             <param name="resultType">转换的目标类型</param>
             <param name="jsonSerializerOptions">
-                <see cref="T:System.Text.Json.JsonSerializerOptions"/>
+                <see cref="T:System.Text.Json.JsonSerializerOptions" />
             </param>
             <returns>
-                <see cref="T:System.Object"/>
+                <see cref="T:System.Object" />
             </returns>
         </member>
         <member name="M:Shapeless.Core.Extensions.JsonExtensions.GetNumericValue(System.Text.Json.Nodes.JsonNode)">
             <summary>
-                将
-                <see cref="T:System.Text.Json.Nodes.JsonNode"/>
-                转换为数值类型的值
+                将 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 转换为数值类型的值
             </summary>
             <param name="jsonNode">
-                <see cref="T:System.Text.Json.Nodes.JsonNode"/>
+                <see cref="T:System.Text.Json.Nodes.JsonNode" />
             </param>
             <returns>
-                <see cref="T:System.Object"/>
+                <see cref="T:System.Object" />
             </returns>
             <exception cref="T:System.InvalidOperationException"></exception>
         </member>
@@ -856,19 +783,18 @@
                 根据提供的命名策略转换 JSON 节点中的对象键名
             </summary>
             <param name="jsonNode">
-                <see cref="T:System.Text.Json.Nodes.JsonNode"/>
+                <see cref="T:System.Text.Json.Nodes.JsonNode" />
             </param>
             <param name="jsonNamingPolicy">
-                <see cref="T:System.Text.Json.JsonNamingPolicy"/>
+                <see cref="T:System.Text.Json.JsonNamingPolicy" />
             </param>
             <returns>
-                <see cref="T:System.Text.Json.Nodes.JsonNode"/>
+                <see cref="T:System.Text.Json.Nodes.JsonNode" />
             </returns>
         </member>
         <member name="T:Shapeless.Core.Extensions.TypeExtensions">
             <summary>
-                <see cref="T:System.Type"/>
-                拓展类
+                <see cref="T:System.Type" /> 拓展类
             </summary>
         </member>
         <member name="M:Shapeless.Core.Extensions.TypeExtensions.CreatePropertyGetter(System.Type,System.Reflection.PropertyInfo)">
@@ -876,19 +802,18 @@
                 创建实例属性值访问器
             </summary>
             <param name="type">
-                <see cref="T:System.Type"/>
+                <see cref="T:System.Type" />
             </param>
             <param name="propertyInfo">
-                <see cref="T:System.Reflection.PropertyInfo"/>
+                <see cref="T:System.Reflection.PropertyInfo" />
             </param>
             <returns>
-                <see cref="T:System.Func`2"/>
+                <see cref="T:System.Func`2" />
             </returns>
         </member>
         <member name="T:Shapeless.Core.Extensions.Utf8JsonReaderExtensions">
             <summary>
-                <see cref="T:System.Text.Json.Utf8JsonReader"/>
-                拓展类
+                <see cref="T:System.Text.Json.Utf8JsonReader" /> 拓展类
             </summary>
         </member>
         <member name="M:Shapeless.Core.Extensions.Utf8JsonReaderExtensions.GetRawText(System.Text.Json.Utf8JsonReader@)">
@@ -896,10 +821,10 @@
                 获取 JSON 原始输入数据
             </summary>
             <param name="reader">
-                <see cref="T:System.Text.Json.Utf8JsonReader"/>
+                <see cref="T:System.Text.Json.Utf8JsonReader" />
             </param>
             <returns>
-                <see cref="T:System.String"/>
+                <see cref="T:System.String" />
             </returns>
         </member>
         <member name="T:Shapeless.ClayIndexRemovedEventArgs">
@@ -909,7 +834,7 @@
         </member>
         <member name="M:Shapeless.ClayIndexRemovedEventArgs.#ctor(System.Object)">
             <summary>
-                <inheritdoc cref="T:Shapeless.ClayIndexRemovedEventArgs"/>
+                <inheritdoc cref="T:Shapeless.ClayIndexRemovedEventArgs" />
             </summary>
             <param name="keyOrIndex">键或索引</param>
         </member>
@@ -925,7 +850,7 @@
         </member>
         <member name="M:Shapeless.ClayIndexRemovingEventArgs.#ctor(System.Object)">
             <summary>
-                <inheritdoc cref="T:Shapeless.ClayIndexRemovingEventArgs"/>
+                <inheritdoc cref="T:Shapeless.ClayIndexRemovingEventArgs" />
             </summary>
             <param name="keyOrIndex">键或索引</param>
         </member>
@@ -941,7 +866,7 @@
         </member>
         <member name="M:Shapeless.ClayValueChangedEventArgs.#ctor(System.Object)">
             <summary>
-                <inheritdoc cref="T:Shapeless.ClayValueChangedEventArgs"/>
+                <inheritdoc cref="T:Shapeless.ClayValueChangedEventArgs" />
             </summary>
             <param name="keyOrIndex">键或索引</param>
         </member>
@@ -957,7 +882,7 @@
         </member>
         <member name="M:Shapeless.ClayValueChangingEventArgs.#ctor(System.Object)">
             <summary>
-                <inheritdoc cref="T:Shapeless.ClayValueChangingEventArgs"/>
+                <inheritdoc cref="T:Shapeless.ClayValueChangingEventArgs" />
             </summary>
             <param name="keyOrIndex">键或索引</param>
         </member>
@@ -968,25 +893,20 @@
         </member>
         <member name="T:Shapeless.Utf8StringWriter">
             <summary>
-                <c>UTF-8</c>
-                格式的
-                <see cref="T:System.IO.StringWriter"/>
+                <c>UTF-8</c> 格式的 <see cref="T:System.IO.StringWriter" />
             </summary>
         </member>
         <member name="P:Shapeless.Utf8StringWriter.Encoding">
-            <inheritdoc/>
+            <inheritdoc />
         </member>
         <member name="T:Shapeless.ClayOptions">
             <summary>
-                <see cref="T:Shapeless.Clay"/>
-                选项
+                <see cref="T:Shapeless.Clay" /> 选项
             </summary>
         </member>
         <member name="P:Shapeless.ClayOptions.Default">
             <summary>
-                默认
-                <see cref="T:Shapeless.ClayOptions"/>
-                实例
+                默认 <see cref="T:Shapeless.ClayOptions" /> 实例
             </summary>
         </member>
         <member name="P:Shapeless.ClayOptions.ScalarValueKey">
@@ -998,34 +918,21 @@
             <summary>
                 是否允许访问不存在的属性
             </summary>
-            <remarks>当
-                <see cref="P:Shapeless.Clay.IsObject"/>
-                为 <c>true</c> 时有效。默认值为：<c>false</c>，表示遇到缺失属性时将抛出异常。
-            </remarks>
+            <remarks>当 <see cref="P:Shapeless.Clay.IsObject" /> 为 <c>true</c> 时有效。默认值为：<c>false</c>，表示遇到缺失属性时将抛出异常。</remarks>
         </member>
         <member name="P:Shapeless.ClayOptions.AllowIndexOutOfRange">
             <summary>
                 是否允许访问越界的数组索引
             </summary>
-            <remarks>当
-                <see cref="P:Shapeless.Clay.IsArray"/>
-                为 <c>true</c> 时有效。默认值为：<c>false</c>，表示遇到无效索引时将抛出异常。
-            </remarks>
+            <remarks>当 <see cref="P:Shapeless.Clay.IsArray" /> 为 <c>true</c> 时有效。默认值为：<c>false</c>，表示遇到无效索引时将抛出异常。</remarks>
         </member>
         <member name="P:Shapeless.ClayOptions.AutoCreateNestedObjects">
             <summary>
                 是否自动创建嵌套的对象实例
             </summary>
             <remarks>
-                当
-                <see cref="P:Shapeless.Clay.IsObject"/>
-                和
-                <see cref="P:Shapeless.ClayOptions.AllowMissingProperty"/>
-                为 <c>true</c> 时有效。默认值为：
-                <c>false</c>
-                ，当设置为 <c>true</c> 时，如果尝试访问或设置一个不存在的成员并且索引器带 <c>?</c> 后缀的键时，将自动创建一个新的
-                <see cref="T:Shapeless.Clay"/>
-                对象实例。
+                当 <see cref="P:Shapeless.Clay.IsObject" /> 和 <see cref="P:Shapeless.ClayOptions.AllowMissingProperty" /> 为 <c>true</c> 时有效。默认值为：<c>false</c>
+                ，当设置为 <c>true</c> 时，如果尝试访问或设置一个不存在的成员并且索引器带 <c>?</c> 后缀的键时，将自动创建一个新的 <see cref="T:Shapeless.Clay" /> 对象实例。
             </remarks>
         </member>
         <member name="P:Shapeless.ClayOptions.AutoCreateNestedArrays">
@@ -1033,57 +940,37 @@
                 是否自动创建嵌套的数组实例
             </summary>
             <remarks>
-                当
-                <see cref="P:Shapeless.Clay.IsArray"/>
-                和
-                <see cref="P:Shapeless.ClayOptions.AutoCreateNestedArrays"/>
-                为 <c>true</c> 时有效。默认值为：
-                <c>false</c>
-                ，当设置为 <c>true</c> 时，如果尝试访问或设置超出数组长度的索引时，将自动补位新的
-                <see cref="T:Shapeless.Clay"/>
-                数组实例。
+                当 <see cref="P:Shapeless.Clay.IsArray" /> 和 <see cref="P:Shapeless.ClayOptions.AutoCreateNestedArrays" /> 为 <c>true</c> 时有效。默认值为：<c>false</c>
+                ，当设置为 <c>true</c> 时，如果尝试访问或设置超出数组长度的索引时，将自动补位新的 <see cref="T:Shapeless.Clay" /> 数组实例。
             </remarks>
         </member>
         <member name="P:Shapeless.ClayOptions.AutoExpandArrayWithNulls">
             <summary>
-                是否超出数组长度时自动补位
-                <c>null</c>
+                是否超出数组长度时自动补位 <c>null</c>
             </summary>
             <remarks>
-                当
-                <see cref="P:Shapeless.Clay.IsArray"/>
-                和
-                <see cref="P:Shapeless.ClayOptions.AllowIndexOutOfRange"/>
-                为 <c>true</c> 时有效。默认值为：<c>false</c>，当设置为
-                <c>true</c>
-                时，如果尝试访问或设置超出数组长度的索引时，将自动进行补位 <c>null</c> 操作。
+                当 <see cref="P:Shapeless.Clay.IsArray" /> 和 <see cref="P:Shapeless.ClayOptions.AllowIndexOutOfRange" /> 为 <c>true</c> 时有效。默认值为：<c>false</c>，当设置为
+                <c>true</c> 时，如果尝试访问或设置超出数组长度的索引时，将自动进行补位 <c>null</c> 操作。
             </remarks>
         </member>
         <member name="P:Shapeless.ClayOptions.ValidateAfterConversion">
             <summary>
                 是否应在转换后执行数据校验
             </summary>
-            <remarks>当
-                <see cref="P:Shapeless.Clay.IsObject"/>
-                为 <c>true</c> 时有效。默认值为：<c>false</c>，表示不进行转换后的数据校验。
-            </remarks>
+            <remarks>当 <see cref="P:Shapeless.Clay.IsObject" /> 为 <c>true</c> 时有效。默认值为：<c>false</c>，表示不进行转换后的数据校验。</remarks>
         </member>
         <member name="P:Shapeless.ClayOptions.AutoConvertToDateTime">
             <summary>
                 控制是否尝试将字符串转换为时间格式
             </summary>
-            <remarks>默认值为：<c>false</c>。
-            </remarks>
+            <remarks>默认值为：<c>false</c>。</remarks>
         </member>
         <member name="P:Shapeless.ClayOptions.PropertyNameCaseInsensitive">
             <summary>
                 是否属性名称不区分大小写
             </summary>
             <remarks>
-                <para>当
-                    <see cref="P:Shapeless.Clay.IsObject"/>
-                    为 <c>true</c> 时有效。默认值为：<c>false</c>，表示访问属性时使用的名称与属性名完全匹配。
-                </para>
+                <para>当 <see cref="P:Shapeless.Clay.IsObject" /> 为 <c>true</c> 时有效。默认值为：<c>false</c>，表示访问属性时使用的名称与属性名完全匹配。</para>
                 <para>如果在对象初始化之后更改此属性，则会触发深度克隆操作，创建一个新对象以反映更改。</para>
             </remarks>
         </member>
@@ -1103,78 +990,46 @@
             </summary>
         </member>
         <member name="M:Shapeless.PascalCaseNamingPolicy.ConvertName(System.String)">
-            <inheritdoc/>
+            <inheritdoc />
         </member>
         <member name="M:Shapeless.PascalCaseNamingPolicy.WordBoundaryRegex">
             <remarks>
-                Pattern:
-                <br/>
-                <code>(?&lt;=[A-Z])(?=[A-Z][a-z])|(?&lt;=[^A-Z])(?=[A-Z])|(?&lt;=[A-Za-z])(?=[^A-Za-z])|(?&lt;=\\d)(?=\\D)|(?&lt;=\\D)(?=\\d)</code>
-                <br/>
-                Explanation:
-                <br/>
-                <code>
-                    ○ Match with 5 alternative expressions, atomically.
-                    <br/>
-                    ○ Match a sequence of expressions.
-                    <br/>
-                    ○ Zero-width positive lookbehind.
-                    <br/>
-                    ○ Match a character in the set [A-Z] right-to-left.
-                    <br/>
-                    ○ Zero-width positive lookahead.
-                    <br/>
-                    ○ Match a character in the set [A-Z].
-                    <br/>
-                    ○ Match a character in the set [a-z].
-                    <br/>
-                    ○ Match a sequence of expressions.
-                    <br/>
-                    ○ Zero-width positive lookbehind.
-                    <br/>
-                    ○ Match a character in the set [^A-Z] right-to-left.
-                    <br/>
-                    ○ Zero-width positive lookahead.
-                    <br/>
-                    ○ Match a character in the set [A-Z].
-                    <br/>
-                    ○ Match a sequence of expressions.
-                    <br/>
-                    ○ Zero-width positive lookbehind.
-                    <br/>
-                    ○ Match a character in the set [A-Za-z] right-to-left.
-                    <br/>
-                    ○ Zero-width positive lookahead.
-                    <br/>
-                    ○ Match a character in the set [^A-Za-z].
-                    <br/>
-                    ○ Match a sequence of expressions.
-                    <br/>
-                    ○ Zero-width positive lookbehind.
-                    <br/>
-                    ○ Match a Unicode digit right-to-left.
-                    <br/>
-                    ○ Zero-width positive lookahead.
-                    <br/>
-                    ○ Match any character other than a Unicode digit.
-                    <br/>
-                    ○ Match a sequence of expressions.
-                    <br/>
-                    ○ Zero-width positive lookbehind.
-                    <br/>
-                    ○ Match any character other than a Unicode digit right-to-left.
-                    <br/>
-                    ○ Zero-width positive lookahead.
-                    <br/>
-                    ○ Match a Unicode digit.
-                    <br/>
-                </code>
+            Pattern:<br/>
+            <code>(?&lt;=[A-Z])(?=[A-Z][a-z])|(?&lt;=[^A-Z])(?=[A-Z])|(?&lt;=[A-Za-z])(?=[^A-Za-z])|(?&lt;=\\d)(?=\\D)|(?&lt;=\\D)(?=\\d)</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match with 5 alternative expressions, atomically.<br/>
+                ○ Match a sequence of expressions.<br/>
+                    ○ Zero-width positive lookbehind.<br/>
+                        ○ Match a character in the set [A-Z] right-to-left.<br/>
+                    ○ Zero-width positive lookahead.<br/>
+                        ○ Match a character in the set [A-Z].<br/>
+                        ○ Match a character in the set [a-z].<br/>
+                ○ Match a sequence of expressions.<br/>
+                    ○ Zero-width positive lookbehind.<br/>
+                        ○ Match a character in the set [^A-Z] right-to-left.<br/>
+                    ○ Zero-width positive lookahead.<br/>
+                        ○ Match a character in the set [A-Z].<br/>
+                ○ Match a sequence of expressions.<br/>
+                    ○ Zero-width positive lookbehind.<br/>
+                        ○ Match a character in the set [A-Za-z] right-to-left.<br/>
+                    ○ Zero-width positive lookahead.<br/>
+                        ○ Match a character in the set [^A-Za-z].<br/>
+                ○ Match a sequence of expressions.<br/>
+                    ○ Zero-width positive lookbehind.<br/>
+                        ○ Match a Unicode digit right-to-left.<br/>
+                    ○ Zero-width positive lookahead.<br/>
+                        ○ Match any character other than a Unicode digit.<br/>
+                ○ Match a sequence of expressions.<br/>
+                    ○ Zero-width positive lookbehind.<br/>
+                        ○ Match any character other than a Unicode digit right-to-left.<br/>
+                    ○ Zero-width positive lookahead.<br/>
+                        ○ Match a Unicode digit.<br/>
+            </code>
             </remarks>
         </member>
         <member name="T:System.Text.RegularExpressions.Generated.WordBoundaryRegex_0">
-            <summary>Custom<see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the WordBoundaryRegex
-                method.
-            </summary>
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the WordBoundaryRegex method.</summary>
         </member>
         <member name="F:System.Text.RegularExpressions.Generated.WordBoundaryRegex_0.Instance">
             <summary>Cached, thread-safe singleton instance.</summary>
@@ -1183,52 +1038,31 @@
             <summary>Initializes the instance.</summary>
         </member>
         <member name="T:System.Text.RegularExpressions.Generated.WordBoundaryRegex_0.RunnerFactory">
-            <summary>Provides a factory for creating
-                <see cref="T:System.Text.RegularExpressions.RegexRunner"/>
-                instances to be used by methods on<see cref="T:System.Text.RegularExpressions.Regex"/>.
-            </summary>
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
         </member>
         <member name="M:System.Text.RegularExpressions.Generated.WordBoundaryRegex_0.RunnerFactory.CreateInstance">
-            <summary>Creates an instance of a
-                <see cref="T:System.Text.RegularExpressions.RegexRunner"/>
-                used by methods on<see cref="T:System.Text.RegularExpressions.Regex"/>.
-            </summary>
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
         </member>
         <member name="T:System.Text.RegularExpressions.Generated.WordBoundaryRegex_0.RunnerFactory.Runner">
-            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.
-            </summary>
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
         </member>
         <member name="M:System.Text.RegularExpressions.Generated.WordBoundaryRegex_0.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
-            <summary>Scan the
-                <paramref name="inputSpan"/>
-                starting from base.runtextstart for the next match.
-            </summary>
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
             <param name="inputSpan">The text being scanned by the regular expression.</param>
         </member>
         <member name="M:System.Text.RegularExpressions.Generated.WordBoundaryRegex_0.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
-            <summary>Determine whether
-                <paramref name="inputSpan"/>
-                at base.runtextpos is a match for the regular expression.
-            </summary>
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
             <param name="inputSpan">The text being scanned by the regular expression.</param>
             <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
         </member>
         <member name="T:System.Text.RegularExpressions.Generated.Utilities">
-            <summary>Helper methods used by generated<see cref="T:System.Text.RegularExpressions.Regex"/>-derived
-                implementations.
-            </summary>
+            <summary>Helper methods used by generated <see cref="T:System.Text.RegularExpressions.Regex"/>-derived implementations.</summary>
         </member>
         <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout">
-            <summary>Default timeout value set in<see cref="T:System.AppContext"/>, or
-                <see cref="F:System.Text.RegularExpressions.Regex.InfiniteMatchTimeout"/>
-                if none was set.
-            </summary>
+            <summary>Default timeout value set in <see cref="T:System.AppContext"/>, or <see cref="F:System.Text.RegularExpressions.Regex.InfiniteMatchTimeout"/> if none was set.</summary>
         </member>
         <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
-            <summary>Whether
-                <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/>
-                is non-infinite.
-            </summary>
+            <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
         </member>
     </members>
 </doc>

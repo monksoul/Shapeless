@@ -17,6 +17,8 @@ performance characteristics.
   data validation mechanism.
 - **Serialization Support**: Provides fast `JSON` serialization and deserialization capabilities, suitable for data
   exchange and storage needs.
+- **Reactive Listening**: Supports monitoring changes in values and removal of keys within `JSON` objects, automatically
+  triggering event notifications.
 - **Architectural Design**: The design is flexible, making it easy to use and extend.
 - **Cross-platform Without Dependencies**: Supports cross-platform execution without requiring external dependencies.
 - **High-quality Code Assurance**: Adheres to high-standard coding norms, boasting unit test and integration test
