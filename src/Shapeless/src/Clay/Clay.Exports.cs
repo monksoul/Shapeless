@@ -93,9 +93,9 @@ public sealed partial class Clay
     public bool IsEmpty => Count == 0;
 
     /// <summary>
-    ///     获取键数组
+    ///     获取键或索引数组
     /// </summary>
-    public object[] Keys =>
+    public object[] Indexes =>
         (IsObject ? EnumerateObject().Select(object (u) => u.Key) : EnumerateArray().Select(object (u) => u.Key))
         .ToArray();
 
@@ -205,60 +205,6 @@ public sealed partial class Clay
     public static Clay Parse(ref Utf8JsonReader utf8JsonReader, ClayOptions? options = null,
         JsonDocumentOptions jsonDocumentOptions = default) =>
         Parse(utf8JsonReader.GetRawText(), options, jsonDocumentOptions);
-
-    /// <inheritdoc />
-    public override string ToString() => JsonCanvas.ToString();
-
-    /// <summary>
-    ///     将 <see cref="Clay" /> 输出为 JSON 格式字符串
-    /// </summary>
-    /// <remarks>性能通常比 <see cref="ToString" /> 方式略高。</remarks>
-    /// <param name="jsonSerializerOptions">
-    ///     <see cref="JsonSerializerOptions" />
-    /// </param>
-    /// <returns>
-    ///     <see cref="string" />
-    /// </returns>
-    public string ToJsonString(JsonSerializerOptions? jsonSerializerOptions = null)
-    {
-        // 获取提供的 JSON 序列化选项或默认选项
-        var serializerOptions = jsonSerializerOptions ?? Options.JsonSerializerOptions;
-
-        // 如果指定了命名策略，则对 JsonCanvas 进行键名转换；否则直接使用原 JsonCanvas
-        var jsonCanvasToSerialize = serializerOptions.PropertyNamingPolicy is not null
-            ? JsonCanvas.TransformKeysWithNamingPolicy(serializerOptions.PropertyNamingPolicy)
-            : JsonCanvas;
-
-        // 空检查
-        ArgumentNullException.ThrowIfNull(jsonCanvasToSerialize);
-
-        return jsonCanvasToSerialize.ToJsonString(serializerOptions);
-    }
-
-    /// <summary>
-    ///     将 <see cref="Clay" /> 输出为 XML 格式字符串
-    /// </summary>
-    /// <param name="xmlWriterSettings">
-    ///     <see cref="XmlWriterSettings" />
-    /// </param>
-    /// <returns>
-    ///     <see cref="string" />
-    /// </returns>
-    public string ToXmlString(XmlWriterSettings? xmlWriterSettings = null)
-    {
-        // 初始化 Utf8StringWriter 实例
-        using var stringWriter = new Utf8StringWriter();
-
-        // 初始化 XmlWriter 实例
-        // 注意：如果使用 using var xmlWriter = ...; 代码方式，则需要手动调用 xmlWriter.Flush(); 方法来确保所有数据都被写入
-        using (var xmlWriter = XmlWriter.Create(stringWriter, xmlWriterSettings))
-        {
-            // 将 XElement 的内容保存到 XmlWriter 中
-            As<XElement>()?.Save(xmlWriter);
-        }
-
-        return stringWriter.ToString();
-    }
 
     /// <summary>
     ///     检查键或索引是否定义
@@ -598,4 +544,58 @@ public sealed partial class Clay
     ///     <see cref="bool" />
     /// </returns>
     public bool TryRemove(object keyOrIndex) => Contains(keyOrIndex) && RemoveValue(keyOrIndex);
+
+    /// <inheritdoc />
+    public override string ToString() => JsonCanvas.ToString();
+
+    /// <summary>
+    ///     将 <see cref="Clay" /> 输出为 JSON 格式字符串
+    /// </summary>
+    /// <remarks>性能通常比 <see cref="ToString" /> 方式略高。</remarks>
+    /// <param name="jsonSerializerOptions">
+    ///     <see cref="JsonSerializerOptions" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="string" />
+    /// </returns>
+    public string ToJsonString(JsonSerializerOptions? jsonSerializerOptions = null)
+    {
+        // 获取提供的 JSON 序列化选项或默认选项
+        var serializerOptions = jsonSerializerOptions ?? Options.JsonSerializerOptions;
+
+        // 如果指定了命名策略，则对 JsonCanvas 进行键名转换；否则直接使用原 JsonCanvas
+        var jsonCanvasToSerialize = serializerOptions.PropertyNamingPolicy is not null
+            ? JsonCanvas.TransformKeysWithNamingPolicy(serializerOptions.PropertyNamingPolicy)
+            : JsonCanvas;
+
+        // 空检查
+        ArgumentNullException.ThrowIfNull(jsonCanvasToSerialize);
+
+        return jsonCanvasToSerialize.ToJsonString(serializerOptions);
+    }
+
+    /// <summary>
+    ///     将 <see cref="Clay" /> 输出为 XML 格式字符串
+    /// </summary>
+    /// <param name="xmlWriterSettings">
+    ///     <see cref="XmlWriterSettings" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="string" />
+    /// </returns>
+    public string ToXmlString(XmlWriterSettings? xmlWriterSettings = null)
+    {
+        // 初始化 Utf8StringWriter 实例
+        using var stringWriter = new Utf8StringWriter();
+
+        // 初始化 XmlWriter 实例
+        // 注意：如果使用 using var xmlWriter = ...; 代码方式，则需要手动调用 xmlWriter.Flush(); 方法来确保所有数据都被写入
+        using (var xmlWriter = XmlWriter.Create(stringWriter, xmlWriterSettings))
+        {
+            // 将 XElement 的内容保存到 XmlWriter 中
+            As<XElement>()?.Save(xmlWriter);
+        }
+
+        return stringWriter.ToString();
+    }
 }

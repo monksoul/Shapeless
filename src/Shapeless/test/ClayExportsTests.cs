@@ -99,13 +99,13 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Keys_ReturnOK()
+    public void Indexes_ReturnOK()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
-        Assert.Equal(["id", "name"], clay.Keys);
+        Assert.Equal(["id", "name"], clay.Indexes);
 
         var clay2 = Clay.Parse("[1,2,3]");
-        Assert.Equal([0, 1, 2], clay2.Keys);
+        Assert.Equal([0, 1, 2], clay2.Indexes);
     }
 
     [Fact]

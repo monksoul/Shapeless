@@ -265,7 +265,7 @@ public class ClayTests(ITestOutputHelper output)
     public void SetNodeInObject_ReturnOK()
     {
         var clay = new Clay();
-        clay.SetNodeInObject("Name", "Furion");
+        clay.SetNodeInObject("Name", "Furion", out _);
 
         var findNode = clay.FindNode("Name");
         Assert.NotNull(findNode);
@@ -275,15 +275,15 @@ public class ClayTests(ITestOutputHelper output)
         {
             AllowIndexOutOfRange = true, PropertyNameCaseInsensitive = true, AllowMissingProperty = true
         });
-        clay2.SetNodeInObject("Name", "Furion");
-        clay.SetNodeInObject("Child", clay2);
+        clay2.SetNodeInObject("Name", "Furion", out _);
+        clay.SetNodeInObject("Child", clay2, out _);
 
         var findNode2 = clay.FindNode("Child");
         Assert.NotNull(findNode2);
         Assert.NotEqual(findNode2, clay2.JsonCanvas);
 
         var clay3 = new Clay(new ClayOptions { AllowMissingProperty = true, AutoCreateNestedObjects = true });
-        clay3.SetNodeInObject("nested?", 1);
+        clay3.SetNodeInObject("nested?", 1, out _);
         Assert.Equal(1, clay3.FindNode("nested?")!.GetValue<int>());
         Assert.Equal(1, clay3.FindNode("nested")!.GetValue<int>());
     }
@@ -293,26 +293,26 @@ public class ClayTests(ITestOutputHelper output)
     {
         var clay = new Clay(ClayType.Array);
 
-        var exception = Assert.Throws<ArgumentOutOfRangeException>(() => clay.SetNodeInArray(-1, null));
+        var exception = Assert.Throws<ArgumentOutOfRangeException>(() => clay.SetNodeInArray(-1, null, out _));
         Assert.Equal(
             "Negative indices are not allowed. Index must be greater than or equal to 0. (Parameter 'index')",
             exception.Message);
 
-        var exception2 = Assert.Throws<ArgumentOutOfRangeException>(() => clay.SetNodeInArray(1, null));
+        var exception2 = Assert.Throws<ArgumentOutOfRangeException>(() => clay.SetNodeInArray(1, null, out _));
         Assert.Equal("Index `1` is out of range. The array is empty, so no indices are valid. (Parameter 'index')",
             exception2.Message);
 
         clay[0] = "Furion";
-        var exception3 = Assert.Throws<ArgumentOutOfRangeException>(() => clay.SetNodeInArray(2, null));
+        var exception3 = Assert.Throws<ArgumentOutOfRangeException>(() => clay.SetNodeInArray(2, null, out _));
         Assert.Equal("Index `2` is out of range. The array contains a single element at index 0. (Parameter 'index')",
             exception3.Message);
 
         clay[1] = "Furion";
-        var exception4 = Assert.Throws<ArgumentOutOfRangeException>(() => clay.SetNodeInArray(3, null));
+        var exception4 = Assert.Throws<ArgumentOutOfRangeException>(() => clay.SetNodeInArray(3, null, out _));
         Assert.Equal("Index `3` is out of range. The allowed index range for the array is 0 to 1. (Parameter 'index')",
             exception4.Message);
 
-        var exception5 = Assert.Throws<InvalidOperationException>(() => clay.SetNodeInArray("name", null));
+        var exception5 = Assert.Throws<InvalidOperationException>(() => clay.SetNodeInArray("name", null, out _));
         Assert.Equal("The provided index `name` is not a valid array index.", exception5.Message);
     }
 
@@ -320,26 +320,26 @@ public class ClayTests(ITestOutputHelper output)
     public void SetNodeInArray_ReturnOK()
     {
         var clay = new Clay(ClayType.Array);
-        clay.SetNodeInArray(0, 1);
+        clay.SetNodeInArray(0, 1, out _);
         var findNode = clay.FindNode(0);
         Assert.NotNull(findNode);
         Assert.Equal(1, findNode.GetValue<int>());
 
-        clay.SetNodeInArray(1, 2);
+        clay.SetNodeInArray(1, 2, out _);
         var findNode2 = clay.FindNode(1);
         Assert.NotNull(findNode2);
         Assert.Equal(2, findNode2.GetValue<int>());
 
-        clay.SetNodeInArray(0, "Furion");
+        clay.SetNodeInArray(0, "Furion", out _);
         var findNode3 = clay.FindNode(0);
         Assert.NotNull(findNode3);
         Assert.Equal("Furion", findNode3.GetValue<string>());
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => clay.SetNodeInArray(3, null));
+        Assert.Throws<ArgumentOutOfRangeException>(() => clay.SetNodeInArray(3, null, out _));
 
         var array = new Clay(ClayType.Array,
             new ClayOptions { AllowIndexOutOfRange = true, AutoExpandArrayWithNulls = true });
-        array.SetNodeInArray(3, "Furion");
+        array.SetNodeInArray(3, "Furion", out _);
         Assert.Equal("[null,null,null,\"Furion\"]", array.ToJsonString());
         var findNode4 = array.FindNode(3);
         Assert.NotNull(findNode4);
@@ -347,7 +347,7 @@ public class ClayTests(ITestOutputHelper output)
 
         var errorArray = new Clay(ClayType.Array,
             new ClayOptions { AllowIndexOutOfRange = true });
-        errorArray.SetNodeInArray(3, null);
+        errorArray.SetNodeInArray(3, null, out _);
     }
 
     [Fact]
@@ -396,6 +396,28 @@ public class ClayTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void SetValue_WithEvents_ReturnOK()
+    {
+        var clay = new Clay();
+        var keys = new List<object>();
+        clay.ValueChanging += (sender, args) =>
+        {
+            keys.Add(args.KeyOrIndex);
+        };
+        clay.ValueChanged += (sender, args) =>
+        {
+            keys.Add(args.KeyOrIndex + "_Changed");
+        };
+
+        clay.SetValue("Name", "Furion");
+        Assert.Equal(["Name", "Name_Changed"], keys);
+
+        dynamic clay2 = clay;
+        clay2.Age = 30;
+        Assert.Equal(["Name", "Name_Changed", "Age", "Age_Changed"], keys);
+    }
+
+    [Fact]
     public void ProcessNestedNullPropagationIndexKey_ReturnOK()
     {
         Assert.Equal("name?", new Clay().ProcessNestedNullPropagationIndexKey("name?"));
@@ -430,7 +452,7 @@ public class ClayTests(ITestOutputHelper output)
     public void RemoveNodeFromObject_Invalid_Parameters()
     {
         var clay = new Clay();
-        var exception = Assert.Throws<KeyNotFoundException>(() => clay.RemoveNodeFromObject("Name"));
+        var exception = Assert.Throws<KeyNotFoundException>(() => clay.RemoveNodeFromObject("Name", out _));
         Assert.Equal("The property `Name` was not found in the Clay.", exception.Message);
     }
 
@@ -438,17 +460,17 @@ public class ClayTests(ITestOutputHelper output)
     public void RemoveNodeFromObject_ReturnOK()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
-        Assert.True(clay.RemoveNodeFromObject("id"));
-        Assert.True(clay.RemoveNodeFromObject("name"));
-        Assert.Throws<KeyNotFoundException>(() => clay.RemoveNodeFromObject("Name"));
+        Assert.True(clay.RemoveNodeFromObject("id", out _));
+        Assert.True(clay.RemoveNodeFromObject("name", out _));
+        Assert.Throws<KeyNotFoundException>(() => clay.RemoveNodeFromObject("Name", out _));
 
         dynamic clay2 = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
-        Assert.Throws<KeyNotFoundException>(() => clay.RemoveNodeFromObject("Id"));
+        Assert.Throws<KeyNotFoundException>(() => clay.RemoveNodeFromObject("Id", out _));
         clay2(new ClayOptions { PropertyNameCaseInsensitive = true });
-        Assert.True(clay2.RemoveNodeFromObject("Id"));
+        Assert.True(((Clay)clay2).RemoveNodeFromObject("Id", out _));
 
         var clay3 = Clay.Parse("{\"id\":1,\"name\":\"furion\"}", new ClayOptions { AllowMissingProperty = true });
-        Assert.False(clay3.RemoveNodeFromObject("Name"));
+        Assert.False(clay3.RemoveNodeFromObject("Name", out _));
     }
 
     [Fact]
@@ -456,26 +478,27 @@ public class ClayTests(ITestOutputHelper output)
     {
         dynamic clay = new Clay(ClayType.Array);
 
-        var exception = Assert.Throws<ArgumentOutOfRangeException>(() => clay.RemoveNodeFromArray(-1));
+        var exception = Assert.Throws<ArgumentOutOfRangeException>(() => ((Clay)clay).RemoveNodeFromArray(-1, out _));
         Assert.Equal(
             "Negative indices are not allowed. Index must be greater than or equal to 0. (Parameter 'index')",
             exception.Message);
 
-        var exception2 = Assert.Throws<ArgumentOutOfRangeException>(() => clay.RemoveNodeFromArray(0));
+        var exception2 = Assert.Throws<ArgumentOutOfRangeException>(() => ((Clay)clay).RemoveNodeFromArray(0, out _));
         Assert.Equal("Index `0` is out of range. The array is empty, so no indices are valid. (Parameter 'index')",
             exception2.Message);
 
         clay[0] = "Furion";
-        var exception3 = Assert.Throws<ArgumentOutOfRangeException>(() => clay.RemoveNodeFromArray(1));
+        var exception3 = Assert.Throws<ArgumentOutOfRangeException>(() => ((Clay)clay).RemoveNodeFromArray(1, out _));
         Assert.Equal("Index `1` is out of range. The array contains a single element at index 0. (Parameter 'index')",
             exception3.Message);
 
         clay[1] = "Furion";
-        var exception4 = Assert.Throws<ArgumentOutOfRangeException>(() => clay.RemoveNodeFromArray(2));
+        var exception4 = Assert.Throws<ArgumentOutOfRangeException>(() => ((Clay)clay).RemoveNodeFromArray(2, out _));
         Assert.Equal("Index `2` is out of range. The allowed index range for the array is 0 to 1. (Parameter 'index')",
             exception4.Message);
 
-        var exception5 = Assert.Throws<InvalidOperationException>(() => clay.RemoveNodeFromArray("name"));
+        var exception5 =
+            Assert.Throws<InvalidOperationException>(() => ((Clay)clay).RemoveNodeFromArray("name", out _));
         Assert.Equal("The provided index `name` is not a valid array index.", exception5.Message);
     }
 
@@ -483,15 +506,15 @@ public class ClayTests(ITestOutputHelper output)
     public void RemoveNodeFromArray_ReturnOK()
     {
         var clay = Clay.Parse("[1,2,3]");
-        Assert.True(clay.RemoveNodeFromArray(0));
+        Assert.True(clay.RemoveNodeFromArray(0, out _));
         Assert.Equal("[2,3]", clay.ToJsonString());
-        Assert.True(clay.RemoveNodeFromArray(1));
+        Assert.True(clay.RemoveNodeFromArray(1, out _));
         Assert.Equal("[2]", clay.ToJsonString());
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => clay.RemoveNodeFromArray(1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => clay.RemoveNodeFromArray(1, out _));
 
         var clay2 = Clay.Parse("[1,2,3]", new ClayOptions { AllowIndexOutOfRange = true });
-        Assert.False(clay2.RemoveNodeFromArray(3));
+        Assert.False(clay2.RemoveNodeFromArray(3, out _));
         Assert.Equal("[1,2,3]", clay2.ToJsonString());
     }
 
@@ -506,6 +529,26 @@ public class ClayTests(ITestOutputHelper output)
         dynamic array = clay["arr"]!;
         Assert.True(array.RemoveValue(0));
         Assert.Equal("{\"arr\":[2,3]}", clay.ToJsonString());
+    }
+
+    [Fact]
+    public void RemoveValue_WithEvents_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\",\"arr\":[1,2,3]}");
+        var keys = new List<object>();
+        clay.IndexRemoving += (sender, args) =>
+        {
+            keys.Add(args.KeyOrIndex);
+        };
+        clay.IndexRemoved += (sender, args) =>
+        {
+            keys.Add(args.KeyOrIndex + "_Removed");
+        };
+
+        clay.RemoveValue("id");
+        Assert.Equal(["id", "id_Removed"], keys);
+        clay.RemoveValue("arr");
+        Assert.Equal(["id", "id_Removed", "arr", "arr_Removed"], keys);
     }
 
     [Fact]
