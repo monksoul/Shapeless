@@ -570,22 +570,22 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void ContainsKey_ReturnOK()
+    public void Contains_ReturnOK()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
-        Assert.False(clay.ContainsKey("Id"));
-        Assert.True(clay.ContainsKey("id"));
-        Assert.True(clay.ContainsKey("name"));
-        Assert.False(clay.ContainsKey(0));
+        Assert.False(clay.Contains("Id"));
+        Assert.True(clay.Contains("id"));
+        Assert.True(clay.Contains("name"));
+        Assert.False(clay.Contains(0));
 
         var clay2 = Clay.Parse("[1,2,3]");
-        Assert.False(clay2.ContainsKey("Id"));
-        Assert.False(clay2.ContainsKey("name"));
-        Assert.True(clay2.ContainsKey(0));
-        Assert.True(clay2.ContainsKey(1));
-        Assert.True(clay2.ContainsKey(2));
-        Assert.False(clay2.ContainsKey(-1));
-        Assert.False(clay2.ContainsKey(3));
+        Assert.False(clay2.Contains("Id"));
+        Assert.False(clay2.Contains("name"));
+        Assert.True(clay2.Contains(0));
+        Assert.True(clay2.Contains(1));
+        Assert.True(clay2.Contains(2));
+        Assert.False(clay2.Contains(-1));
+        Assert.False(clay2.Contains(3));
     }
 
     [Fact]

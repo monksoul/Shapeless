@@ -73,62 +73,62 @@ public sealed partial class Clay : DynamicObject, IEnumerable<KeyValuePair<objec
     /// <summary>
     ///     根据键或索引获取值
     /// </summary>
-    /// <param name="index">键或索引</param>
+    /// <param name="keyOrIndex">键或索引</param>
     /// <returns>
     ///     <see cref="object" />
     /// </returns>
-    internal object? GetValue(object index)
+    internal object? GetValue(object keyOrIndex)
     {
         // 空检查
-        ArgumentNullException.ThrowIfNull(index);
+        ArgumentNullException.ThrowIfNull(keyOrIndex);
 
-        return DeserializeNode(FindNode(index), Options);
+        return DeserializeNode(FindNode(keyOrIndex), Options);
     }
 
     /// <summary>
     ///     根据键或索引设置值
     /// </summary>
-    /// <param name="index">键或索引</param>
+    /// <param name="keyOrIndex">键或索引</param>
     /// <param name="value">值</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    internal bool SetValue(object index, object? value)
+    internal bool SetValue(object keyOrIndex, object? value)
     {
         // 空检查
-        ArgumentNullException.ThrowIfNull(index);
+        ArgumentNullException.ThrowIfNull(keyOrIndex);
 
-        return IsObject ? SetNodeInObject(index, value) : SetNodeInArray(index, value);
+        return IsObject ? SetNodeInObject(keyOrIndex, value) : SetNodeInArray(keyOrIndex, value);
     }
 
     /// <summary>
     ///     根据键或索引删除值
     /// </summary>
-    /// <param name="index">键或索引</param>
+    /// <param name="keyOrIndex">键或索引</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    internal bool RemoveValue(object index)
+    internal bool RemoveValue(object keyOrIndex)
     {
         // 空检查
-        ArgumentNullException.ThrowIfNull(index);
+        ArgumentNullException.ThrowIfNull(keyOrIndex);
 
-        return IsObject ? RemoveNodeFromObject(index) : RemoveNodeFromArray(index);
+        return IsObject ? RemoveNodeFromObject(keyOrIndex) : RemoveNodeFromArray(keyOrIndex);
     }
 
     /// <summary>
     ///     根据键或索引查找 <see cref="JsonNode" /> 节点
     /// </summary>
-    /// <param name="index">键或索引</param>
+    /// <param name="keyOrIndex">键或索引</param>
     /// <returns>
     ///     <see cref="JsonNode" />
     /// </returns>
-    internal JsonNode? FindNode(object index)
+    internal JsonNode? FindNode(object keyOrIndex)
     {
         // 空检查
-        ArgumentNullException.ThrowIfNull(index);
+        ArgumentNullException.ThrowIfNull(keyOrIndex);
 
-        return IsObject ? GetNodeFromObject(index) : GetNodeFromArray(index);
+        return IsObject ? GetNodeFromObject(keyOrIndex) : GetNodeFromArray(keyOrIndex);
     }
 
     /// <summary>
@@ -448,6 +448,9 @@ public sealed partial class Clay : DynamicObject, IEnumerable<KeyValuePair<objec
     /// </returns>
     internal IEnumerable<KeyValuePair<string, dynamic?>> EnumerateObject()
     {
+        // 检查是否是集合（数组）实例调用
+        ThrowIfMethodCalledOnArrayCollection(nameof(EnumerateObject));
+
         // 获取循环访问 JsonObject 的枚举数
         using var enumerator = JsonCanvas.AsObject().GetEnumerator();
 
@@ -469,6 +472,9 @@ public sealed partial class Clay : DynamicObject, IEnumerable<KeyValuePair<objec
     /// </returns>
     internal IEnumerable<KeyValuePair<int, dynamic?>> EnumerateArray()
     {
+        // 检查是否是单一对象实例调用
+        ThrowIfMethodCalledOnSingleObject(nameof(EnumerateArray));
+
         // 获取循环访问 JsonArray 的枚举数
         using var enumerator = JsonCanvas.AsArray().GetEnumerator();
 
@@ -543,6 +549,21 @@ public sealed partial class Clay : DynamicObject, IEnumerable<KeyValuePair<objec
         {
             throw new NotSupportedException(
                 $"`{method}` method can only be used for array or collection operations.");
+        }
+    }
+
+    /// <summary>
+    ///     如果当前实例是集合（数组）且尝试调用不支持的操作，则抛出异常
+    /// </summary>
+    /// <param name="method">方法名</param>
+    /// <exception cref="NotSupportedException"></exception>
+    internal void ThrowIfMethodCalledOnArrayCollection(string method)
+    {
+        // 检查是否是集合（数组）
+        if (IsArray)
+        {
+            throw new NotSupportedException(
+                $"`{method}` method can only be used for single object operations.");
         }
     }
 }

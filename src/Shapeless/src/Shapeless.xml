@@ -197,7 +197,7 @@
             <summary>
                 根据键或索引获取值
             </summary>
-            <param name="index">键或索引</param>
+            <param name="keyOrIndex">键或索引</param>
             <returns>
                 <see cref="T:System.Object" />
             </returns>
@@ -206,7 +206,7 @@
             <summary>
                 根据键或索引设置值
             </summary>
-            <param name="index">键或索引</param>
+            <param name="keyOrIndex">键或索引</param>
             <param name="value">值</param>
             <returns>
                 <see cref="T:System.Boolean" />
@@ -216,7 +216,7 @@
             <summary>
                 根据键或索引删除值
             </summary>
-            <param name="index">键或索引</param>
+            <param name="keyOrIndex">键或索引</param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
@@ -225,7 +225,7 @@
             <summary>
                 根据键或索引查找 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 节点
             </summary>
-            <param name="index">键或索引</param>
+            <param name="keyOrIndex">键或索引</param>
             <returns>
                 <see cref="T:System.Text.Json.Nodes.JsonNode" />
             </returns>
@@ -372,6 +372,13 @@
         <member name="M:Shapeless.Clay.ThrowIfMethodCalledOnSingleObject(System.String)">
             <summary>
                 如果当前实例是单一对象且尝试调用不支持的操作，则抛出异常
+            </summary>
+            <param name="method">方法名</param>
+            <exception cref="T:System.NotSupportedException"></exception>
+        </member>
+        <member name="M:Shapeless.Clay.ThrowIfMethodCalledOnArrayCollection(System.String)">
+            <summary>
+                如果当前实例是集合（数组）且尝试调用不支持的操作，则抛出异常
             </summary>
             <param name="method">方法名</param>
             <exception cref="T:System.NotSupportedException"></exception>
@@ -536,11 +543,11 @@
                 <see cref="T:System.String" />
             </returns>
         </member>
-        <member name="M:Shapeless.Clay.ContainsKey(System.Object)">
+        <member name="M:Shapeless.Clay.Contains(System.Object)">
             <summary>
                 检查键或索引是否定义
             </summary>
-            <param name="index">键或索引</param>
+            <param name="keyOrIndex">键或索引</param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
@@ -549,7 +556,7 @@
             <summary>
                 根据键或索引获取值
             </summary>
-            <param name="index">键或索引</param>
+            <param name="keyOrIndex">键或索引</param>
             <returns>
                 <see cref="T:System.Object" />
             </returns>
@@ -558,7 +565,7 @@
             <summary>
                 根据键或索引获取目标类型的值
             </summary>
-            <param name="index">键或索引</param>
+            <param name="keyOrIndex">键或索引</param>
             <param name="resultType">转换的目标类型</param>
             <param name="jsonSerializerOptions">
                 <see cref="T:System.Text.Json.JsonSerializerOptions" />
@@ -571,7 +578,7 @@
             <summary>
                 根据键或索引获取目标类型的值
             </summary>
-            <param name="index">键或索引</param>
+            <param name="keyOrIndex">键或索引</param>
             <param name="jsonSerializerOptions">
                 <see cref="T:System.Text.Json.JsonSerializerOptions" />
             </param>
@@ -584,7 +591,7 @@
             <summary>
                 获取 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 实例
             </summary>
-            <param name="index">键或索引</param>
+            <param name="keyOrIndex">键或索引</param>
             <returns>
                 <see cref="T:System.Text.Json.Nodes.JsonNode" />
             </returns>
@@ -593,7 +600,7 @@
             <summary>
                 根据键或索引设置值
             </summary>
-            <param name="index">键或索引</param>
+            <param name="keyOrIndex">键或索引</param>
             <param name="value">值</param>
         </member>
         <member name="M:Shapeless.Clay.Insert(System.Int32,System.Object)">
@@ -609,7 +616,7 @@
             <summary>
                 根据键或索引删除数据
             </summary>
-            <param name="index">键或索引</param>
+            <param name="keyOrIndex">键或索引</param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
@@ -669,7 +676,7 @@
             <summary>
                 尝试根据键或索引获取值
             </summary>
-            <param name="index">键或索引</param>
+            <param name="keyOrIndex">键或索引</param>
             <param name="value">值</param>
             <returns>
                 <see cref="T:System.Boolean" />
@@ -679,7 +686,7 @@
             <summary>
                 尝试根据键或索引获取目标类型的值
             </summary>
-            <param name="index">键或索引</param>
+            <param name="keyOrIndex">键或索引</param>
             <param name="resultType">转换的目标类型</param>
             <param name="value">值</param>
             <param name="jsonSerializerOptions">
@@ -693,7 +700,7 @@
             <summary>
                 尝试根据键或索引获取目标类型的值
             </summary>
-            <param name="index">键或索引</param>
+            <param name="keyOrIndex">键或索引</param>
             <param name="value">值</param>
             <param name="jsonSerializerOptions">
                 <see cref="T:System.Text.Json.JsonSerializerOptions" />
@@ -707,7 +714,7 @@
             <summary>
                 尝试根据键或索引设置值
             </summary>
-            <param name="index">键或索引</param>
+            <param name="keyOrIndex">键或索引</param>
             <param name="value">值</param>
             <returns>
                 <see cref="T:System.Boolean" />
@@ -731,7 +738,7 @@
             <summary>
                 尝试根据键或索引删除数据
             </summary>
-            <param name="index">键或索引</param>
+            <param name="keyOrIndex">键或索引</param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>

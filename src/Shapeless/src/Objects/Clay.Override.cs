@@ -102,7 +102,7 @@ public sealed partial class Clay
                 {
                     // 处理 clay.Prop() 情况
                     case { Length: 0 }:
-                        result = ContainsKey(name);
+                        result = Contains(name);
                         return true;
                     // 处理 clay.Prop(Type) 情况
                     case [Type resultType]:

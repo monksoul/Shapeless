@@ -509,13 +509,29 @@ public class ClayTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void EnumerateObject_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("[1,2,3]");
+        var exception = Assert.Throws<NotSupportedException>(() => clay.EnumerateObject().ToList());
+        Assert.Equal("`EnumerateObject` method can only be used for single object operations.", exception.Message);
+    }
+
+    [Fact]
     public void EnumerateObject_ReturnOK()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
         foreach (var item in clay.EnumerateObject())
         {
-            output.WriteLine(item.Key.ToString());
+            output.WriteLine(item.Key);
         }
+    }
+
+    [Fact]
+    public void EnumerateArray_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        var exception = Assert.Throws<NotSupportedException>(() => clay.EnumerateArray().ToList());
+        Assert.Equal("`EnumerateArray` method can only be used for array or collection operations.", exception.Message);
     }
 
     [Fact]
@@ -537,6 +553,17 @@ public class ClayTests(ITestOutputHelper output)
 
         var clay2 = Clay.Parse("[1,2,3]");
         clay2.ThrowIfMethodCalledOnSingleObject("Method");
+    }
+
+    [Fact]
+    public void ThrowIfMethodCalledOnArrayCollection_ReturnOK()
+    {
+        var clay = Clay.Parse("[1,2,3]");
+        var exception = Assert.Throws<NotSupportedException>(() => clay.ThrowIfMethodCalledOnArrayCollection("Method"));
+        Assert.Equal("`Method` method can only be used for single object operations.", exception.Message);
+
+        var clay2 = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        clay2.ThrowIfMethodCalledOnArrayCollection("Method");
     }
 }
 

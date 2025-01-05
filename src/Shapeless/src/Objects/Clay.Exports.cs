@@ -263,17 +263,17 @@ public sealed partial class Clay
     /// <summary>
     ///     检查键或索引是否定义
     /// </summary>
-    /// <param name="index">键或索引</param>
+    /// <param name="keyOrIndex">键或索引</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    public bool ContainsKey(object index)
+    public bool Contains(object keyOrIndex)
     {
         // 空检查
-        ArgumentNullException.ThrowIfNull(index);
+        ArgumentNullException.ThrowIfNull(keyOrIndex);
 
         // 将索引转换为字符串类型
-        var stringIndex = index.ToString()!;
+        var stringIndex = keyOrIndex.ToString()!;
 
         // 检查是否是单一对象
         if (IsObject)
@@ -293,16 +293,16 @@ public sealed partial class Clay
     /// <summary>
     ///     根据键或索引获取值
     /// </summary>
-    /// <param name="index">键或索引</param>
+    /// <param name="keyOrIndex">键或索引</param>
     /// <returns>
     ///     <see cref="object" />
     /// </returns>
-    public object? Get(object index) => GetValue(index);
+    public object? Get(object keyOrIndex) => GetValue(keyOrIndex);
 
     /// <summary>
     ///     根据键或索引获取目标类型的值
     /// </summary>
-    /// <param name="index">键或索引</param>
+    /// <param name="keyOrIndex">键或索引</param>
     /// <param name="resultType">转换的目标类型</param>
     /// <param name="jsonSerializerOptions">
     ///     <see cref="JsonSerializerOptions" />
@@ -310,10 +310,10 @@ public sealed partial class Clay
     /// <returns>
     ///     <see cref="object" />
     /// </returns>
-    public object? Get(object index, Type resultType, JsonSerializerOptions? jsonSerializerOptions = null)
+    public object? Get(object keyOrIndex, Type resultType, JsonSerializerOptions? jsonSerializerOptions = null)
     {
         // 根据键或索引查找 JsonNode 节点
-        var jsonNode = FindNode(index);
+        var jsonNode = FindNode(keyOrIndex);
 
         return resultType == typeof(Clay)
             ? new Clay(jsonNode, Options)
@@ -323,7 +323,7 @@ public sealed partial class Clay
     /// <summary>
     ///     根据键或索引获取目标类型的值
     /// </summary>
-    /// <param name="index">键或索引</param>
+    /// <param name="keyOrIndex">键或索引</param>
     /// <param name="jsonSerializerOptions">
     ///     <see cref="JsonSerializerOptions" />
     /// </param>
@@ -331,24 +331,24 @@ public sealed partial class Clay
     /// <returns>
     ///     <typeparamref name="TResult" />
     /// </returns>
-    public TResult? Get<TResult>(object index, JsonSerializerOptions? jsonSerializerOptions = null) =>
-        (TResult?)Get(index, typeof(TResult), jsonSerializerOptions);
+    public TResult? Get<TResult>(object keyOrIndex, JsonSerializerOptions? jsonSerializerOptions = null) =>
+        (TResult?)Get(keyOrIndex, typeof(TResult), jsonSerializerOptions);
 
     /// <summary>
     ///     获取 <see cref="JsonNode" /> 实例
     /// </summary>
-    /// <param name="index">键或索引</param>
+    /// <param name="keyOrIndex">键或索引</param>
     /// <returns>
     ///     <see cref="JsonNode" />
     /// </returns>
-    public JsonNode? GetNode(object index) => FindNode(index);
+    public JsonNode? GetNode(object keyOrIndex) => FindNode(keyOrIndex);
 
     /// <summary>
     ///     根据键或索引设置值
     /// </summary>
-    /// <param name="index">键或索引</param>
+    /// <param name="keyOrIndex">键或索引</param>
     /// <param name="value">值</param>
-    public void Set(object index, object? value) => SetValue(index, value);
+    public void Set(object keyOrIndex, object? value) => SetValue(keyOrIndex, value);
 
     /// <summary>
     ///     在指定索引处插入值
@@ -385,11 +385,11 @@ public sealed partial class Clay
     /// <summary>
     ///     根据键或索引删除数据
     /// </summary>
-    /// <param name="index">键或索引</param>
+    /// <param name="keyOrIndex">键或索引</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    public bool Remove(object index) => RemoveValue(index);
+    public bool Remove(object keyOrIndex) => RemoveValue(keyOrIndex);
 
     /// <summary>
     ///     将 <see cref="Clay" /> 转换为目标类型
@@ -461,17 +461,17 @@ public sealed partial class Clay
     /// <summary>
     ///     尝试根据键或索引获取值
     /// </summary>
-    /// <param name="index">键或索引</param>
+    /// <param name="keyOrIndex">键或索引</param>
     /// <param name="value">值</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    public bool TryGet(object index, out object? value)
+    public bool TryGet(object keyOrIndex, out object? value)
     {
         // 检查键或索引是否定义
-        if (ContainsKey(index))
+        if (Contains(keyOrIndex))
         {
-            value = Get(index);
+            value = Get(keyOrIndex);
             return true;
         }
 
@@ -482,7 +482,7 @@ public sealed partial class Clay
     /// <summary>
     ///     尝试根据键或索引获取目标类型的值
     /// </summary>
-    /// <param name="index">键或索引</param>
+    /// <param name="keyOrIndex">键或索引</param>
     /// <param name="resultType">转换的目标类型</param>
     /// <param name="value">值</param>
     /// <param name="jsonSerializerOptions">
@@ -491,13 +491,13 @@ public sealed partial class Clay
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    public bool TryGet(object index, Type resultType, out object? value,
+    public bool TryGet(object keyOrIndex, Type resultType, out object? value,
         JsonSerializerOptions? jsonSerializerOptions = null)
     {
         // 检查键或索引是否定义
-        if (ContainsKey(index))
+        if (Contains(keyOrIndex))
         {
-            value = Get(index, resultType, jsonSerializerOptions);
+            value = Get(keyOrIndex, resultType, jsonSerializerOptions);
             return true;
         }
 
@@ -508,7 +508,7 @@ public sealed partial class Clay
     /// <summary>
     ///     尝试根据键或索引获取目标类型的值
     /// </summary>
-    /// <param name="index">键或索引</param>
+    /// <param name="keyOrIndex">键或索引</param>
     /// <param name="value">值</param>
     /// <param name="jsonSerializerOptions">
     ///     <see cref="JsonSerializerOptions" />
@@ -517,12 +517,13 @@ public sealed partial class Clay
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    public bool TryGet<TResult>(object index, out TResult? value, JsonSerializerOptions? jsonSerializerOptions = null)
+    public bool TryGet<TResult>(object keyOrIndex, out TResult? value,
+        JsonSerializerOptions? jsonSerializerOptions = null)
     {
         // 检查键或索引是否定义
-        if (ContainsKey(index))
+        if (Contains(keyOrIndex))
         {
-            value = Get<TResult>(index, jsonSerializerOptions);
+            value = Get<TResult>(keyOrIndex, jsonSerializerOptions);
             return true;
         }
 
@@ -533,17 +534,17 @@ public sealed partial class Clay
     /// <summary>
     ///     尝试根据键或索引设置值
     /// </summary>
-    /// <param name="index">键或索引</param>
+    /// <param name="keyOrIndex">键或索引</param>
     /// <param name="value">值</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
     /// <exception cref="JsonException"></exception>
-    public bool TrySet(object index, object? value)
+    public bool TrySet(object keyOrIndex, object? value)
     {
         try
         {
-            Set(index, value);
+            Set(keyOrIndex, value);
             return true;
         }
         catch (JsonException)
@@ -592,9 +593,9 @@ public sealed partial class Clay
     /// <summary>
     ///     尝试根据键或索引删除数据
     /// </summary>
-    /// <param name="index">键或索引</param>
+    /// <param name="keyOrIndex">键或索引</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    public bool TryRemove(object index) => ContainsKey(index) && RemoveValue(index);
+    public bool TryRemove(object keyOrIndex) => Contains(keyOrIndex) && RemoveValue(keyOrIndex);
 }
