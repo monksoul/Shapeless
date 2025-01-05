@@ -446,7 +446,7 @@ public sealed partial class Clay : DynamicObject, IEnumerable<KeyValuePair<objec
     /// <returns>
     ///     <see cref="IEnumerable{T}" />
     /// </returns>
-    internal IEnumerable<KeyValuePair<object, dynamic?>> EnumerateObject()
+    internal IEnumerable<KeyValuePair<string, dynamic?>> EnumerateObject()
     {
         // 获取循环访问 JsonObject 的枚举数
         using var enumerator = JsonCanvas.AsObject().GetEnumerator();
@@ -457,7 +457,7 @@ public sealed partial class Clay : DynamicObject, IEnumerable<KeyValuePair<objec
             // 获取当前的键值对
             var current = enumerator.Current;
 
-            yield return new KeyValuePair<object, dynamic?>(current.Key, DeserializeNode(current.Value, Options));
+            yield return new KeyValuePair<string, dynamic?>(current.Key, DeserializeNode(current.Value, Options));
         }
     }
 
@@ -467,7 +467,7 @@ public sealed partial class Clay : DynamicObject, IEnumerable<KeyValuePair<objec
     /// <returns>
     ///     <see cref="IEnumerable{T}" />
     /// </returns>
-    internal IEnumerable<KeyValuePair<object, object?>> EnumerateArray()
+    internal IEnumerable<KeyValuePair<int, dynamic?>> EnumerateArray()
     {
         // 获取循环访问 JsonArray 的枚举数
         using var enumerator = JsonCanvas.AsArray().GetEnumerator();
@@ -481,7 +481,7 @@ public sealed partial class Clay : DynamicObject, IEnumerable<KeyValuePair<objec
             // 获取当前的元素
             var current = enumerator.Current;
 
-            yield return new KeyValuePair<object, object?>(index++, DeserializeNode(current, Options));
+            yield return new KeyValuePair<int, dynamic?>(index++, DeserializeNode(current, Options));
         }
     }
 
