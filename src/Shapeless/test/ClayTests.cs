@@ -108,7 +108,7 @@ public class ClayTests(ITestOutputHelper output)
             exception4.Message);
 
         var exception5 = Assert.Throws<InvalidOperationException>(() => clay.GetNodeFromArray("name"));
-        Assert.Equal("The provided index `name` is not a valid array index.", exception5.Message);
+        Assert.Equal($"The property `name` was not found in the Clay or is not a valid array index.", exception5.Message);
     }
 
     [Fact]
@@ -313,7 +313,7 @@ public class ClayTests(ITestOutputHelper output)
             exception4.Message);
 
         var exception5 = Assert.Throws<InvalidOperationException>(() => clay.SetNodeInArray("name", null, out _));
-        Assert.Equal("The provided index `name` is not a valid array index.", exception5.Message);
+        Assert.Equal($"The property `name` was not found in the Clay or is not a valid array index.", exception5.Message);
     }
 
     [Fact]
@@ -430,7 +430,7 @@ public class ClayTests(ITestOutputHelper output)
     {
         var exception =
             Assert.Throws<InvalidOperationException>(() => Clay.EnsureLegalArrayIndex("name", out _));
-        Assert.Equal("The provided index `name` is not a valid array index.", exception.Message);
+        Assert.Equal($"The property `name` was not found in the Clay or is not a valid array index.", exception.Message);
 
         var exception2 =
             Assert.Throws<ArgumentOutOfRangeException>(() => Clay.EnsureLegalArrayIndex(-1, out _));
@@ -499,7 +499,7 @@ public class ClayTests(ITestOutputHelper output)
 
         var exception5 =
             Assert.Throws<InvalidOperationException>(() => ((Clay)clay).RemoveNodeFromArray("name", out _));
-        Assert.Equal("The provided index `name` is not a valid array index.", exception5.Message);
+        Assert.Equal($"The property `name` was not found in the Clay or is not a valid array index.", exception5.Message);
     }
 
     [Fact]
@@ -607,6 +607,22 @@ public class ClayTests(ITestOutputHelper output)
 
         var clay2 = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
         clay2.ThrowIfMethodCalledOnArrayCollection("Method");
+    }
+
+    [Fact]
+    public void CreateJsonNodeOptions_Invalid_Parameters() =>
+        Assert.Throws<ArgumentNullException>(() => Clay.CreateJsonNodeOptions(null!));
+
+    [Fact]
+    public void CreateJsonNodeOptions_ReturnOK()
+    {
+        var clayOptions = ClayOptions.Default;
+        var (jsonNodeOptions, jsonDocumentOptions) = Clay.CreateJsonNodeOptions(clayOptions);
+
+        Assert.False(jsonNodeOptions.PropertyNameCaseInsensitive);
+        Assert.True(jsonDocumentOptions.AllowTrailingCommas);
+        Assert.Equal(JsonCommentHandling.Disallow, jsonDocumentOptions.CommentHandling);
+        Assert.Equal(0, jsonDocumentOptions.MaxDepth);
     }
 }
 

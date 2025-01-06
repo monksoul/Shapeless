@@ -27,11 +27,14 @@ public sealed partial class Clay : DynamicObject, IEnumerable<KeyValuePair<objec
         // 初始化 ClayOptions
         Options = options ?? ClayOptions.Default;
 
+        // 创建 JsonNode 选项
+        var (jsonNodeOptions, jsonDocumentOptions) = CreateJsonNodeOptions(Options);
+
         // 处理非对象和非数组类型的 JSON 节点
         var jsonCanvas = jsonNode.GetValueKind() is JsonValueKind.Object or JsonValueKind.Array
             ? jsonNode
-            : JsonNode.Parse($"{{\"{Options.ScalarValueKey}\":{jsonNode.ToJsonString()}}}",
-                new JsonNodeOptions { PropertyNameCaseInsensitive = Options.PropertyNameCaseInsensitive })!;
+            : JsonNode.Parse($"{{\"{Options.ScalarValueKey}\":{jsonNode.ToJsonString()}}}", jsonNodeOptions,
+                jsonDocumentOptions)!;
 
         JsonCanvas = jsonCanvas;
 
@@ -49,6 +52,9 @@ public sealed partial class Clay : DynamicObject, IEnumerable<KeyValuePair<objec
     /// </summary>
     /// <remarks>用于作为 <see cref="Clay" /> 的核心数据容器。</remarks>
     internal JsonNode JsonCanvas { get; private set; }
+
+    /// <inheritdoc />
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     /// <summary>
     ///     根据键或索引获取值
@@ -440,8 +446,10 @@ public sealed partial class Clay : DynamicObject, IEnumerable<KeyValuePair<objec
         // 如果新旧选项对于属性名称大小写不敏感的设置相同，则无需重建 JsonCanvas；否则重建。
         if (clayOptions.PropertyNameCaseInsensitive != Options.PropertyNameCaseInsensitive)
         {
-            JsonCanvas = JsonNode.Parse(JsonCanvas.ToJsonString(),
-                new JsonNodeOptions { PropertyNameCaseInsensitive = clayOptions.PropertyNameCaseInsensitive })!;
+            // 创建 JsonNode 选项
+            var (jsonNodeOptions, jsonDocumentOptions) = CreateJsonNodeOptions(clayOptions);
+
+            JsonCanvas = JsonNode.Parse(JsonCanvas.ToJsonString(), jsonNodeOptions, jsonDocumentOptions)!;
         }
 
         Options = clayOptions;
@@ -511,6 +519,35 @@ public sealed partial class Clay : DynamicObject, IEnumerable<KeyValuePair<objec
     }
 
     /// <summary>
+    ///     创建 <see cref="JsonNode" /> 选项
+    /// </summary>
+    /// <param name="options">
+    ///     <see cref="ClayOptions" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="Tuple{T1,T2}" />
+    /// </returns>
+    internal static Tuple<JsonNodeOptions, JsonDocumentOptions> CreateJsonNodeOptions(ClayOptions options)
+    {
+        // 空检查
+        ArgumentNullException.ThrowIfNull(options);
+
+        // 初始化 JsonNodeOptions 实例
+        var jsonNodeOptions =
+            new JsonNodeOptions { PropertyNameCaseInsensitive = options.PropertyNameCaseInsensitive };
+
+        // 初始化 JsonDocumentOptions 实例
+        var jsonDocumentOptions = new JsonDocumentOptions
+        {
+            AllowTrailingCommas = options.JsonSerializerOptions.AllowTrailingCommas,
+            CommentHandling = options.JsonSerializerOptions.ReadCommentHandling,
+            MaxDepth = options.JsonSerializerOptions.MaxDepth
+        };
+
+        return Tuple.Create(jsonNodeOptions, jsonDocumentOptions);
+    }
+
+    /// <summary>
     ///     抛出越界的数组索引异常
     /// </summary>
     /// <param name="index">索引</param>
@@ -545,7 +582,8 @@ public sealed partial class Clay : DynamicObject, IEnumerable<KeyValuePair<objec
         // 尝试将字符串索引转换为整数索引
         if (!int.TryParse(stringIndex, out intIndex))
         {
-            throw new InvalidOperationException($"The provided index `{stringIndex}` is not a valid array index.");
+            throw new InvalidOperationException(
+                $"The property `{stringIndex}` was not found in the Clay or is not a valid array index.");
         }
 
         // 检查索引是否小于 0

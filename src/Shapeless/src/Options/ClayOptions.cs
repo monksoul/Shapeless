@@ -88,6 +88,7 @@ public sealed class ClayOptions
         NumberHandling = JsonNumberHandling.AllowReadingFromString,
         // PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         // 解决中文乱码问题
-        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        AllowTrailingCommas = true
     };
 }

@@ -85,6 +85,16 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void Length_ReturnOK()
+    {
+        dynamic clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        Assert.Equal(2, clay.Length);
+
+        var clay2 = Clay.Parse("[1,2,3]");
+        Assert.Equal(3, clay2.Length);
+    }
+
+    [Fact]
     public void IsEmpty_ReturnOK()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
@@ -208,6 +218,23 @@ public class ClayExportsTests(ITestOutputHelper output)
         var utf8JsonReader = new Utf8JsonReader(utf8Bytes, true, default);
         var clay6 = Clay.Parse(ref utf8JsonReader);
         Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay6.ToJsonString());
+
+        // 测试尾随逗号
+        var clay7 = Clay.Parse("""
+                               {
+                               	"name": "Furion",
+                               	"age": 4,
+                               	"products": [{
+                               		"name": "Furion",
+                               		"author": "百小僧"
+                               	},
+                               	{
+                               		"name": "Layx",
+                               		"author": "百小僧"
+                               	}],
+                               }
+                               """);
+        Assert.NotNull(clay7);
     }
 
     [Fact]

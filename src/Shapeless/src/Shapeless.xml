@@ -41,6 +41,9 @@
             </summary>
             <remarks>用于作为 <see cref="T:Shapeless.Clay" /> 的核心数据容器。</remarks>
         </member>
+        <member name="M:Shapeless.Clay.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc />
+        </member>
         <member name="M:Shapeless.Clay.GetValue(System.Object)">
             <summary>
                 根据键或索引获取值
@@ -204,6 +207,17 @@
                 <see cref="T:System.Collections.Generic.IEnumerable`1" />
             </returns>
         </member>
+        <member name="M:Shapeless.Clay.CreateJsonNodeOptions(Shapeless.ClayOptions)">
+            <summary>
+                创建 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 选项
+            </summary>
+            <param name="options">
+                <see cref="T:Shapeless.ClayOptions" />
+            </param>
+            <returns>
+                <see cref="T:System.Tuple`2" />
+            </returns>
+        </member>
         <member name="M:Shapeless.Clay.ThrowIfOutOfRange(System.Int32,System.Int32)">
             <summary>
                 抛出越界的数组索引异常
@@ -331,6 +345,11 @@
                 元素数量
             </summary>
         </member>
+        <member name="P:Shapeless.Clay.Length">
+            <summary>
+                元素数量
+            </summary>
+        </member>
         <member name="P:Shapeless.Clay.IsEmpty">
             <summary>
                 是否为空元素
@@ -338,16 +357,13 @@
         </member>
         <member name="P:Shapeless.Clay.Indexes">
             <summary>
-                获取键或索引数组
+                获取键或索引集合
             </summary>
         </member>
         <member name="P:Shapeless.Clay.Values">
             <summary>
-                获取值数组
+                获取值集合
             </summary>
-        </member>
-        <member name="M:Shapeless.Clay.System#Collections#IEnumerable#GetEnumerator">
-            <inheritdoc />
         </member>
         <member name="M:Shapeless.Clay.GetEnumerator">
             <summary>
@@ -379,7 +395,7 @@
                 <see cref="T:Shapeless.Clay" />
             </returns>
         </member>
-        <member name="M:Shapeless.Clay.Parse(System.Object,Shapeless.ClayOptions,System.Text.Json.JsonDocumentOptions)">
+        <member name="M:Shapeless.Clay.Parse(System.Object,Shapeless.ClayOptions)">
             <summary>
                 将对象转换为 <see cref="T:Shapeless.Clay" /> 实例
             </summary>
@@ -389,14 +405,11 @@
             <param name="options">
                 <see cref="T:Shapeless.ClayOptions" />
             </param>
-            <param name="jsonDocumentOptions">
-                <see cref="T:System.Text.Json.JsonDocumentOptions" />
-            </param>
             <returns>
                 <see cref="T:Shapeless.Clay" />
             </returns>
         </member>
-        <member name="M:Shapeless.Clay.Parse(System.Text.Json.Utf8JsonReader@,Shapeless.ClayOptions,System.Text.Json.JsonDocumentOptions)">
+        <member name="M:Shapeless.Clay.Parse(System.Text.Json.Utf8JsonReader@,Shapeless.ClayOptions)">
             <summary>
                 将 <see cref="T:System.Text.Json.Utf8JsonReader" /> 转换为 <see cref="T:Shapeless.Clay" /> 实例
             </summary>
@@ -405,9 +418,6 @@
             </param>
             <param name="options">
                 <see cref="T:Shapeless.ClayOptions" />
-            </param>
-            <param name="jsonDocumentOptions">
-                <see cref="T:System.Text.Json.JsonDocumentOptions" />
             </param>
             <returns>
                 <see cref="T:Shapeless.Clay" />

@@ -21,6 +21,7 @@ public class ClayOptionsTests
         Assert.Equal(JsonNumberHandling.AllowReadingFromString,
             ClayOptions.Default.JsonSerializerOptions.NumberHandling);
         Assert.Equal(JavaScriptEncoder.UnsafeRelaxedJsonEscaping, ClayOptions.Default.JsonSerializerOptions.Encoder);
+        Assert.True(ClayOptions.Default.JsonSerializerOptions.AllowTrailingCommas);
     }
 
     [Fact]
