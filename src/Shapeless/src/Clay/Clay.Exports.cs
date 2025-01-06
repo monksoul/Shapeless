@@ -45,21 +45,21 @@ public sealed partial class Clay
     /// <summary>
     ///     字符串索引
     /// </summary>
-    /// <param name="index">索引</param>
-    public object? this[string index]
+    /// <param name="keyOrIndex">键或索引</param>
+    public object? this[string keyOrIndex]
     {
-        get => GetValue(index);
-        set => SetValue(index, value);
+        get => GetValue(keyOrIndex);
+        set => SetValue(keyOrIndex, value);
     }
 
     /// <summary>
     ///     字符索引
     /// </summary>
-    /// <param name="index">索引</param>
-    public object? this[char index]
+    /// <param name="keyOrIndex">键或索引</param>
+    public object? this[char keyOrIndex]
     {
-        get => GetValue(index);
-        set => SetValue(index, value);
+        get => GetValue(keyOrIndex);
+        set => SetValue(keyOrIndex, value);
     }
 
     /// <summary>

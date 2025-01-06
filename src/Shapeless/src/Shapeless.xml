@@ -302,13 +302,13 @@
             <summary>
                 字符串索引
             </summary>
-            <param name="index">索引</param>
+            <param name="keyOrIndex">键或索引</param>
         </member>
         <member name="P:Shapeless.Clay.Item(System.Char)">
             <summary>
                 字符索引
             </summary>
-            <param name="index">索引</param>
+            <param name="keyOrIndex">键或索引</param>
         </member>
         <member name="P:Shapeless.Clay.Item(System.Int32)">
             <summary>
