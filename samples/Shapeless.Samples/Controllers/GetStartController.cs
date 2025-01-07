@@ -24,7 +24,7 @@ public class GetStartController
         clay.Increment();
         Console.WriteLine(clay.number); // number: 11
 
-        // 输入 JSON
+        // 打印 JSON
         Console.WriteLine($"{clay.sayHello()}\r\n{clay.ToJsonString()}");
 
         return clay;
