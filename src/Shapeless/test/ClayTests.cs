@@ -17,6 +17,8 @@ public class ClayTests(ITestOutputHelper output)
         Assert.NotNull(clay.JsonCanvas);
         Assert.True(clay.IsObject);
         Assert.False(clay.IsArray);
+        Assert.NotNull(clay.ObjectMethods);
+        Assert.Empty(clay.ObjectMethods);
 
         var clay2 = new Clay(JsonNode.Parse("[]"));
         Assert.NotNull(clay2.Options);
@@ -108,7 +110,8 @@ public class ClayTests(ITestOutputHelper output)
             exception4.Message);
 
         var exception5 = Assert.Throws<InvalidOperationException>(() => clay.GetNodeFromArray("name"));
-        Assert.Equal($"The property `name` was not found in the Clay or is not a valid array index.", exception5.Message);
+        Assert.Equal("The property `name` was not found in the Clay or is not a valid array index.",
+            exception5.Message);
     }
 
     [Fact]
@@ -286,6 +289,24 @@ public class ClayTests(ITestOutputHelper output)
         clay3.SetNodeInObject("nested?", 1, out _);
         Assert.Equal(1, clay3.FindNode("nested?")!.GetValue<int>());
         Assert.Equal(1, clay3.FindNode("nested")!.GetValue<int>());
+
+        // 处理委托类型
+        var clay4 = new Clay();
+        clay4.SetNodeInObject("Name", "Furion", out _);
+        clay4.SetNodeInObject("Method", (Func<string>)(() => "Furion"), out _);
+        Assert.Single(clay4.JsonCanvas.AsObject());
+        Assert.Single(clay4.ObjectMethods);
+        Assert.Equal("{\"Name\":\"Furion\"}", clay4.ToJsonString());
+
+        clay4.SetNodeInObject("Method", "Method", out _);
+        Assert.Equal(2, clay4.JsonCanvas.AsObject().Count);
+        Assert.Empty(clay4.ObjectMethods);
+        Assert.Equal("{\"Name\":\"Furion\",\"Method\":\"Method\"}", clay4.ToJsonString());
+
+        clay4.SetNodeInObject("Method", (Func<string>)(() => "Furion"), out _);
+        Assert.Single(clay4.JsonCanvas.AsObject());
+        Assert.Single(clay4.ObjectMethods);
+        Assert.Equal("{\"Name\":\"Furion\"}", clay4.ToJsonString());
     }
 
     [Fact]
@@ -313,7 +334,8 @@ public class ClayTests(ITestOutputHelper output)
             exception4.Message);
 
         var exception5 = Assert.Throws<InvalidOperationException>(() => clay.SetNodeInArray("name", null, out _));
-        Assert.Equal($"The property `name` was not found in the Clay or is not a valid array index.", exception5.Message);
+        Assert.Equal("The property `name` was not found in the Clay or is not a valid array index.",
+            exception5.Message);
     }
 
     [Fact]
@@ -418,6 +440,32 @@ public class ClayTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void SetValue_WithDelegate_ReturnOK()
+    {
+        dynamic clay = new Clay();
+        clay.Name = "Furion";
+        clay.Author = "百小僧";
+
+        clay.FullName = (Func<string>)(() => $"{clay.Name} {clay.Author}");
+
+        // 测试调用方法
+        Assert.Equal("Furion 百小僧", clay["FullName"]());
+        Assert.Equal("Furion 百小僧", clay.FullName());
+
+        // 测试内部递增
+        clay.number = 10;
+        clay.Increment = new Action(() => { clay.number++; });
+        Assert.Equal(10, clay.number);
+        clay.Increment();
+        Assert.Equal(11, clay.number);
+
+        // 测试赋值是否丢失方法
+        dynamic clay2 = new Clay();
+        clay2.Child = clay;
+        Assert.Empty(((Clay)clay2.Child).ObjectMethods);
+    }
+
+    [Fact]
     public void ProcessNestedNullPropagationIndexKey_ReturnOK()
     {
         Assert.Equal("name?", new Clay().ProcessNestedNullPropagationIndexKey("name?"));
@@ -430,7 +478,8 @@ public class ClayTests(ITestOutputHelper output)
     {
         var exception =
             Assert.Throws<InvalidOperationException>(() => Clay.EnsureLegalArrayIndex("name", out _));
-        Assert.Equal($"The property `name` was not found in the Clay or is not a valid array index.", exception.Message);
+        Assert.Equal("The property `name` was not found in the Clay or is not a valid array index.",
+            exception.Message);
 
         var exception2 =
             Assert.Throws<ArgumentOutOfRangeException>(() => Clay.EnsureLegalArrayIndex(-1, out _));
@@ -471,6 +520,12 @@ public class ClayTests(ITestOutputHelper output)
 
         var clay3 = Clay.Parse("{\"id\":1,\"name\":\"furion\"}", new ClayOptions { AllowMissingProperty = true });
         Assert.False(clay3.RemoveNodeFromObject("Name", out _));
+
+        dynamic clay4 = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        clay4.FullName = (Func<string>)(() => clay4.Name);
+        Assert.Single(((Clay)clay4).ObjectMethods);
+        Assert.True(((Clay)clay4).RemoveNodeFromObject("FullName", out _));
+        Assert.Empty(((Clay)clay4).ObjectMethods);
     }
 
     [Fact]
@@ -499,7 +554,8 @@ public class ClayTests(ITestOutputHelper output)
 
         var exception5 =
             Assert.Throws<InvalidOperationException>(() => ((Clay)clay).RemoveNodeFromArray("name", out _));
-        Assert.Equal($"The property `name` was not found in the Clay or is not a valid array index.", exception5.Message);
+        Assert.Equal("The property `name` was not found in the Clay or is not a valid array index.",
+            exception5.Message);
     }
 
     [Fact]
@@ -623,6 +679,20 @@ public class ClayTests(ITestOutputHelper output)
         Assert.True(jsonDocumentOptions.AllowTrailingCommas);
         Assert.Equal(JsonCommentHandling.Disallow, jsonDocumentOptions.CommentHandling);
         Assert.Equal(0, jsonDocumentOptions.MaxDepth);
+    }
+
+    [Fact]
+    public void TryGetDelegate_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        Assert.False(clay.TryGetDelegate("Method", out var @delegate));
+        Assert.Null(@delegate);
+
+        dynamic clay2 = clay;
+        clay2.Method = (Func<string>)(() => "Furion");
+        Assert.True(clay.TryGetDelegate("Method", out var delegate2));
+        Assert.NotNull(delegate2);
+        Assert.Equal("Furion", clay2.Method());
     }
 }
 

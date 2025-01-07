@@ -29,11 +29,33 @@ dotnet add package Shapeless
 
 ```cs
 dynamic clay = Clay.Parse("""{"id":1,"name":"shapeless"}""");
+
+// 添加属性
 clay.author = "百小僧";
 clay["company"] = "百签科技";
 clay.homepage = new[] { "https://furion.net/", "https://baiqian.com" };
+clay.number = 10;
 
-Console.WriteLine(clay.ToJsonString());
+// 添加方法
+clay.sayHello = (Func<string>)(() => $"Hello, {clay.name}!");
+clay.Increment = new Action(() => { clay.number++; });
+
+// 调用方法
+Console.WriteLine(clay.number); // number: 10
+clay.Increment();
+Console.WriteLine(clay.number); // number: 11
+
+// 输入 JSON
+Console.WriteLine($"{clay.sayHello()}\r\n{clay.ToJsonString()}");
+```
+
+运行上述代码后，控制台输出如下内容：
+
+```
+10
+11
+Hello, shapeless!
+{"id":1,"name":"shapeless","author":"百小僧","company":"百签科技","homepage":["https://furion.net/","https://baiqian.com"],"number":11}
 ```
 
 [更多文档](https://furion.net/docs/shapeless/)

@@ -41,6 +41,11 @@
             </summary>
             <remarks>用于作为 <see cref="T:Shapeless.Clay" /> 的核心数据容器。</remarks>
         </member>
+        <member name="P:Shapeless.Clay.ObjectMethods">
+            <summary>
+                单一对象自定义委托字典
+            </summary>
+        </member>
         <member name="M:Shapeless.Clay.System#Collections#IEnumerable#GetEnumerator">
             <inheritdoc />
         </member>
@@ -139,6 +144,18 @@
             </summary>
             <param name="index">索引</param>
             <param name="finalIndex">最终移除索引</param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.TryGetDelegate(System.Object,System.Delegate@)">
+            <summary>
+                尝试根据键获取委托
+            </summary>
+            <param name="key">键</param>
+            <param name="delegate">
+                <see cref="T:System.Delegate" />
+            </param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
@@ -529,6 +546,7 @@
             <summary>
                 深度克隆
             </summary>
+            <remarks>该操作不会复制自定义委托方法。</remarks>
             <param name="options">
                 <see cref="T:Shapeless.ClayOptions" />
             </param>

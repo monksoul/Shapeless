@@ -730,9 +730,13 @@ public class ClayExportsTests(ITestOutputHelper output)
     [Fact]
     public void Clear_ReturnOK()
     {
-        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        dynamic clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        clay.FullName = (Func<string>)(() => clay.name);
+        Assert.Single(((Clay)clay).ObjectMethods);
+
         clay.Clear();
         Assert.Equal("{}", clay.ToJsonString());
+        Assert.Empty(((Clay)clay).ObjectMethods);
 
         var clay2 = Clay.Parse("[1,2,3]");
         clay2.Clear();

@@ -37,11 +37,33 @@ We have many examples on our [homepage](https://furion.net/docs/shapeless/). Her
 
 ```cs
 dynamic clay = Clay.Parse("""{"id":1,"name":"shapeless"}""");
+
+// Add Property
 clay.author = "百小僧";
 clay["company"] = "百签科技";
 clay.homepage = new[] { "https://furion.net/", "https://baiqian.com" };
+clay.number = 10;
 
-Console.WriteLine(clay.ToJsonString());
+// Add Method
+clay.sayHello = (Func<string>)(() => $"Hello, {clay.name}!");
+clay.Increment = new Action(() => { clay.number++; });
+
+// Call Method
+Console.WriteLine(clay.number); // number: 10
+clay.Increment();
+Console.WriteLine(clay.number); // number: 11
+
+// Print JSON
+Console.WriteLine($"{clay.sayHello()}\r\n{clay.ToJsonString()}");
+```
+
+After running the above code, the console outputs the following content:
+
+```
+10
+11
+Hello, shapeless!
+{"id":1,"name":"shapeless","author":"百小僧","company":"百签科技","homepage":["https://furion.net/","https://baiqian.com"],"number":11}
 ```
 
 [More Documentation](https://furion.net/docs/shapeless/)

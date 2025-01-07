@@ -108,8 +108,15 @@ public sealed partial class Clay
     /// <inheritdoc />
     public override bool TryInvokeMember(InvokeMemberBinder binder, object?[]? args, out object? result)
     {
-        // 获取调用方法名称
-        var binderName = binder.Name;
+        // 获取成员名称
+        var memberName = binder.Name;
+
+        // 检查该成员是否是一个委托
+        if (ObjectMethods.TryGetValue(memberName, out var @delegate))
+        {
+            result = @delegate?.DynamicInvoke(args);
+            return true;
+        }
 
         // 获取调用方法的泛型参数数组
         var typeArguments = _getCSharpInvokeMemberBinderTypeArguments.Value.Invoke(binder) as Type[];
@@ -122,15 +129,15 @@ public sealed partial class Clay
                 {
                     // 处理 clay.Prop() 情况
                     case { Length: 0 }:
-                        result = Contains(binderName);
+                        result = Contains(memberName);
                         return true;
                     // 处理 clay.Prop(Type) 情况
                     case [Type resultType]:
-                        result = FindNode(binderName).As(resultType, Options.JsonSerializerOptions);
+                        result = FindNode(memberName).As(resultType, Options.JsonSerializerOptions);
                         return true;
                     // 处理 clay.Prop(Type, JsonSerializerOptions) 情况
                     case [Type resultType, JsonSerializerOptions jsonSerializerOptions]:
-                        result = FindNode(binderName).As(resultType, jsonSerializerOptions);
+                        result = FindNode(memberName).As(resultType, jsonSerializerOptions);
                         return true;
                 }
 
@@ -141,11 +148,11 @@ public sealed partial class Clay
                 {
                     // 处理 clay.Prop<T>() 情况
                     case { Length: 0 }:
-                        result = FindNode(binderName).As(typeArguments[0], Options.JsonSerializerOptions);
+                        result = FindNode(memberName).As(typeArguments[0], Options.JsonSerializerOptions);
                         return true;
                     // 处理 clay.Prop<T>(JsonSerializerOptions) 情况
                     case [JsonSerializerOptions jsonSerializerOptions]:
-                        result = FindNode(binderName).As(typeArguments[0], jsonSerializerOptions);
+                        result = FindNode(memberName).As(typeArguments[0], jsonSerializerOptions);
                         return true;
                 }
 
