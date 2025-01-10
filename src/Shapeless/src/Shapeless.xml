@@ -660,6 +660,16 @@
                 <see cref="T:System.Boolean" />
             </returns>
         </member>
+        <member name="M:Shapeless.Clay.AsReadOnly">
+            <summary>
+                设置为只读模式
+            </summary>
+        </member>
+        <member name="M:Shapeless.Clay.AsMutable">
+            <summary>
+                设置为可变（默认）模式
+            </summary>
+        </member>
         <member name="M:Shapeless.Clay.ToString(System.String)">
             <summary>
                 支持格式化字符串输出

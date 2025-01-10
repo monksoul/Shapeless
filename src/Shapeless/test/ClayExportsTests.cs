@@ -1030,4 +1030,30 @@ public class ClayExportsTests(ITestOutputHelper output)
         clay.Add("Furion");
         Assert.Equal("[1,2,3,0,4,\"Furion\"]", clay.ToJsonString());
     }
+
+    [Fact]
+    public void AsReadOnly_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        clay["name"] = "百小僧";
+        clay.AsReadOnly();
+        Assert.Throws<InvalidOperationException>(() =>
+        {
+            clay["name"] = "百小僧";
+        });
+    }
+
+    [Fact]
+    public void AsMutable_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        clay["name"] = "百小僧";
+        clay.AsReadOnly();
+        Assert.Throws<InvalidOperationException>(() =>
+        {
+            clay["name"] = "百小僧";
+        });
+        clay.AsMutable();
+        clay["name"] = "百小僧";
+    }
 }

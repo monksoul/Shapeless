@@ -593,6 +593,16 @@ public sealed partial class Clay
     public bool TryRemove(object keyOrIndex) => Contains(keyOrIndex) && RemoveValue(keyOrIndex);
 
     /// <summary>
+    ///     设置为只读模式
+    /// </summary>
+    public void AsReadOnly() => Options.ReadOnly = true;
+
+    /// <summary>
+    ///     设置为可变（默认）模式
+    /// </summary>
+    public void AsMutable() => Options.ReadOnly = false;
+
+    /// <summary>
     ///     支持格式化字符串输出
     /// </summary>
     /// <param name="format">格式化字符串</param>
