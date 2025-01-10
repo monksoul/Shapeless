@@ -130,6 +130,55 @@ public sealed partial class Clay
             ? EnumerateObject().Select(u => new KeyValuePair<object, dynamic?>(u.Key, u.Value)).GetEnumerator()
             : EnumerateArray().Select(u => new KeyValuePair<object, dynamic?>(u.Key, u.Value)).GetEnumerator();
 
+    /// <inheritdoc />
+    public string ToString(string? format, IFormatProvider? formatProvider)
+    {
+        // 空检查
+        if (format is null)
+        {
+            return JsonCanvas.ToString();
+        }
+
+        // 将格式化字符串转换为字符数组
+        var chars = format.ToCharArray();
+
+        // 命名策略不能同时指定
+        if (chars.Contains('C') && chars.Contains('P'))
+        {
+            throw new FormatException(
+                $"The format string `{format}` cannot contain both 'C' and 'P', as they specify conflicting naming strategies.");
+        }
+
+        // 初始化 JsonSerializerOptions 实例
+        var jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerOptions.Default) { WriteIndented = true };
+
+        // 添加压缩（取消格式化）处理
+        if (chars.Contains('Z'))
+        {
+            jsonSerializerOptions.WriteIndented = false;
+        }
+
+        // 添加取消中文 Unicode 编码处理
+        if (chars.Contains('U'))
+        {
+            jsonSerializerOptions.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+        }
+
+        // 添加小驼峰命名处理
+        if (chars.Contains('C'))
+        {
+            jsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        }
+
+        // 添加帕斯卡（大驼峰）命名处理
+        if (chars.Contains('P'))
+        {
+            jsonSerializerOptions.PropertyNamingPolicy = new PascalCaseNamingPolicy();
+        }
+
+        return ToJsonString(jsonSerializerOptions);
+    }
+
     /// <summary>
     ///     创建空对象类型的 <see cref="Clay" /> 实例
     /// </summary>
@@ -321,6 +370,25 @@ public sealed partial class Clay
 
         // 在指定位置插入
         jsonArray.Insert(index, SerializeToNode(value, Options));
+        return true;
+    }
+
+    /// <summary>
+    ///     在末尾处添加值
+    /// </summary>
+    /// <remarks>当 <see cref="IsArray" /> 为 <c>true</c> 时有效。</remarks>
+    /// <param name="value">值</param>
+    /// <exception cref="NotSupportedException"></exception>
+    public bool Add(object? value)
+    {
+        // 检查是否是单一对象实例调用
+        ThrowIfMethodCalledOnSingleObject(nameof(Add));
+
+        // 将 JsonCanvas 转换为 JsonArray 实例
+        var jsonArray = JsonCanvas.AsArray();
+
+        // 在末尾处追加
+        jsonArray.Add(SerializeToNode(value, Options));
         return true;
     }
 
@@ -543,8 +611,17 @@ public sealed partial class Clay
     /// </returns>
     public bool TryRemove(object keyOrIndex) => Contains(keyOrIndex) && RemoveValue(keyOrIndex);
 
+    /// <summary>
+    ///     支持格式化字符串输出
+    /// </summary>
+    /// <param name="format">格式化字符串</param>
+    /// <returns>
+    ///     <see cref="string" />
+    /// </returns>
+    public string ToString(string? format) => ToString(format, null);
+
     /// <inheritdoc />
-    public override string ToString() => JsonCanvas.ToString();
+    public override string ToString() => ToString(null, null);
 
     /// <summary>
     ///     将 <see cref="Clay" /> 输出为 JSON 格式字符串

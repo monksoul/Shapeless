@@ -390,6 +390,9 @@
                 <see cref="T:System.Collections.Generic.IEnumerator`1" />
             </returns>
         </member>
+        <member name="M:Shapeless.Clay.ToString(System.String,System.IFormatProvider)">
+            <inheritdoc />
+        </member>
         <member name="M:Shapeless.Clay.EmptyObject(Shapeless.ClayOptions)">
             <summary>
                 创建空对象类型的 <see cref="T:Shapeless.Clay" /> 实例
@@ -506,6 +509,14 @@
             </summary>
             <remarks>当 <see cref="P:Shapeless.Clay.IsArray" /> 为 <c>true</c> 时有效。</remarks>
             <param name="index">索引</param>
+            <param name="value">值</param>
+            <exception cref="T:System.NotSupportedException"></exception>
+        </member>
+        <member name="M:Shapeless.Clay.Add(System.Object)">
+            <summary>
+                在末尾处添加值
+            </summary>
+            <remarks>当 <see cref="P:Shapeless.Clay.IsArray" /> 为 <c>true</c> 时有效。</remarks>
             <param name="value">值</param>
             <exception cref="T:System.NotSupportedException"></exception>
         </member>
@@ -641,6 +652,15 @@
                 <see cref="T:System.Boolean" />
             </returns>
         </member>
+        <member name="M:Shapeless.Clay.ToString(System.String)">
+            <summary>
+                支持格式化字符串输出
+            </summary>
+            <param name="format">格式化字符串</param>
+            <returns>
+                <see cref="T:System.String" />
+            </returns>
+        </member>
         <member name="M:Shapeless.Clay.ToString">
             <inheritdoc />
         </member>
@@ -648,7 +668,7 @@
             <summary>
                 将 <see cref="T:Shapeless.Clay" /> 输出为 JSON 格式字符串
             </summary>
-            <remarks>性能通常比 <see cref="M:Shapeless.Clay.ToString" /> 方式略高。</remarks>
+            <remarks>性能通常比 <see cref="M:Shapeless.Clay.ToString(System.String,System.IFormatProvider)" /> 方式略高。</remarks>
             <param name="jsonSerializerOptions">
                 <see cref="T:System.Text.Json.JsonSerializerOptions" />
             </param>

@@ -550,6 +550,36 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void ToString_WithFormat_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        var exception = Assert.Throws<FormatException>(() => clay.ToString("UPC"));
+        Assert.Equal(
+            "The format string `UPC` cannot contain both 'C' and 'P', as they specify conflicting naming strategies.",
+            exception.Message);
+    }
+
+    [Fact]
+    public void ToString_WithFormat_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        Assert.Equal(clay.ToString("U"), clay.ToString());
+
+        Assert.Equal($"{clay:R}", $"{clay}");
+        ((dynamic)clay).author = "百小僧";
+        Assert.Equal("{\r\n  \"id\": 1,\r\n  \"name\": \"furion\",\r\n  \"author\": \"\\u767E\\u5C0F\\u50E7\"\r\n}",
+            $"{clay}");
+        Assert.Equal("{\r\n  \"id\": 1,\r\n  \"name\": \"furion\",\r\n  \"author\": \"百小僧\"\r\n}",
+            $"{clay:U}");
+
+        Assert.Equal("{\"id\":1,\"name\":\"furion\",\"author\":\"百小僧\"}", $"{clay:UZ}");
+        Assert.Equal("{\"Id\":1,\"Name\":\"furion\",\"Author\":\"百小僧\"}", $"{clay:UZP}");
+
+        var clay2 = Clay.Parse("{\"Id\":1,\"Name\":\"furion\",\"Author\":\"百小僧\"}");
+        Assert.Equal("{\"id\":1,\"name\":\"furion\",\"author\":\"百小僧\"}", $"{clay2:UZC}");
+    }
+
+    [Fact]
     public void ToJsonString_ReturnOK()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
@@ -960,5 +990,27 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.NotNull(dictionary);
         Assert.True(dictionary.ContainsKey("id"));
         Assert.True(dictionary.ContainsKey("name"));
+    }
+
+    [Fact]
+    public void Add_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        var exception = Assert.Throws<NotSupportedException>(() => clay.Add("furion"));
+        Assert.Equal("`Add` method can only be used for array or collection operations.", exception.Message);
+    }
+
+    [Fact]
+    public void Add_ReturnOK()
+    {
+        var clay = Clay.Parse("[1,2,3]");
+        clay.Add(0);
+        Assert.Equal("[1,2,3,0]", clay.ToJsonString());
+
+        clay.Add(4);
+        Assert.Equal("[1,2,3,0,4]", clay.ToJsonString());
+
+        clay.Add("Furion");
+        Assert.Equal("[1,2,3,0,4,\"Furion\"]", clay.ToJsonString());
     }
 }
