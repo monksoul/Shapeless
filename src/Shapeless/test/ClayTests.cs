@@ -166,18 +166,6 @@ public class ClayTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void SerializeToNode_Invalid_Parameters()
-    {
-        var dataTable = new DataTable();
-        dataTable.Columns.Add("id", typeof(int));
-        dataTable.Columns.Add("name", typeof(string));
-        dataTable.Rows.Add(1, "Furion");
-        dataTable.Rows.Add(2, "百小僧");
-
-        Assert.Throws<NotSupportedException>(() => Clay.SerializeToNode(dataTable));
-    }
-
-    [Fact]
     public void Rebuilt_ReturnOK()
     {
         dynamic clay = new Clay();
@@ -190,6 +178,18 @@ public class ClayTests(ITestOutputHelper output)
         _ = ((Clay)clay).Rebuilt(clayOptions);
         Assert.Equal("Furion", clay.name);
         Assert.Equal(clayOptions, clay.Options);
+    }
+
+    [Fact]
+    public void SerializeToNode_Invalid_Parameters()
+    {
+        var dataTable = new DataTable();
+        dataTable.Columns.Add("id", typeof(int));
+        dataTable.Columns.Add("name", typeof(string));
+        dataTable.Rows.Add(1, "Furion");
+        dataTable.Rows.Add(2, "百小僧");
+
+        Assert.Throws<NotSupportedException>(() => Clay.SerializeToNode(dataTable));
     }
 
     [Fact]
@@ -228,6 +228,11 @@ public class ClayTests(ITestOutputHelper output)
         var jsonNode5 = Clay.SerializeToNode(jsonDocument.RootElement);
         Assert.NotNull(jsonNode5);
         Assert.Equal("{\"id\":1,\"name\":\"Furion\"}", jsonNode5.ToJsonString());
+
+        var dictionary = new Dictionary<string, object> { { "name", "Furion" }, { "id", 1 } };
+        var jsonNode6 = Clay.SerializeToNode(dictionary);
+        Assert.NotNull(jsonNode6);
+        Assert.Equal("{\"name\":\"Furion\",\"id\":1}", jsonNode6.ToJsonString());
     }
 
     [Fact]

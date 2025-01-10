@@ -4,6 +4,10 @@
 [Route("[controller]/[action]")]
 public class GetStartController
 {
+    /// <summary>
+    ///     创建单个对象
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public Clay SingleObject()
     {
@@ -28,8 +32,11 @@ public class GetStartController
         clay.extend.username = "MonkSoul";
 
         // 支持输出字符串格式化：U（取消中文 Unicode 编码）
-        Console.WriteLine(
-            $"{clay.Id} {clay.Name} {clay.IsDynamic} {clay.sub:U} {clay.extend} {clay.extend.username}");
+        Console.WriteLine($"{clay:U}"); // 或使用 clay.ToString("U");
+
+        // C：输出小驼峰键命名；P：输出帕斯卡（大驼峰）键命名
+        Console.WriteLine($"{clay:UC}"); // 或使用 clay.ToString("UC");
+        Console.WriteLine($"{clay:UP}"); // 或使用 clay.ToString("UP");
 
         return clay;
     }

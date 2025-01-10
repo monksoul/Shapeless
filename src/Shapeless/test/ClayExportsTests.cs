@@ -235,6 +235,10 @@ public class ClayExportsTests(ITestOutputHelper output)
                                }
                                """);
         Assert.NotNull(clay7);
+
+        var dictionary = new Dictionary<string, object> { { "name", "Furion" }, { "id", 1 } };
+        var clay8 = Clay.Parse(dictionary);
+        Assert.Equal("{\r\n  \"name\": \"Furion\",\r\n  \"id\": 1\r\n}", clay8.ToString());
     }
 
     [Fact]
