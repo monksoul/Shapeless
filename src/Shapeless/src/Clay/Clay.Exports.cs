@@ -140,7 +140,7 @@ public sealed partial class Clay
         }
 
         // 将格式化字符串转换为字符数组
-        var chars = format.ToCharArray();
+        var chars = format.ToUpper().ToCharArray();
 
         // 命名策略不能同时指定
         if (chars.Contains('C') && chars.Contains('P'))

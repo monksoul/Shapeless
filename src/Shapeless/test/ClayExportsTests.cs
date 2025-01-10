@@ -571,6 +571,8 @@ public class ClayExportsTests(ITestOutputHelper output)
             $"{clay}");
         Assert.Equal("{\r\n  \"id\": 1,\r\n  \"name\": \"furion\",\r\n  \"author\": \"百小僧\"\r\n}",
             $"{clay:U}");
+        Assert.Equal("{\r\n  \"id\": 1,\r\n  \"name\": \"furion\",\r\n  \"author\": \"百小僧\"\r\n}",
+            $"{clay:u}");
 
         Assert.Equal("{\"id\":1,\"name\":\"furion\",\"author\":\"百小僧\"}", $"{clay:UZ}");
         Assert.Equal("{\"Id\":1,\"Name\":\"furion\",\"Author\":\"百小僧\"}", $"{clay:UZP}");
