@@ -62,7 +62,7 @@ public class GetStartController
         Console.WriteLine(clay.number); // number: 11
 
         // 打印 JSON
-        Console.WriteLine($"{clay.sayHello()}\r\n{clay.ToJsonString()}");
+        Console.WriteLine($"{clay.sayHello()}\r\n{clay:UZ}");
 
         return clay;
     }

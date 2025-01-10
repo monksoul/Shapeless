@@ -54,7 +54,7 @@ clay.Increment();
 Console.WriteLine(clay.number); // number: 11
 
 // Print JSON
-Console.WriteLine($"{clay.sayHello()}\r\n{clay.ToJsonString()}");
+Console.WriteLine($"{clay.sayHello()}\r\n{clay:UZ}");
 ```
 
 After running the above code, the console outputs the following content:

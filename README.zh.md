@@ -46,7 +46,7 @@ clay.Increment();
 Console.WriteLine(clay.number); // number: 11
 
 // 打印 JSON
-Console.WriteLine($"{clay.sayHello()}\r\n{clay.ToJsonString()}");
+Console.WriteLine($"{clay.sayHello()}\r\n{clay:UZ}");
 ```
 
 运行上述代码后，控制台输出如下内容：
