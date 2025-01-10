@@ -83,11 +83,15 @@ public sealed partial class Clay : DynamicObject, IEnumerable<KeyValuePair<objec
     /// </summary>
     /// <param name="keyOrIndex">键或索引</param>
     /// <param name="value">值</param>
+    /// <param name="arrayInsert">是否作为在指定位置插入</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    internal bool SetValue(object keyOrIndex, object? value)
+    internal bool SetValue(object keyOrIndex, object? value, bool arrayInsert = false)
     {
+        // 确保当前实例不在只读模式下
+        EnsureNotReadOnlyBeforeModify();
+
         // 空检查
         ArgumentNullException.ThrowIfNull(keyOrIndex);
 
@@ -97,7 +101,7 @@ public sealed partial class Clay : DynamicObject, IEnumerable<KeyValuePair<objec
         // 根据键或索引设置值并获取结果
         var result = IsObject
             ? SetNodeInObject(keyOrIndex, value, out var finalIndex)
-            : SetNodeInArray(keyOrIndex, value, out finalIndex);
+            : SetNodeInArray(keyOrIndex, value, out finalIndex, arrayInsert);
 
         // 触发值变更之后事件
         if (result)
@@ -117,6 +121,9 @@ public sealed partial class Clay : DynamicObject, IEnumerable<KeyValuePair<objec
     /// </returns>
     internal bool RemoveValue(object keyOrIndex)
     {
+        // 确保当前实例不在只读模式下
+        EnsureNotReadOnlyBeforeModify();
+
         // 空检查
         ArgumentNullException.ThrowIfNull(keyOrIndex);
 
@@ -278,10 +285,11 @@ public sealed partial class Clay : DynamicObject, IEnumerable<KeyValuePair<objec
     /// <param name="index">索引</param>
     /// <param name="value">元素值</param>
     /// <param name="finalIndex">最终设置索引</param>
+    /// <param name="arrayInsert">是否作为在指定位置插入</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    internal bool SetNodeInArray(object index, object? value, out object finalIndex)
+    internal bool SetNodeInArray(object index, object? value, out object finalIndex, bool arrayInsert = false)
     {
         // 检查数组索引合法性
         EnsureLegalArrayIndex(index, out var intIndex);
@@ -295,7 +303,19 @@ public sealed partial class Clay : DynamicObject, IEnumerable<KeyValuePair<objec
         // 检查索引小于数组长度
         if (intIndex < count)
         {
-            jsonArray[intIndex] = SerializeToNode(value, Options);
+            // 将值序列化成 JsonNode 实例
+            var jsonNodeValue = SerializeToNode(value, Options);
+
+            // 替换指定位置的值
+            if (!arrayInsert)
+            {
+                jsonArray[intIndex] = jsonNodeValue;
+            }
+            // 在指定位置插入
+            else
+            {
+                jsonArray.Insert(intIndex, jsonNodeValue);
+            }
         }
         // 检查索引是否等于长度，如果是则追加
         else if (intIndex == count)
@@ -636,6 +656,20 @@ public sealed partial class Clay : DynamicObject, IEnumerable<KeyValuePair<objec
         {
             throw new ArgumentOutOfRangeException(nameof(index),
                 "Negative indices are not allowed. Index must be greater than or equal to 0.");
+        }
+    }
+
+    /// <summary>
+    ///     确保当前实例不在只读模式下。如果实例是只读的，则抛出异常
+    /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
+    internal void EnsureNotReadOnlyBeforeModify()
+    {
+        // 检查是否是只读模式
+        if (Options.ReadOnly)
+        {
+            throw new InvalidOperationException(
+                "Operation cannot be performed because the Clay is in read-only mode.");
         }
     }
 

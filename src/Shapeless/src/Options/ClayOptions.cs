@@ -80,6 +80,12 @@ public sealed class ClayOptions
     public bool PropertyNameCaseInsensitive { get; set; }
 
     /// <summary>
+    ///     是否是只读模式
+    /// </summary>
+    /// <remarks>默认值为：<c>false</c>。</remarks>
+    public bool ReadOnly { get; set; }
+
+    /// <summary>
     ///     JSON 序列化配置
     /// </summary>
     public JsonSerializerOptions JsonSerializerOptions { get; set; } = new(JsonSerializerOptions.Default)

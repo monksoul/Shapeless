@@ -466,6 +466,20 @@ public class ClayTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void SetValue_WithReadOnly_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        clay["name"] = "百小僧";
+
+        var clay2 = Clay.Parse("{\"id\":1,\"name\":\"furion\"}", new ClayOptions { ReadOnly = true });
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+        {
+            clay2["name"] = "百小僧";
+        });
+        Assert.Equal("Operation cannot be performed because the Clay is in read-only mode.", exception.Message);
+    }
+
+    [Fact]
     public void ProcessNestedNullPropagationIndexKey_ReturnOK()
     {
         Assert.Equal("name?", new Clay().ProcessNestedNullPropagationIndexKey("name?"));
@@ -608,6 +622,17 @@ public class ClayTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void RemoveValue_WithReadOnly_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        clay.Remove("name");
+
+        var clay2 = Clay.Parse("{\"id\":1,\"name\":\"furion\"}", new ClayOptions { ReadOnly = true });
+        var exception = Assert.Throws<InvalidOperationException>(() => clay2.Remove("name"));
+        Assert.Equal("Operation cannot be performed because the Clay is in read-only mode.", exception.Message);
+    }
+
+    [Fact]
     public void EnumerateObject_Invalid_Parameters()
     {
         var clay = Clay.Parse("[1,2,3]");
@@ -693,6 +718,17 @@ public class ClayTests(ITestOutputHelper output)
         Assert.True(clay.TryGetDelegate("Method", out var delegate2));
         Assert.NotNull(delegate2);
         Assert.Equal("Furion", clay2.Method());
+    }
+
+    [Fact]
+    public void EnsureNotReadOnlyBeforeModify_ReturnOK()
+    {
+        var clay = new Clay();
+        clay.EnsureNotReadOnlyBeforeModify();
+
+        var clay2 = new Clay(new ClayOptions { ReadOnly = true });
+        var exception = Assert.Throws<InvalidOperationException>(() => clay2.EnsureNotReadOnlyBeforeModify());
+        Assert.Equal("Operation cannot be performed because the Clay is in read-only mode.", exception.Message);
     }
 }
 

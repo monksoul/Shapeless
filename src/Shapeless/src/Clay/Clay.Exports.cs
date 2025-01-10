@@ -353,24 +353,7 @@ public sealed partial class Clay
         // 检查是否是单一对象实例调用
         ThrowIfMethodCalledOnSingleObject(nameof(Insert));
 
-        // 检查数组索引合法性
-        EnsureLegalArrayIndex(index, out _);
-
-        // 将 JsonCanvas 转换为 JsonArray 实例
-        var jsonArray = JsonCanvas.AsArray();
-
-        // 获取 JsonArray 长度
-        var count = jsonArray.Count;
-
-        // 检查索引大于数组长度
-        if (index > count)
-        {
-            return SetValue(index, value);
-        }
-
-        // 在指定位置插入
-        jsonArray.Insert(index, SerializeToNode(value, Options));
-        return true;
+        return SetValue(index, value, true);
     }
 
     /// <summary>
@@ -384,12 +367,7 @@ public sealed partial class Clay
         // 检查是否是单一对象实例调用
         ThrowIfMethodCalledOnSingleObject(nameof(Add));
 
-        // 将 JsonCanvas 转换为 JsonArray 实例
-        var jsonArray = JsonCanvas.AsArray();
-
-        // 在末尾处追加
-        jsonArray.Add(SerializeToNode(value, Options));
-        return true;
+        return SetValue(JsonCanvas.AsArray().Count, value);
     }
 
     /// <summary>
@@ -446,6 +424,9 @@ public sealed partial class Clay
     /// </summary>
     public void Clear()
     {
+        // 确保当前实例不在只读模式下
+        EnsureNotReadOnlyBeforeModify();
+
         // 检查是否是单一对象
         if (IsObject)
         {
@@ -626,7 +607,6 @@ public sealed partial class Clay
     /// <summary>
     ///     将 <see cref="Clay" /> 输出为 JSON 格式字符串
     /// </summary>
-    /// <remarks>性能通常比 <see cref="ToString" /> 方式略高。</remarks>
     /// <param name="jsonSerializerOptions">
     ///     <see cref="JsonSerializerOptions" />
     /// </param>

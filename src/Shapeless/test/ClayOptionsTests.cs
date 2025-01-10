@@ -37,6 +37,7 @@ public class ClayOptionsTests
         Assert.False(clayOptions.ValidateAfterConversion);
         Assert.False(clayOptions.AutoConvertToDateTime);
         Assert.False(clayOptions.PropertyNameCaseInsensitive);
+        Assert.False(clayOptions.ReadOnly);
 
         Assert.NotNull(clayOptions.JsonSerializerOptions);
         Assert.True(clayOptions.JsonSerializerOptions.PropertyNameCaseInsensitive);

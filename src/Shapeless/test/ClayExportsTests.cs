@@ -774,6 +774,17 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void Clear_WithReadOnly_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        clay.Clear();
+
+        var clay2 = Clay.Parse("{\"id\":1,\"name\":\"furion\"}", new ClayOptions { ReadOnly = true });
+        var exception = Assert.Throws<InvalidOperationException>(() => clay2.Clear());
+        Assert.Equal("Operation cannot be performed because the Clay is in read-only mode.", exception.Message);
+    }
+
+    [Fact]
     public void WriteTo_ReturnOK()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
