@@ -698,6 +698,19 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.Equal(1, array.Get(0));
         Assert.Equal(2, array.Get(1));
         Assert.Equal(3, array.Get(2));
+
+        dynamic clay4 = new Clay();
+        clay4.sayHello = (Func<string>)(() => "Hello, Furion!");
+        clay4.Increment = new Action(() => { });
+
+        var sayHelloDelegate = ((Clay)clay4).Get<Func<string>>("sayHello");
+        Assert.NotNull(sayHelloDelegate);
+        Assert.Equal("Hello, Furion!", sayHelloDelegate());
+
+        var exception = Assert.Throws<InvalidCastException>(() => ((Clay)clay4).Get<Action<string>>("Increment"));
+        Assert.Contains(
+            "The delegate type `System.Action` cannot be cast to the target type",
+            exception.Message);
     }
 
     [Fact]
@@ -1110,5 +1123,36 @@ public class ClayExportsTests(ITestOutputHelper output)
         });
         clay.AsMutable();
         clay["name"] = "百小僧";
+    }
+
+    [Fact]
+    public void Nested_ReturnOK()
+    {
+        dynamic clay = new Clay.Object();
+        clay.Id = 1;
+        clay["Name"] = "Shapeless";
+        clay.IsDynamic = true;
+        clay.IsArray = false;
+
+        clay.sub = new { HomePage = new[] { "https://furion.net", "https://baiqian.com" } };
+        clay.sub.HomePage[2] = "https://baiqian.ltd";
+        clay.sub.HomePage.Add("https://百签.com");
+
+        clay.extend = new Clay();
+        clay.extend.username = "MonkSoul";
+
+        clay.Remove("IsArray");
+
+        Assert.Equal(
+            "{\"Id\":1,\"Name\":\"Shapeless\",\"IsDynamic\":true,\"sub\":{\"HomePage\":[\"https://furion.net\",\"https://baiqian.com\",\"https://baiqian.ltd\",\"https://百签.com\"]},\"extend\":{\"username\":\"MonkSoul\"}}",
+            clay.ToJsonString());
+
+        Assert.True(clay.As<Clay>() is Clay);
+
+        dynamic clay2 = new Clay.Array();
+        clay2.Add(1);
+        clay2.Add(2);
+        clay2.Add(3);
+        Assert.Equal("[1,2,3]", clay2.ToJsonString());
     }
 }

@@ -735,6 +735,13 @@ public class ClayTests(ITestOutputHelper output)
         var exception = Assert.Throws<InvalidOperationException>(() => clay2.EnsureNotReadOnlyBeforeModify());
         Assert.Equal("Operation cannot be performed because the Clay is in read-only mode.", exception.Message);
     }
+
+    [Theory]
+    [InlineData(typeof(Clay), true)]
+    [InlineData(typeof(Clay.Object), true)]
+    [InlineData(typeof(Clay.Array), true)]
+    [InlineData(typeof(string), false)]
+    public void IsClay_ReturnOK(Type type, bool expected) => Assert.Equal(expected, Clay.IsClay(type));
 }
 
 public class CustomDataTableJsonConverter : JsonConverter<DataTable>

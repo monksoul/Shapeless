@@ -274,6 +274,17 @@
             <param name="method">方法名</param>
             <exception cref="T:System.NotSupportedException"></exception>
         </member>
+        <member name="M:Shapeless.Clay.IsClay(System.Type)">
+            <summary>
+                检查类型是否是 <see cref="T:Shapeless.Clay" /> 类型
+            </summary>
+            <param name="type">
+                <see cref="T:System.Type" />
+            </param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
         <member name="E:Shapeless.Clay.ValueChanging">
             <summary>
                 值变更之前事件
@@ -491,6 +502,7 @@
             <returns>
                 <see cref="T:System.Object" />
             </returns>
+            <exception cref="T:System.InvalidCastException"></exception>
         </member>
         <member name="M:Shapeless.Clay.Get``1(System.Object,System.Text.Json.JsonSerializerOptions)">
             <summary>
@@ -733,6 +745,32 @@
             <returns>
                 <see cref="T:System.String" />
             </returns>
+        </member>
+        <member name="T:Shapeless.Clay.Object">
+            <summary>
+                单一对象
+            </summary>
+        </member>
+        <member name="M:Shapeless.Clay.Object.#ctor(Shapeless.ClayOptions)">
+            <summary>
+                <inheritdoc cref="T:Shapeless.Clay.Object" />
+            </summary>
+            <param name="options">
+                <see cref="T:Shapeless.ClayOptions" />
+            </param>
+        </member>
+        <member name="T:Shapeless.Clay.Array">
+            <summary>
+                集合/数组
+            </summary>
+        </member>
+        <member name="M:Shapeless.Clay.Array.#ctor(Shapeless.ClayOptions)">
+            <summary>
+                <inheritdoc cref="T:Shapeless.Clay.Array" />
+            </summary>
+            <param name="options">
+                <see cref="T:Shapeless.ClayOptions" />
+            </param>
         </member>
         <member name="F:Shapeless.Clay._getCSharpInvokeMemberBinderTypeArguments">
             <summary>

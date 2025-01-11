@@ -9,7 +9,7 @@ namespace Shapeless;
 /// <summary>
 ///     流变对象
 /// </summary>
-public sealed partial class Clay
+public partial class Clay
 {
     /// <summary>
     ///     获取 <see cref="InvokeMemberBinder" /> 类型的 <c>TypeArguments</c> 属性访问器

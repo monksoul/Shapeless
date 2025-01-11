@@ -7,7 +7,7 @@ namespace Shapeless;
 /// <summary>
 ///     流变对象
 /// </summary>
-public sealed partial class Clay
+public partial class Clay
 {
     /// <summary>
     ///     值变更之前事件

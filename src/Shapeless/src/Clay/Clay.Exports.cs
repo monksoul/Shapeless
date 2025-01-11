@@ -7,7 +7,7 @@ namespace Shapeless;
 /// <summary>
 ///     流变对象
 /// </summary>
-public sealed partial class Clay
+public partial class Clay
 {
     /// <summary>
     ///     <inheritdoc cref="Clay" />
@@ -311,12 +311,26 @@ public sealed partial class Clay
     /// <returns>
     ///     <see cref="object" />
     /// </returns>
+    /// <exception cref="InvalidCastException"></exception>
     public object? Get(object keyOrIndex, Type resultType, JsonSerializerOptions? jsonSerializerOptions = null)
     {
+        // 尝试根据键获取委托
+        if (TryGetDelegate(keyOrIndex, out var @delegate))
+        {
+            // 空检查或检查目标委托类型是否一致
+            if (@delegate is null || @delegate.GetType() == resultType)
+            {
+                return @delegate;
+            }
+
+            throw new InvalidCastException(
+                $"The delegate type `{@delegate.GetType().FullName}` cannot be cast to the target type `{resultType.FullName}`.");
+        }
+
         // 根据键或索引查找 JsonNode 节点
         var jsonNode = FindNode(keyOrIndex);
 
-        return resultType == typeof(Clay)
+        return IsClay(resultType)
             ? new Clay(jsonNode, Options)
             : jsonNode.As(resultType, jsonSerializerOptions ?? Options.JsonSerializerOptions);
     }
@@ -410,7 +424,7 @@ public sealed partial class Clay
     ///     <see cref="object" />
     /// </returns>
     public object? As(Type resultType, JsonSerializerOptions? jsonSerializerOptions = null) =>
-        resultType == typeof(Clay)
+        IsClay(resultType)
             ? this
             : JsonCanvas.As(resultType, jsonSerializerOptions ?? Options.JsonSerializerOptions);
 
@@ -692,5 +706,37 @@ public sealed partial class Clay
         }
 
         return stringWriter.ToString();
+    }
+
+    /// <summary>
+    ///     单一对象
+    /// </summary>
+    public sealed class Object : Clay
+    {
+        /// <summary>
+        ///     <inheritdoc cref="Object" />
+        /// </summary>
+        /// <param name="options">
+        ///     <see cref="ClayOptions" />
+        /// </param>
+        public Object(ClayOptions? options = null) : base(options)
+        {
+        }
+    }
+
+    /// <summary>
+    ///     集合/数组
+    /// </summary>
+    public sealed class Array : Clay
+    {
+        /// <summary>
+        ///     <inheritdoc cref="Array" />
+        /// </summary>
+        /// <param name="options">
+        ///     <see cref="ClayOptions" />
+        /// </param>
+        public Array(ClayOptions? options = null) : base(ClayType.Array, options)
+        {
+        }
     }
 }

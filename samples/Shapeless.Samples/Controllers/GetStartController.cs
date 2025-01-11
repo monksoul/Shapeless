@@ -5,18 +5,20 @@
 public class GetStartController
 {
     /// <summary>
-    ///     创建单个对象
+    ///     创建单一对象
     /// </summary>
     /// <returns></returns>
     [HttpGet]
     public Clay SingleObject()
     {
-        dynamic clay = new Clay();
+        // 创建空的单一对象
+        dynamic clay = new Clay(); // 或使用 Clay.EmptyObject(); 或 new Clay.Object();
 
         // 属性或索引方式设置值
         clay.Id = 1;
         clay["Name"] = "Shapeless";
         clay.IsDynamic = true;
+        clay.IsArray = false;
 
         // 设置匿名对象
         clay.sub = new
@@ -24,12 +26,15 @@ public class GetStartController
             HomePage = new[] { "https://furion.net", "https://baiqian.com" }
         };
         // 继续添加数组内容
-        clay.sub.HomePage[2] = "https://baiqian.ltd";
+        clay.sub.HomePage[2] = "https://baiqian.ltd"; // 使用索引方式
         clay.sub.HomePage.Add("https://百签.com"); // 使用 Add 方法
 
         // 嵌套设置流变对象
         clay.extend = new Clay();
         clay.extend.username = "MonkSoul";
+
+        // 删除 IsArray 属性
+        clay.Remove("IsArray"); // 或使用 clay.Delete("IsArray")
 
         // 支持输出字符串格式化：U（取消中文 Unicode 编码）
         Console.WriteLine($"{clay:U}"); // 或使用 clay.ToString("U");
@@ -37,6 +42,15 @@ public class GetStartController
         // C：输出小驼峰键命名；P：输出帕斯卡（大驼峰）键命名
         Console.WriteLine($"{clay:UC}"); // 或使用 clay.ToString("UC");
         Console.WriteLine($"{clay:UP}"); // 或使用 clay.ToString("UP");
+
+        return clay;
+    }
+
+    [HttpGet]
+    public Clay ArrayCollection()
+    {
+        // 创建空的集合/数组
+        dynamic clay = new Clay(ClayType.Array); // 或使用 Clay.EmptyArray(); 或 new Clay.Array();
 
         return clay;
     }
