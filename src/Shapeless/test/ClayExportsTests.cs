@@ -652,6 +652,25 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void IsDefined_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        Assert.False(clay.IsDefined("Id"));
+        Assert.True(clay.IsDefined("id"));
+        Assert.True(clay.IsDefined("name"));
+        Assert.False(clay.IsDefined(0));
+
+        var clay2 = Clay.Parse("[1,2,3]");
+        Assert.False(clay2.IsDefined("Id"));
+        Assert.False(clay2.IsDefined("name"));
+        Assert.True(clay2.IsDefined(0));
+        Assert.True(clay2.IsDefined(1));
+        Assert.True(clay2.IsDefined(2));
+        Assert.False(clay2.IsDefined(-1));
+        Assert.False(clay2.IsDefined(3));
+    }
+
+    [Fact]
     public void Get_ReturnOK()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
@@ -716,6 +735,19 @@ public class ClayExportsTests(ITestOutputHelper output)
 
         dynamic array = clay["arr"]!;
         Assert.True(array.Remove(0));
+        Assert.Equal("{\"arr\":[2,3]}", clay.ToJsonString());
+    }
+
+    [Fact]
+    public void Delete_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\",\"arr\":[1,2,3]}");
+        Assert.True(clay.Delete("id"));
+        Assert.True(clay.Delete("name"));
+        Assert.Equal("{\"arr\":[1,2,3]}", clay.ToJsonString());
+
+        dynamic array = clay["arr"]!;
+        Assert.True(array.Delete(0));
         Assert.Equal("{\"arr\":[2,3]}", clay.ToJsonString());
     }
 
@@ -932,6 +964,24 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void TryDelete_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        Assert.False(clay.TryDelete("age"));
+        Assert.True(clay.TryDelete("id"));
+        Assert.True(clay.TryDelete("name"));
+        Assert.True(clay.IsEmpty);
+
+        var clay2 = Clay.Parse("[1,2,3]");
+        Assert.False(clay2.TryDelete("age"));
+        Assert.True(clay2.TryDelete(0));
+        Assert.True(clay2.TryDelete(1));
+        Assert.True(clay2.TryDelete(0));
+        Assert.False(clay2.TryDelete(3));
+        Assert.True(clay2.IsEmpty);
+    }
+
+    [Fact]
     public void Insert_Invalid_Parameters()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
@@ -1000,13 +1050,18 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void ToDictionary()
+    public void ToDictionary_ReturnOK()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
         var dictionary = clay.ToDictionary(u => u.Key, u => u.Value);
         Assert.NotNull(dictionary);
         Assert.True(dictionary.ContainsKey("id"));
         Assert.True(dictionary.ContainsKey("name"));
+
+        var dictionary2 = clay.ToDictionary();
+        Assert.NotNull(dictionary2);
+        Assert.True(dictionary2.ContainsKey("id"));
+        Assert.True(dictionary2.ContainsKey("name"));
     }
 
     [Fact]

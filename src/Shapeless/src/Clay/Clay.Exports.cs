@@ -180,7 +180,7 @@ public sealed partial class Clay
     }
 
     /// <summary>
-    ///     创建空对象类型的 <see cref="Clay" /> 实例
+    ///     创建空的单一对象
     /// </summary>
     /// <param name="options">
     ///     <see cref="ClayOptions" />
@@ -191,7 +191,7 @@ public sealed partial class Clay
     public static Clay EmptyObject(ClayOptions? options = null) => new(options);
 
     /// <summary>
-    ///     创建空数组类型的 <see cref="Clay" /> 实例
+    ///     创建空的集合/数组
     /// </summary>
     /// <param name="options">
     ///     <see cref="ClayOptions" />
@@ -280,6 +280,16 @@ public sealed partial class Clay
 
         return false;
     }
+
+    /// <summary>
+    ///     检查键或索引是否定义
+    /// </summary>
+    /// <remarks>兼容旧版本粘土对象。</remarks>
+    /// <param name="keyOrIndex">键或索引</param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
+    public bool IsDefined(object keyOrIndex) => Contains(keyOrIndex);
 
     /// <summary>
     ///     根据键或索引获取值
@@ -378,6 +388,16 @@ public sealed partial class Clay
     ///     <see cref="bool" />
     /// </returns>
     public bool Remove(object keyOrIndex) => RemoveValue(keyOrIndex);
+
+    /// <summary>
+    ///     根据键或索引删除数据
+    /// </summary>
+    /// <remarks>兼容旧版本粘土对象。</remarks>
+    /// <param name="keyOrIndex">键或索引</param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
+    public bool Delete(object keyOrIndex) => Remove(keyOrIndex);
 
     /// <summary>
     ///     将 <see cref="Clay" /> 转换为目标类型
@@ -591,6 +611,16 @@ public sealed partial class Clay
     ///     <see cref="bool" />
     /// </returns>
     public bool TryRemove(object keyOrIndex) => Contains(keyOrIndex) && RemoveValue(keyOrIndex);
+
+    /// <summary>
+    ///     尝试根据键或索引删除数据
+    /// </summary>
+    /// <remarks>兼容旧版本粘土对象。</remarks>
+    /// <param name="keyOrIndex">键或索引</param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
+    public bool TryDelete(object keyOrIndex) => TryRemove(keyOrIndex);
 
     /// <summary>
     ///     设置为只读模式

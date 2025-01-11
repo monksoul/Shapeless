@@ -403,7 +403,7 @@
         </member>
         <member name="M:Shapeless.Clay.EmptyObject(Shapeless.ClayOptions)">
             <summary>
-                创建空对象类型的 <see cref="T:Shapeless.Clay" /> 实例
+                创建空的单一对象
             </summary>
             <param name="options">
                 <see cref="T:Shapeless.ClayOptions" />
@@ -414,7 +414,7 @@
         </member>
         <member name="M:Shapeless.Clay.EmptyArray(Shapeless.ClayOptions)">
             <summary>
-                创建空数组类型的 <see cref="T:Shapeless.Clay" /> 实例
+                创建空的集合/数组
             </summary>
             <param name="options">
                 <see cref="T:Shapeless.ClayOptions" />
@@ -455,6 +455,16 @@
             <summary>
                 检查键或索引是否定义
             </summary>
+            <param name="keyOrIndex">键或索引</param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.IsDefined(System.Object)">
+            <summary>
+                检查键或索引是否定义
+            </summary>
+            <remarks>兼容旧版本粘土对象。</remarks>
             <param name="keyOrIndex">键或索引</param>
             <returns>
                 <see cref="T:System.Boolean" />
@@ -532,6 +542,16 @@
             <summary>
                 根据键或索引删除数据
             </summary>
+            <param name="keyOrIndex">键或索引</param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.Delete(System.Object)">
+            <summary>
+                根据键或索引删除数据
+            </summary>
+            <remarks>兼容旧版本粘土对象。</remarks>
             <param name="keyOrIndex">键或索引</param>
             <returns>
                 <see cref="T:System.Boolean" />
@@ -655,6 +675,16 @@
             <summary>
                 尝试根据键或索引删除数据
             </summary>
+            <param name="keyOrIndex">键或索引</param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.TryDelete(System.Object)">
+            <summary>
+                尝试根据键或索引删除数据
+            </summary>
+            <remarks>兼容旧版本粘土对象。</remarks>
             <param name="keyOrIndex">键或索引</param>
             <returns>
                 <see cref="T:System.Boolean" />
