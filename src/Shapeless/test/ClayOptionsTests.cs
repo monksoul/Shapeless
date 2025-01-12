@@ -44,5 +44,7 @@ public class ClayOptionsTests
         Assert.Null(clayOptions.JsonSerializerOptions.PropertyNamingPolicy);
         Assert.Equal(JsonNumberHandling.AllowReadingFromString, clayOptions.JsonSerializerOptions.NumberHandling);
         Assert.Equal(JavaScriptEncoder.UnsafeRelaxedJsonEscaping, clayOptions.JsonSerializerOptions.Encoder);
+        Assert.Single(clayOptions.JsonSerializerOptions.Converters);
+        Assert.True(clayOptions.JsonSerializerOptions.Converters.First() is ClayJsonConverter);
     }
 }

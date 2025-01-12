@@ -73,7 +73,7 @@ public class GetStartController
         // 在索引为 1 处插入
         clay.Insert(1, "Insert");
 
-        // 在索引为 1 处批量插入
+        // 在索引为 2 处批量插入
         clay.InsertRange(2, new object[] { "Furion", "Sundial", "Jaina", "TimeCrontab", "HttpAgent" });
 
         // 删除项
@@ -86,6 +86,38 @@ public class GetStartController
         Console.WriteLine(clay); // 或使用 clay.ToString();
 
         return clay;
+    }
+
+    [HttpGet]
+    public Clay ParseJson()
+    {
+        // 从 JSON 对象字符串创建
+        dynamic clay = Clay.Parse("""{"id":1,"name":"Furion"}""");
+        var id = clay.id; // 1
+        var name = clay["name"]; // "Furion"
+        clay.age = 30;
+
+        Console.WriteLine(clay);
+
+        // 从 JSON 数组字符串创建
+        dynamic array = Clay.Parse("[1,2,3,true,\"Furion\"]");
+        array.Add(false);
+        array.Add(clay);
+
+        Console.WriteLine(array);
+
+        // 从任意 JSON 字面量字符串创建
+        dynamic any = Clay.Parse("true");
+        Console.WriteLine(any);
+
+        // 自定义包装字面量的键名
+        dynamic custom = Clay.Parse("true", new ClayOptions
+        {
+            ScalarValueKey = "value"
+        });
+        Console.WriteLine(custom);
+
+        return Clay.Parse(new { clay, array, any, custom });
     }
 
     [HttpGet]
