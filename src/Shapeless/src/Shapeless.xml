@@ -237,6 +237,26 @@
                 <see cref="T:System.Tuple`2" />
             </returns>
         </member>
+        <member name="M:Shapeless.Clay.TryConvertJsonArrayToDictionaryObject(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNodeOptions,System.Text.Json.JsonDocumentOptions,System.Text.Json.Nodes.JsonObject@)">
+            <summary>
+                尝试将 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 中的键值对字典转换为 <see cref="T:System.Text.Json.Nodes.JsonObject" />
+            </summary>
+            <param name="jsonNode">
+                <see cref="T:System.Text.Json.Nodes.JsonNode" />
+            </param>
+            <param name="jsonNodeOptions">
+                <see cref="T:System.Text.Json.Nodes.JsonNodeOptions" />
+            </param>
+            <param name="jsonDocumentOptions">
+                <see cref="T:System.Text.Json.JsonDocumentOptions" />
+            </param>
+            <param name="jsonObject">
+                <see cref="T:System.Text.Json.Nodes.JsonObject" />
+            </param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
         <member name="M:Shapeless.Clay.ThrowIfOutOfRange(System.Int32,System.Int32)">
             <summary>
                 抛出越界的数组索引异常
@@ -434,7 +454,7 @@
                 <see cref="T:Shapeless.Clay" />
             </returns>
         </member>
-        <member name="M:Shapeless.Clay.Parse(System.Object,Shapeless.ClayOptions)">
+        <member name="M:Shapeless.Clay.Parse(System.Object,Shapeless.ClayOptions,System.Boolean)">
             <summary>
                 将对象转换为 <see cref="T:Shapeless.Clay" /> 实例
             </summary>
@@ -444,6 +464,7 @@
             <param name="options">
                 <see cref="T:Shapeless.ClayOptions" />
             </param>
+            <param name="useObjectForDictionaryJson">是否自动将 JSON 字典格式字符串解析为单一对象。默认值为：<c>false</c>。</param>
             <returns>
                 <see cref="T:Shapeless.Clay" />
             </returns>

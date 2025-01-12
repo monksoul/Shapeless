@@ -210,10 +210,11 @@ public partial class Clay
     /// <param name="options">
     ///     <see cref="ClayOptions" />
     /// </param>
+    /// <param name="useObjectForDictionaryJson">是否自动将 JSON 字典格式字符串解析为单一对象。默认值为：<c>false</c>。</param>
     /// <returns>
     ///     <see cref="Clay" />
     /// </returns>
-    public static Clay Parse(object? obj, ClayOptions? options = null)
+    public static Clay Parse(object? obj, ClayOptions? options = null, bool useObjectForDictionaryJson = false)
     {
         // 空检查
         ArgumentNullException.ThrowIfNull(obj);
@@ -232,6 +233,14 @@ public partial class Clay
             byte[] utf8JsonBytes => JsonNode.Parse(utf8JsonBytes, jsonNodeOptions, jsonDocumentOptions),
             _ => SerializeToNode(obj, clayOptions)
         };
+
+        // 处理是否将 JSON 字典格式字符串解析为单一对象
+        if (useObjectForDictionaryJson &&
+            TryConvertJsonArrayToDictionaryObject(jsonNode, jsonNodeOptions, jsonDocumentOptions,
+                out var jsonObject))
+        {
+            jsonNode = jsonObject;
+        }
 
         return new Clay(jsonNode, clayOptions);
     }

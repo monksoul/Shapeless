@@ -613,6 +613,73 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     }
 
     /// <summary>
+    ///     尝试将 <see cref="JsonNode" /> 中的键值对字典转换为 <see cref="JsonObject" />
+    /// </summary>
+    /// <param name="jsonNode">
+    ///     <see cref="JsonNode" />
+    /// </param>
+    /// <param name="jsonNodeOptions">
+    ///     <see cref="JsonNodeOptions" />
+    /// </param>
+    /// <param name="jsonDocumentOptions">
+    ///     <see cref="JsonDocumentOptions" />
+    /// </param>
+    /// <param name="jsonObject">
+    ///     <see cref="JsonObject" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
+    internal static bool TryConvertJsonArrayToDictionaryObject(JsonNode? jsonNode, JsonNodeOptions jsonNodeOptions,
+        JsonDocumentOptions jsonDocumentOptions, [NotNullWhen(true)] out JsonObject? jsonObject)
+    {
+        // 如果不是数组或者为空，则无法转换
+        if (jsonNode?.GetValueKind() is not JsonValueKind.Array || jsonNode.AsArray().Count == 0)
+        {
+            jsonObject = null;
+            return false;
+        }
+
+        // 将 JsonCanvas 转换为 JsonArray 实例
+        var jsonArray = jsonNode.AsArray();
+
+        // 初始化 JsonObject 实例
+        jsonObject = new JsonObject(jsonNodeOptions);
+
+        // 初始化 JsonNodeOptions 实例（忽略大小写）
+        var caseInsensitiveJsonNodeOptions = new JsonNodeOptions { PropertyNameCaseInsensitive = true };
+
+        // 遍历集合的每一项
+        foreach (var item in jsonArray)
+        {
+            // 如果当前项不是一个有效的对象或不包含两个属性，则不能转换
+            if (item?.GetValueKind() is not JsonValueKind.Object || item.AsObject().Count != 2)
+            {
+                jsonObject = null;
+                return false;
+            }
+
+            // 使用大小写不敏感的选项克隆当前项
+            var itemObject = JsonNode.Parse(item.ToJsonString(), caseInsensitiveJsonNodeOptions, jsonDocumentOptions)
+                ?.AsObject()!;
+
+            // 检查当前项是否包含有效的 key 和 value 属性
+            if (!itemObject.TryGetPropertyValue("key", out var keyNode) ||
+                keyNode?.GetValueKind() is not JsonValueKind.String ||
+                !itemObject.TryGetPropertyValue("value", out var valueNode))
+            {
+                jsonObject = null;
+                return false;
+            }
+
+            // 将键值对添加 JsonObject 实例中
+            jsonObject[keyNode.GetValue<string>()] = valueNode?.DeepClone();
+        }
+
+        return true;
+    }
+
+    /// <summary>
     ///     抛出越界的数组索引异常
     /// </summary>
     /// <param name="index">索引</param>

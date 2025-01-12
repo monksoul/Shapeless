@@ -239,6 +239,25 @@ public class ClayExportsTests(ITestOutputHelper output)
         var dictionary = new Dictionary<string, object> { { "name", "Furion" }, { "id", 1 } };
         var clay8 = Clay.Parse(dictionary);
         Assert.Equal("{\r\n  \"name\": \"Furion\",\r\n  \"id\": 1\r\n}", clay8.ToString());
+
+        const string dictionaryJson = """
+                                      [
+                                        {
+                                          "key": "id",
+                                          "value": 1
+                                        },
+                                        {
+                                          "key": "name",
+                                          "value": "Furion"
+                                        }
+                                      ]
+                                      """;
+        var clay9 = Clay.Parse(dictionaryJson);
+        Assert.Equal("[{\"key\":\"id\",\"value\":1},{\"key\":\"name\",\"value\":\"Furion\"}]",
+            clay9.ToJsonString());
+
+        var clay10 = Clay.Parse(dictionaryJson, useObjectForDictionaryJson: true);
+        Assert.Equal("{\"id\":1,\"name\":\"Furion\"}", clay10.ToJsonString());
     }
 
     [Fact]
