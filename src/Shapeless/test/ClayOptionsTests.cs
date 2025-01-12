@@ -47,4 +47,22 @@ public class ClayOptionsTests
         Assert.Single(clayOptions.JsonSerializerOptions.Converters);
         Assert.True(clayOptions.JsonSerializerOptions.Converters.First() is ClayJsonConverter);
     }
+
+    [Fact]
+    public void Configure_Invalid_Parameters()
+    {
+        var clayOptions = new ClayOptions();
+        Assert.Throws<ArgumentNullException>(() => clayOptions.Configure(null!));
+    }
+
+    [Fact]
+    public void Configure_ReturnOK()
+    {
+        var clayOptions = new ClayOptions();
+        Assert.Single(clayOptions.JsonSerializerOptions.Converters);
+
+        clayOptions.Configure(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+        Assert.Equal(2, clayOptions.JsonSerializerOptions.Converters.Count);
+        Assert.True(clayOptions.JsonSerializerOptions.Converters.Last() is JsonStringEnumConverter);
+    }
 }

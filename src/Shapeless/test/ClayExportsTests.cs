@@ -258,6 +258,19 @@ public class ClayExportsTests(ITestOutputHelper output)
 
         var clay10 = Clay.Parse(dictionaryJson, useObjectForDictionaryJson: true);
         Assert.Equal("{\"id\":1,\"name\":\"Furion\"}", clay10.ToJsonString());
+
+        var clay11 = Clay.Parse(new { Id = 1, Name = "Furion" });
+        Assert.Equal("{\"Id\":1,\"Name\":\"Furion\"}", clay11.ToJsonString());
+
+        var clay12 = Clay.Parse(utf8Bytes);
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay12.ToJsonString());
+
+        using var memoryStream = new MemoryStream(utf8Bytes);
+        var clay13 = Clay.Parse(memoryStream);
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay13.ToJsonString());
+
+        var clay14 = Clay.Parse(clay13);
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay14.ToJsonString());
     }
 
     [Fact]
@@ -923,6 +936,18 @@ public class ClayExportsTests(ITestOutputHelper output)
         {
             output.WriteLine(item.Key.ToString());
         }
+    }
+
+    [Fact]
+    public void AsEnumerable_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        var keyValuePairs = clay.AsEnumerable();
+        Assert.Equal(["id", "name"], keyValuePairs.Select(u => u.Key).ToList());
+
+        var clay2 = Clay.Parse("[1,2,3]");
+        var keyValuePairs2 = clay2.AsEnumerable();
+        Assert.Equal([1, 2, 3], keyValuePairs2.Select(u => u.Value).ToList());
     }
 
     [Fact]

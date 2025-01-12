@@ -102,16 +102,12 @@ public partial class Clay
     /// <summary>
     ///     获取键或索引集合
     /// </summary>
-    public IEnumerable<object> Indexes => IsObject
-        ? EnumerateObject().Select(object (u) => u.Key)
-        : EnumerateArray().Select(object (u) => u.Key);
+    public IEnumerable<object> Indexes => AsEnumerable().Select(u => u.Key);
 
     /// <summary>
     ///     获取值集合
     /// </summary>
-    public IEnumerable<dynamic?> Values => IsObject
-        ? EnumerateObject().Select(u => u.Value)
-        : EnumerateArray().Select(u => u.Value);
+    public IEnumerable<dynamic?> Values => AsEnumerable().Select(u => u.Value);
 
     // /// <summary>
     // ///     反序列化时没有匹配的属性字典集合
@@ -125,10 +121,7 @@ public partial class Clay
     /// <returns>
     ///     <see cref="IEnumerator{T}" />
     /// </returns>
-    public IEnumerator<KeyValuePair<object, dynamic?>> GetEnumerator() =>
-        IsObject
-            ? EnumerateObject().Select(u => new KeyValuePair<object, dynamic?>(u.Key, u.Value)).GetEnumerator()
-            : EnumerateArray().Select(u => new KeyValuePair<object, dynamic?>(u.Key, u.Value)).GetEnumerator();
+    public IEnumerator<KeyValuePair<object, dynamic?>> GetEnumerator() => AsEnumerable().GetEnumerator();
 
     /// <inheritdoc />
     public string ToString(string? format, IFormatProvider? formatProvider)
@@ -178,6 +171,16 @@ public partial class Clay
 
         return ToJsonString(jsonSerializerOptions);
     }
+
+    /// <summary>
+    ///     返回类型化为 <see cref="IEnumerable{T}" /> 的输入
+    /// </summary>
+    /// <returns>
+    ///     <see cref="IEnumerable{T}" />
+    /// </returns>
+    public IEnumerable<KeyValuePair<object, dynamic?>> AsEnumerable() => IsObject
+        ? EnumerateObject().Select(u => new KeyValuePair<object, dynamic?>(u.Key, u.Value))
+        : EnumerateArray().Select(u => new KeyValuePair<object, dynamic?>(u.Key, u.Value));
 
     /// <summary>
     ///     创建空的单一对象
@@ -254,11 +257,13 @@ public partial class Clay
     /// <param name="options">
     ///     <see cref="ClayOptions" />
     /// </param>
+    /// <param name="useObjectForDictionaryJson">是否自动将 JSON 字典格式字符串解析为单一对象。默认值为：<c>false</c>。</param>
     /// <returns>
     ///     <see cref="Clay" />
     /// </returns>
-    public static Clay Parse(ref Utf8JsonReader utf8JsonReader, ClayOptions? options = null) =>
-        Parse(utf8JsonReader.GetRawText(), options);
+    public static Clay Parse(ref Utf8JsonReader utf8JsonReader, ClayOptions? options = null,
+        bool useObjectForDictionaryJson = false) =>
+        Parse(utf8JsonReader.GetRawText(), options, useObjectForDictionaryJson);
 
     /// <summary>
     ///     检查键或索引是否定义

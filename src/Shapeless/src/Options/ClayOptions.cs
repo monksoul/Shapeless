@@ -97,4 +97,21 @@ public sealed class ClayOptions
         AllowTrailingCommas = true,
         Converters = { new ClayJsonConverter() }
     };
+
+    /// <summary>
+    ///     自定义配置 <see cref="ClayOptions" /> 实例
+    /// </summary>
+    /// <param name="configure">自定义配置委托</param>
+    /// <returns>
+    ///     <see cref="ClayOptions" />
+    /// </returns>
+    public ClayOptions Configure(Action<ClayOptions> configure)
+    {
+        // 空检查
+        ArgumentNullException.ThrowIfNull(configure);
+
+        configure.Invoke(this);
+
+        return this;
+    }
 }

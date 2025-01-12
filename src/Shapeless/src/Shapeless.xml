@@ -432,6 +432,14 @@
         <member name="M:Shapeless.Clay.ToString(System.String,System.IFormatProvider)">
             <inheritdoc />
         </member>
+        <member name="M:Shapeless.Clay.AsEnumerable">
+            <summary>
+                返回类型化为 <see cref="T:System.Collections.Generic.IEnumerable`1" /> 的输入
+            </summary>
+            <returns>
+                <see cref="T:System.Collections.Generic.IEnumerable`1" />
+            </returns>
+        </member>
         <member name="M:Shapeless.Clay.EmptyObject(Shapeless.ClayOptions)">
             <summary>
                 创建空的单一对象
@@ -469,7 +477,7 @@
                 <see cref="T:Shapeless.Clay" />
             </returns>
         </member>
-        <member name="M:Shapeless.Clay.Parse(System.Text.Json.Utf8JsonReader@,Shapeless.ClayOptions)">
+        <member name="M:Shapeless.Clay.Parse(System.Text.Json.Utf8JsonReader@,Shapeless.ClayOptions,System.Boolean)">
             <summary>
                 将 <see cref="T:System.Text.Json.Utf8JsonReader" /> 转换为 <see cref="T:Shapeless.Clay" /> 实例
             </summary>
@@ -479,6 +487,7 @@
             <param name="options">
                 <see cref="T:Shapeless.ClayOptions" />
             </param>
+            <param name="useObjectForDictionaryJson">是否自动将 JSON 字典格式字符串解析为单一对象。默认值为：<c>false</c>。</param>
             <returns>
                 <see cref="T:Shapeless.Clay" />
             </returns>
@@ -1178,6 +1187,15 @@
             <summary>
                 JSON 序列化配置
             </summary>
+        </member>
+        <member name="M:Shapeless.ClayOptions.Configure(System.Action{Shapeless.ClayOptions})">
+            <summary>
+                自定义配置 <see cref="T:Shapeless.ClayOptions" /> 实例
+            </summary>
+            <param name="configure">自定义配置委托</param>
+            <returns>
+                <see cref="T:Shapeless.ClayOptions" />
+            </returns>
         </member>
         <member name="T:Shapeless.PascalCaseNamingPolicy">
             <summary>

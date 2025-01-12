@@ -121,6 +121,60 @@ public class GetStartController
     }
 
     [HttpGet]
+    public Clay ParseObject()
+    {
+        // 从现有的对象创建
+        dynamic clay1 = Clay.Parse(new Model { Id = 1, Name = "Shapeless" });
+
+        // 从匿名对象创建
+        dynamic clay2 = Clay.Parse(new { id = 1, name = "Furion" });
+
+        // 从字典对象创建
+        dynamic clay3 = Clay.Parse(new Dictionary<string, object> { { "id", 1 }, { "name", "Furion" } });
+
+        // 从集合/数组创建
+        dynamic clay4 = Clay.Parse(new List<Model>
+            { new() { Id = 1, Name = "Furion" }, new() { Id = 2, Name = "Shapeless" } });
+
+        // 从 Byte[] 中创建
+        dynamic clay5 = Clay.Parse("{\"id\":1,\"name\":\"furion\"}"u8.ToArray());
+
+        // 从 Stream 中创建
+        using var memoryStream = new MemoryStream("{\"id\":1,\"name\":\"furion\"}"u8.ToArray());
+        dynamic clay6 = Clay.Parse(memoryStream);
+
+        // 从 Utf8JsonReader 中创建
+        var utf8JsonReader = new Utf8JsonReader("{\"id\":1,\"name\":\"furion\"}"u8.ToArray(), true, default);
+        var clay7 = Clay.Parse(ref utf8JsonReader);
+
+        // 从 Clay 中创建
+        dynamic dyn = new Clay();
+        dyn.Id = 1;
+        dyn.name = "Shapeless";
+        var clay8 = Clay.Parse(dyn);
+
+        // 从任意对象（支持序列化操作）中创建
+        var clay9 = Clay.Parse(true);
+
+        // 通过自定义 JsonConverter 创建，如 DataTable 转换为流变对象
+        var dataTable = new DataTable();
+        dataTable.Columns.Add("id", typeof(int));
+        dataTable.Columns.Add("name", typeof(string));
+        dataTable.Rows.Add(1, "Furion");
+        dataTable.Rows.Add(2, "百小僧");
+
+        var clay10 = Clay.Parse(dataTable,
+            new ClayOptions().Configure(options =>
+                options.JsonSerializerOptions.Converters.Add(new DataTableJsonConverter())));
+
+        // 打印 JSON
+        Console.WriteLine(
+            $"{Clay.Parse(new { clay1, clay2, clay3, clay4, clay5, clay6, clay7, clay8, clay9, clay10 }):U}");
+
+        return Clay.Parse(new { clay1, clay2, clay3, clay4, clay5, clay6, clay7, clay8, clay9, clay10 });
+    }
+
+    [HttpGet]
     public Clay Usage()
     {
         dynamic clay = Clay.Parse("""{"id":1,"name":"shapeless"}""");
