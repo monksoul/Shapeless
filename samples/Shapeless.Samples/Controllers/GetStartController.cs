@@ -73,6 +73,9 @@ public class GetStartController
         // 在索引为 1 处插入
         clay.Insert(1, "Insert");
 
+        // 在索引为 1 处批量插入
+        clay.InsertRange(2, new object[] { "Furion", "Sundial", "Jaina", "TimeCrontab", "HttpAgent" });
+
         // 删除项
         clay.Remove(4); // 或使用 clay.Delete(4)
 

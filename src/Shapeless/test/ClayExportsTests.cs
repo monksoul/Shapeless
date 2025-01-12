@@ -1049,6 +1049,28 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void InsertRange_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        var exception = Assert.Throws<NotSupportedException>(() => clay.InsertRange(0, ["furion"]));
+        Assert.Equal("`InsertRange` method can only be used for array or collection operations.", exception.Message);
+
+        var clay2 = Clay.Parse("[1,2,3]");
+        var exception2 =
+            Assert.Throws<ArgumentOutOfRangeException>(() => clay2.InsertRange(-1, ["furion"]));
+        Assert.Equal("Negative indices are not allowed. Index must be greater than or equal to 0. (Parameter 'index')",
+            exception2.Message);
+    }
+
+    [Fact]
+    public void InsertRange_ReturnOK()
+    {
+        var clay = Clay.Parse("[1,2,3]");
+        clay.InsertRange(0, [-3, -2, -1, 0]);
+        Assert.Equal("[-3,-2,-1,0,1,2,3]", clay.ToJsonString());
+    }
+
+    [Fact]
     public void TryInsert_Invalid_Parameters()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");

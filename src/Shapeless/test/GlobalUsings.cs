@@ -13,7 +13,6 @@ global using System.Text.Json;
 global using System.Text.Json.Nodes;
 global using System.Text.Json.Serialization;
 global using System.Xml;
-// ReSharper disable once RedundantUsingDirective.Global
 global using System.Xml.Linq;
 global using Xunit;
 global using Xunit.Abstractions;

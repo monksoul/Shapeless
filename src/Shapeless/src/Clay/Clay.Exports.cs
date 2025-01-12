@@ -393,6 +393,28 @@ public partial class Clay
     }
 
     /// <summary>
+    ///     在指定索引处批量插入项
+    /// </summary>
+    /// <remarks>当 <see cref="IsArray" /> 为 <c>true</c> 时有效。</remarks>
+    /// <param name="index">索引</param>
+    /// <param name="values">值集合</param>
+    /// <exception cref="NotSupportedException"></exception>
+    public void InsertRange(int index, params IEnumerable<object?> values)
+    {
+        // 检查是否是单一对象实例调用
+        ThrowIfMethodCalledOnSingleObject(nameof(InsertRange));
+
+        // 初始化待插入索引位置
+        var currentIndex = index;
+
+        // 逐条在指定索引处插入项
+        foreach (var value in values)
+        {
+            SetValue(currentIndex++, value, true);
+        }
+    }
+
+    /// <summary>
     ///     在末尾处添加项
     /// </summary>
     /// <remarks>当 <see cref="IsArray" /> 为 <c>true</c> 时有效。</remarks>

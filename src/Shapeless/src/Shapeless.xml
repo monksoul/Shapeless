@@ -566,6 +566,15 @@
             </returns>
             <exception cref="T:System.NotSupportedException"></exception>
         </member>
+        <member name="M:Shapeless.Clay.InsertRange(System.Int32,System.Collections.Generic.IEnumerable{System.Object})">
+            <summary>
+                在指定索引处批量插入项
+            </summary>
+            <remarks>当 <see cref="P:Shapeless.Clay.IsArray" /> 为 <c>true</c> 时有效。</remarks>
+            <param name="index">索引</param>
+            <param name="values">值集合</param>
+            <exception cref="T:System.NotSupportedException"></exception>
+        </member>
         <member name="M:Shapeless.Clay.Add(System.Object)">
             <summary>
                 在末尾处添加项
