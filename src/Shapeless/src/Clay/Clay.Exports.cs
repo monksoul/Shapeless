@@ -366,11 +366,14 @@ public partial class Clay
     public void Set(object keyOrIndex, object? value) => SetValue(keyOrIndex, value);
 
     /// <summary>
-    ///     在指定索引处插入值
+    ///     在指定索引处插入项
     /// </summary>
     /// <remarks>当 <see cref="IsArray" /> 为 <c>true</c> 时有效。</remarks>
     /// <param name="index">索引</param>
     /// <param name="value">值</param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
     /// <exception cref="NotSupportedException"></exception>
     public bool Insert(int index, object? value)
     {
@@ -381,10 +384,13 @@ public partial class Clay
     }
 
     /// <summary>
-    ///     在末尾处添加值
+    ///     在末尾处添加项
     /// </summary>
     /// <remarks>当 <see cref="IsArray" /> 为 <c>true</c> 时有效。</remarks>
     /// <param name="value">值</param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
     /// <exception cref="NotSupportedException"></exception>
     public bool Add(object? value)
     {
@@ -392,6 +398,66 @@ public partial class Clay
         ThrowIfMethodCalledOnSingleObject(nameof(Add));
 
         return SetValue(JsonCanvas.AsArray().Count, value);
+    }
+
+    /// <summary>
+    ///     在末尾处批量添加项
+    /// </summary>
+    /// <remarks>当 <see cref="IsArray" /> 为 <c>true</c> 时有效。</remarks>
+    /// <param name="values">值集合</param>
+    /// <exception cref="NotSupportedException"></exception>
+    public void AddRange(params IEnumerable<object?> values)
+    {
+        // 空检查
+        ArgumentNullException.ThrowIfNull(values);
+
+        // 检查是否是单一对象实例调用
+        ThrowIfMethodCalledOnSingleObject(nameof(AddRange));
+
+        // 将 JsonCanvas 转换为 JsonArray 实例
+        var jsonArray = JsonCanvas.AsArray();
+
+        // 逐条追加项
+        foreach (var value in values)
+        {
+            SetValue(jsonArray.Count, value);
+        }
+    }
+
+    /// <summary>
+    ///     在末尾处添加项
+    /// </summary>
+    /// <remarks>当 <see cref="IsArray" /> 为 <c>true</c> 时有效。</remarks>
+    /// <param name="value">值</param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
+    /// <exception cref="NotSupportedException"></exception>
+    public bool Push(object? value)
+    {
+        // 检查是否是单一对象实例调用
+        ThrowIfMethodCalledOnSingleObject(nameof(Push));
+
+        return SetValue(JsonCanvas.AsArray().Count, value);
+    }
+
+    /// <summary>
+    ///     移除末尾处的项
+    /// </summary>
+    /// <remarks>当 <see cref="IsArray" /> 为 <c>true</c> 时有效。</remarks>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
+    /// <exception cref="NotSupportedException"></exception>
+    public bool Pop()
+    {
+        // 检查是否是单一对象实例调用
+        ThrowIfMethodCalledOnSingleObject(nameof(Pop));
+
+        // 获取 JsonArray 最大索引
+        var maxIndex = JsonCanvas.AsArray().Count - 1;
+
+        return maxIndex > -1 && RemoveValue(maxIndex);
     }
 
     /// <summary>

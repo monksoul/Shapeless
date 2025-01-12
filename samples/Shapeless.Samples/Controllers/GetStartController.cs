@@ -52,6 +52,36 @@ public class GetStartController
         // 创建空的集合/数组
         dynamic clay = new Clay(ClayType.Array); // 或使用 Clay.EmptyArray(); 或 new Clay.Array();
 
+        // 追加项
+        clay.Add(1); // 或使用 clay.Push(1);
+        clay.Add(true);
+        clay.Add("Furion");
+        clay.Add(false);
+
+        // 追加对象
+        clay.Add(new { id = 1, name = "Furion" });
+
+        // 追加流变对象
+        clay.Add(Clay.Parse("{\"id\":2,\"name\":\"shapeless\"}"));
+
+        // 批量追加项
+        clay.AddRange(new object[] { 2, 3, "will be deleted" });
+
+        // 修改项
+        clay[0] += 1; // 或使用 clay.Set(0, 2);
+
+        // 在索引为 1 处插入
+        clay.Insert(1, "Insert");
+
+        // 删除项
+        clay.Remove(4); // 或使用 clay.Delete(4)
+
+        // 删除末项
+        clay.Pop();
+
+        // 输出字符串
+        Console.WriteLine(clay); // 或使用 clay.ToString();
+
         return clay;
     }
 

@@ -541,6 +541,7 @@ public class ClayExportsTests(ITestOutputHelper output)
         output.WriteLine(duration.ToString());
 
         stopwatch.Stop();
+        Assert.NotNull(clay);
     }
 
     [Fact]
@@ -1100,6 +1101,71 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void AddRange_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+
+        Assert.Throws<ArgumentNullException>(() => clay.AddRange(null!));
+
+        var exception = Assert.Throws<NotSupportedException>(() => clay.AddRange(["furion"]));
+        Assert.Equal("`AddRange` method can only be used for array or collection operations.", exception.Message);
+    }
+
+    [Fact]
+    public void AddRange_ReturnOK()
+    {
+        var clay = Clay.Parse("[1,2,3]");
+        clay.AddRange([4, 5, 6]);
+        Assert.Equal("[1,2,3,4,5,6]", clay.ToJsonString());
+    }
+
+    [Fact]
+    public void Push_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        var exception = Assert.Throws<NotSupportedException>(() => clay.Push("furion"));
+        Assert.Equal("`Push` method can only be used for array or collection operations.", exception.Message);
+    }
+
+    [Fact]
+    public void Push_ReturnOK()
+    {
+        var clay = Clay.Parse("[1,2,3]");
+        clay.Push(0);
+        Assert.Equal("[1,2,3,0]", clay.ToJsonString());
+
+        clay.Push(4);
+        Assert.Equal("[1,2,3,0,4]", clay.ToJsonString());
+
+        clay.Push("Furion");
+        Assert.Equal("[1,2,3,0,4,\"Furion\"]", clay.ToJsonString());
+    }
+
+    [Fact]
+    public void Pop_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        var exception = Assert.Throws<NotSupportedException>(() => clay.Pop());
+        Assert.Equal("`Pop` method can only be used for array or collection operations.", exception.Message);
+    }
+
+    [Fact]
+    public void Pop_ReturnOK()
+    {
+        var clay = Clay.Parse("[1,2,3]");
+        Assert.True(clay.Pop());
+        Assert.Equal("[1,2]", clay.ToJsonString());
+        Assert.True(clay.Pop());
+        Assert.Equal("[1]", clay.ToJsonString());
+        Assert.True(clay.Pop());
+        Assert.Equal("[]", clay.ToJsonString());
+        Assert.False(clay.Pop());
+        Assert.Equal("[]", clay.ToJsonString());
+        Assert.False(clay.Pop());
+        Assert.Equal("[]", clay.ToJsonString());
+    }
+
+    [Fact]
     public void AsReadOnly_ReturnOK()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
@@ -1151,8 +1217,26 @@ public class ClayExportsTests(ITestOutputHelper output)
 
         dynamic clay2 = new Clay.Array();
         clay2.Add(1);
-        clay2.Add(2);
-        clay2.Add(3);
-        Assert.Equal("[1,2,3]", clay2.ToJsonString());
+        clay2.Add(true);
+        clay2.Add("Furion");
+        clay2.Add(false);
+
+        clay2.Add(new { id = 1, name = "Furion" });
+
+        clay2.Add(Clay.Parse("{\"id\":2,\"name\":\"shapeless\"}"));
+
+        clay2.AddRange(new object[] { 2, 3, "will be deleted" });
+
+        clay2[0] += 1;
+
+        clay2.Insert(1, "Insert");
+
+        clay2.Remove(4);
+
+        clay2.Pop();
+
+        Assert.Equal(
+            "[2,\"Insert\",true,\"Furion\",{\"id\":1,\"name\":\"Furion\"},{\"id\":2,\"name\":\"shapeless\"},2,3]",
+            clay2.ToJsonString());
     }
 }
