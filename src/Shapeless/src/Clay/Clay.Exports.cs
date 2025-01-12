@@ -811,6 +811,28 @@ public partial class Clay
     }
 
     /// <summary>
+    ///     检查类型是否是 <see cref="Clay" /> 类型
+    /// </summary>
+    /// <param name="type">
+    ///     <see cref="Type" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
+    public static bool IsClay(Type type) => type == typeof(Clay) || typeof(Clay).IsAssignableFrom(type);
+
+    /// <summary>
+    ///     检查类型是否是 <see cref="Clay" /> 类型
+    /// </summary>
+    /// <param name="obj">
+    ///     <see cref="object" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
+    public static bool IsClay(object? obj) => obj is not null && IsClay(obj as Type ?? obj.GetType());
+
+    /// <summary>
     ///     单一对象
     /// </summary>
     public sealed class Object : Clay

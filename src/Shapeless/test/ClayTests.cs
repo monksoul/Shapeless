@@ -736,13 +736,6 @@ public class ClayTests(ITestOutputHelper output)
         Assert.Equal("Operation cannot be performed because the Clay is in read-only mode.", exception.Message);
     }
 
-    [Theory]
-    [InlineData(typeof(Clay), true)]
-    [InlineData(typeof(Clay.Object), true)]
-    [InlineData(typeof(Clay.Array), true)]
-    [InlineData(typeof(string), false)]
-    public void IsClay_ReturnOK(Type type, bool expected) => Assert.Equal(expected, Clay.IsClay(type));
-
     [Fact]
     public void TryConvertJsonArrayToDictionaryObject_ReturnOK()
     {

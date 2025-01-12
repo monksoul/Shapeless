@@ -175,7 +175,7 @@ public class GetStartController
     }
 
     [HttpGet]
-    public Clay Usage()
+    public Clay MoreUsage()
     {
         dynamic clay = Clay.Parse("""{"id":1,"name":"shapeless"}""");
 
@@ -195,7 +195,7 @@ public class GetStartController
         Console.WriteLine(clay.number); // number: 11
 
         // 打印 JSON
-        Console.WriteLine($"{clay.sayHello()}\r\n{clay:UZ}");
+        Console.WriteLine($"{clay.sayHello()}\r\n{clay:U}");
 
         return clay;
     }

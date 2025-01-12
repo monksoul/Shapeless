@@ -294,17 +294,6 @@
             <param name="method">方法名</param>
             <exception cref="T:System.NotSupportedException"></exception>
         </member>
-        <member name="M:Shapeless.Clay.IsClay(System.Type)">
-            <summary>
-                检查类型是否是 <see cref="T:Shapeless.Clay" /> 类型
-            </summary>
-            <param name="type">
-                <see cref="T:System.Type" />
-            </param>
-            <returns>
-                <see cref="T:System.Boolean" />
-            </returns>
-        </member>
         <member name="E:Shapeless.Clay.ValueChanging">
             <summary>
                 值变更之前事件
@@ -818,6 +807,28 @@
             </param>
             <returns>
                 <see cref="T:System.String" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.IsClay(System.Type)">
+            <summary>
+                检查类型是否是 <see cref="T:Shapeless.Clay" /> 类型
+            </summary>
+            <param name="type">
+                <see cref="T:System.Type" />
+            </param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.IsClay(System.Object)">
+            <summary>
+                检查类型是否是 <see cref="T:Shapeless.Clay" /> 类型
+            </summary>
+            <param name="obj">
+                <see cref="T:System.Object" />
+            </param>
+            <returns>
+                <see cref="T:System.Boolean" />
             </returns>
         </member>
         <member name="T:Shapeless.Clay.Object">

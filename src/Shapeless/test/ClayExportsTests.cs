@@ -1257,6 +1257,24 @@ public class ClayExportsTests(ITestOutputHelper output)
         clay["name"] = "百小僧";
     }
 
+    [Theory]
+    [InlineData(typeof(Clay), true)]
+    [InlineData(typeof(Clay.Object), true)]
+    [InlineData(typeof(Clay.Array), true)]
+    [InlineData(typeof(string), false)]
+    public void IsClay_ReturnOK(Type type, bool expected) => Assert.Equal(expected, Clay.IsClay(type));
+
+    [Fact]
+    public void IsClay_WithObject_ReturnOK()
+    {
+        Assert.False(Clay.IsClay((object?)null));
+        Assert.True(Clay.IsClay(new Clay()));
+        Assert.True(Clay.IsClay(new Clay.Object()));
+        Assert.True(Clay.IsClay(new Clay.Array()));
+        Assert.True(Clay.IsClay(Clay.Parse("{\"id\":1,\"name\":\"furion\"}")));
+        Assert.False(Clay.IsClay("furion"));
+    }
+
     [Fact]
     public void Nested_ReturnOK()
     {

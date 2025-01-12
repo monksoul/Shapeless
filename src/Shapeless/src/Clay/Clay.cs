@@ -769,15 +769,4 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
                 $"`{method}` method can only be used for single object operations.");
         }
     }
-
-    /// <summary>
-    ///     检查类型是否是 <see cref="Clay" /> 类型
-    /// </summary>
-    /// <param name="type">
-    ///     <see cref="Type" />
-    /// </param>
-    /// <returns>
-    ///     <see cref="bool" />
-    /// </returns>
-    internal static bool IsClay(Type type) => type == typeof(Clay) || typeof(Clay).IsAssignableFrom(type);
 }
