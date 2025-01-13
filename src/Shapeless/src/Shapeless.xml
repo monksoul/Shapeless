@@ -210,6 +210,14 @@
                 <see cref="T:System.String" />
             </returns>
         </member>
+        <member name="M:Shapeless.Clay.ExpandArrayWithNulls(System.Text.Json.Nodes.JsonArray)">
+            <summary>
+                对数组进行 null 值补位
+            </summary>
+            <param name="jsonArray">
+                <see cref="T:System.Text.Json.Nodes.JsonArray" />
+            </param>
+        </member>
         <member name="M:Shapeless.Clay.CreateJsonNodeOptions(Shapeless.ClayOptions)">
             <summary>
                 创建 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 选项

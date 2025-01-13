@@ -836,6 +836,30 @@ public class ClayTests(ITestOutputHelper output)
         Assert.True(jsonObject9.ContainsKey("id"));
         Assert.True(jsonObject9.ContainsKey("name"));
     }
+
+    [Fact]
+    public void ExpandArrayWithNulls_ReturnOK()
+    {
+        var clay = new Clay(ClayType.Array,
+            new ClayOptions { AllowIndexOutOfRange = true, AutoExpandArrayWithNulls = true });
+
+        var i = 0;
+        var j = 0;
+        clay.Changing += (sender, args) =>
+        {
+            output.WriteLine(args.Identifier.ToString());
+            i++;
+        };
+
+        clay.Changed += (sender, args) =>
+        {
+            j++;
+        };
+
+        clay.ExpandArrayWithNulls(clay.JsonCanvas.AsArray());
+        Assert.Equal(1, i);
+        Assert.Equal(1, j);
+    }
 }
 
 public class CustomDataTableJsonConverter : JsonConverter<DataTable>

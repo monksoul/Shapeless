@@ -332,17 +332,8 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
             // 补位操作
             while (jsonArray.Count < intIndex)
             {
-                // 获取最新的数组索引
-                var addingIndex = jsonArray.Count;
-
-                // 触发数据变更之前事件
-                OnChanging(addingIndex);
-
-                // 追加 null
-                jsonArray.Add(null);
-
-                // 触发数据变更之后事件
-                OnChanged(addingIndex);
+                // 对数组进行 null 值补位
+                ExpandArrayWithNulls(jsonArray);
             }
 
             jsonArray.Add(SerializeToNode(value, Options));
@@ -538,6 +529,27 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     /// </returns>
     internal string ProcessNestedNullPropagationIdentifier(string identifier) =>
         !Options.AutoCreateNestedObjects ? identifier : identifier.TrimEnd('?');
+
+    /// <summary>
+    ///     对数组进行 null 值补位
+    /// </summary>
+    /// <param name="jsonArray">
+    ///     <see cref="JsonArray" />
+    /// </param>
+    internal void ExpandArrayWithNulls(JsonArray jsonArray)
+    {
+        // 获取最新的数组索引
+        var addingIndex = jsonArray.Count;
+
+        // 触发数据变更之前事件
+        OnChanging(addingIndex);
+
+        // 追加 null
+        jsonArray.Add(null);
+
+        // 触发数据变更之后事件
+        OnChanged(addingIndex);
+    }
 
     /// <summary>
     ///     创建 <see cref="JsonNode" /> 选项
