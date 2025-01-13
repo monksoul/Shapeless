@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace Shapeless.Samples.Controllers;
+﻿namespace Shapeless.Samples.Controllers;
 
 [ApiController]
 [Route("[controller]/[action]")]
@@ -119,7 +117,22 @@ public class GetStartController
         });
         Console.WriteLine(custom);
 
-        return Clay.Parse(new { clay, array, any, custom });
+        // 从 JSON 字典格式字符串创建
+        dynamic dicObject = Clay.Parse("""
+                                       [
+                                         {
+                                           "key": "id",
+                                           "value": 1
+                                         },
+                                         {
+                                           "key": "name",
+                                           "value": "Furion"
+                                         }
+                                       ]
+                                       """, useObjectForDictionaryJson: true);
+        Console.WriteLine(dicObject);
+
+        return Clay.Parse(new { clay, array, any, custom, dicObject });
     }
 
     [HttpGet]
