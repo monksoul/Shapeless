@@ -4,7 +4,7 @@
 
 namespace Shapeless.Tests;
 
-public class ClayTests(ITestOutputHelper output)
+public class ClayTests
 {
     [Fact]
     public void New_Invalid_Parameters() => Assert.Throws<ArgumentNullException>(() => new Clay((JsonNode?)null));
@@ -635,42 +635,6 @@ public class ClayTests(ITestOutputHelper output)
         var clay2 = Clay.Parse("{\"id\":1,\"name\":\"furion\"}", new ClayOptions { ReadOnly = true });
         var exception = Assert.Throws<InvalidOperationException>(() => clay2.Remove("name"));
         Assert.Equal("Operation cannot be performed because the Clay is in read-only mode.", exception.Message);
-    }
-
-    [Fact]
-    public void EnumerateObject_Invalid_Parameters()
-    {
-        var clay = Clay.Parse("[1,2,3]");
-        var exception = Assert.Throws<NotSupportedException>(() => clay.EnumerateObject().ToList());
-        Assert.Equal("`EnumerateObject` method can only be used for single object operations.", exception.Message);
-    }
-
-    [Fact]
-    public void EnumerateObject_ReturnOK()
-    {
-        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
-        foreach (var item in clay.EnumerateObject())
-        {
-            output.WriteLine(item.Key);
-        }
-    }
-
-    [Fact]
-    public void EnumerateArray_Invalid_Parameters()
-    {
-        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
-        var exception = Assert.Throws<NotSupportedException>(() => clay.EnumerateArray().ToList());
-        Assert.Equal("`EnumerateArray` method can only be used for array or collection operations.", exception.Message);
-    }
-
-    [Fact]
-    public void EnumerateArray_ReturnOK()
-    {
-        var clay = Clay.Parse("[1,2,3]");
-        foreach (var item in clay.EnumerateArray())
-        {
-            output.WriteLine(item.Key.ToString());
-        }
     }
 
     [Fact]

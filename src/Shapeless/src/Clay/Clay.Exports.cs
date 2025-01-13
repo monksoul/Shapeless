@@ -84,45 +84,12 @@ public partial class Clay
     /// </summary>
     public bool IsArray { get; }
 
-    /// <summary>
-    ///     元素数量
-    /// </summary>
-    public int Count => IsObject ? JsonCanvas.AsObject().Count : JsonCanvas.AsArray().Count;
-
-    /// <summary>
-    ///     元素数量
-    /// </summary>
-    public int Length => Count;
-
-    /// <summary>
-    ///     是否为空元素
-    /// </summary>
-    public bool IsEmpty => Count == 0;
-
-    /// <summary>
-    ///     获取键或索引集合
-    /// </summary>
-    public IEnumerable<object> Indexes => AsEnumerable().Select(u => u.Key);
-
-    /// <summary>
-    ///     获取值集合
-    /// </summary>
-    public IEnumerable<dynamic?> Values => AsEnumerable().Select(u => u.Value);
 
     // /// <summary>
     // ///     反序列化时没有匹配的属性字典集合
     // /// </summary>
     // [JsonExtensionData]
     // public Dictionary<object, object?> Extensions { get; set; } = new();
-
-    /// <summary>
-    ///     返回循环访问元素的枚举数
-    /// </summary>
-    /// <returns>
-    ///     <see cref="IEnumerator{T}" />
-    /// </returns>
-    public IEnumerator<KeyValuePair<object, dynamic?>> GetEnumerator() => AsEnumerable().GetEnumerator();
-
     /// <inheritdoc />
     public string ToString(string? format, IFormatProvider? formatProvider)
     {
@@ -171,16 +138,6 @@ public partial class Clay
 
         return ToJsonString(jsonSerializerOptions);
     }
-
-    /// <summary>
-    ///     返回类型化为 <see cref="IEnumerable{T}" /> 的输入
-    /// </summary>
-    /// <returns>
-    ///     <see cref="IEnumerable{T}" />
-    /// </returns>
-    public IEnumerable<KeyValuePair<object, dynamic?>> AsEnumerable() => IsObject
-        ? EnumerateObject().Select(u => new KeyValuePair<object, dynamic?>(u.Key, u.Value))
-        : EnumerateArray().Select(u => new KeyValuePair<object, dynamic?>(u.Key, u.Value));
 
     /// <summary>
     ///     创建空的单一对象
@@ -536,13 +493,13 @@ public partial class Clay
         // 检查是否是 IEnumerable<KeyValuePair<string, object?>> 类型且是单一对象
         if (resultType == typeof(IEnumerable<KeyValuePair<string, object?>>) && IsObject)
         {
-            return EnumerateObject();
+            return AsEnumerableObject();
         }
 
         // 检查是否是 IEnumerable<KeyValuePair<int, object?>> 类型且是集合/数组
         if (resultType == typeof(IEnumerable<KeyValuePair<int, object?>>) && IsArray)
         {
-            return EnumerateArray();
+            return AsEnumerableArray();
         }
 
         return Helpers.DeserializeNode(JsonCanvas, resultType, jsonSerializerOptions ?? Options.JsonSerializerOptions);

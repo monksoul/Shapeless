@@ -1,4 +1,6 @@
-﻿namespace Shapeless.Samples.Controllers;
+﻿using System.Diagnostics;
+
+namespace Shapeless.Samples.Controllers;
 
 [ApiController]
 [Route("[controller]/[action]")]
@@ -153,7 +155,7 @@ public class GetStartController
         dyn.name = "Shapeless";
         var clay8 = Clay.Parse(dyn);
 
-        // 从任意对象（支持序列化操作）中创建
+        // 从任意对象（支持序列化的类型）中创建
         var clay9 = Clay.Parse(true);
 
         // 通过自定义 JsonConverter 创建，如 DataTable 转换为流变对象
@@ -198,5 +200,63 @@ public class GetStartController
         Console.WriteLine($"{clay.sayHello()}\r\n{clay:U}");
 
         return clay;
+    }
+
+    [HttpGet]
+    public void Foreach()
+    {
+        // ===================== 遍历单一对象 =====================
+
+        dynamic clay = Clay.Parse("""{"id":1,"name":"shapeless"}""");
+
+        // 遍历项（Key 为 Object）
+        foreach (KeyValuePair<object, dynamic?> item in clay) // 或使用 clay.AsEnumerable()
+            Console.WriteLine($"Key: {item.Key} Value: {item.Value}");
+
+        // 遍历项（Key 为 String）
+        foreach (KeyValuePair<string, dynamic?> item in clay.AsEnumerableObject())
+            Console.WriteLine($"Key: {item.Key} Value: {item.Value}");
+
+        // 遍历键
+        foreach (var key in clay.Keys) // 或使用 clay.Indexes
+            Console.WriteLine($"Key: {key}");
+
+        // 遍历值
+        foreach (var value in clay.Values) Console.WriteLine($"Value: {value}");
+
+        // 游标方式
+        using IEnumerator<KeyValuePair<object, dynamic?>> objectEnumerator = clay.GetEnumerator();
+
+        var listObject = new List<KeyValuePair<object, dynamic?>>();
+        while (objectEnumerator.MoveNext()) listObject.Add(objectEnumerator.Current);
+
+        Debug.Assert(listObject.Count == 2);
+
+        // ===================== 遍历集合/数组 =====================
+
+        dynamic array = Clay.Parse("""[1,2,true,false,"Furion",{"id":1,"name":"shapeless"},null]""");
+
+        // 遍历项（Key 为 Object）
+        foreach (KeyValuePair<object, dynamic?> item in array) // 或使用 clay.AsEnumerable()
+            Console.WriteLine($"Index: {item.Key} Value: {item.Value}");
+
+        // 遍历项（Key 为 Int）
+        foreach (KeyValuePair<int, dynamic?> item in array.AsEnumerableArray())
+            Console.WriteLine($"Index: {item.Key} Value: {item.Value}");
+
+        // 遍历索引
+        foreach (var index in array.Keys) // 或使用 clay.Indexes
+            Console.WriteLine($"Index: {index}");
+
+        // 遍历值
+        foreach (var value in array.Values) Console.WriteLine($"Value: {value}");
+
+        // 游标方式
+        using IEnumerator<KeyValuePair<object, dynamic?>> arrayEnumerator = array.GetEnumerator();
+
+        var listArray = new List<KeyValuePair<object, dynamic?>>();
+        while (arrayEnumerator.MoveNext()) listArray.Add(objectEnumerator.Current);
+
+        Debug.Assert(listArray.Count == 7);
     }
 }

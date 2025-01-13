@@ -58,9 +58,6 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     /// </summary>
     internal IDictionary<string, Delegate?> ObjectMethods { get; } = new Dictionary<string, Delegate?>();
 
-    /// <inheritdoc />
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
     /// <summary>
     ///     根据键或索引获取值
     /// </summary>
@@ -531,57 +528,6 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     /// </returns>
     internal string ProcessNestedNullPropagationIndexKey(string indexKey) =>
         !Options.AutoCreateNestedObjects ? indexKey : indexKey.TrimEnd('?');
-
-    /// <summary>
-    ///     枚举 <see cref="JsonCanvas" /> 作为对象时的键值对
-    /// </summary>
-    /// <returns>
-    ///     <see cref="IEnumerable{T}" />
-    /// </returns>
-    internal IEnumerable<KeyValuePair<string, dynamic?>> EnumerateObject()
-    {
-        // 检查是否是集合（数组）实例调用
-        ThrowIfMethodCalledOnArrayCollection(nameof(EnumerateObject));
-
-        // 获取循环访问 JsonObject 的枚举数
-        using var enumerator = JsonCanvas.AsObject().GetEnumerator();
-
-        // 遍历 JsonObject 每个键值对
-        while (enumerator.MoveNext())
-        {
-            // 获取当前的键值对
-            var current = enumerator.Current;
-
-            yield return new KeyValuePair<string, dynamic?>(current.Key, DeserializeNode(current.Value, Options));
-        }
-    }
-
-    /// <summary>
-    ///     枚举 <see cref="JsonCanvas" /> 作为数组时的元素
-    /// </summary>
-    /// <returns>
-    ///     <see cref="IEnumerable{T}" />
-    /// </returns>
-    internal IEnumerable<KeyValuePair<int, dynamic?>> EnumerateArray()
-    {
-        // 检查是否是单一对象实例调用
-        ThrowIfMethodCalledOnSingleObject(nameof(EnumerateArray));
-
-        // 获取循环访问 JsonArray 的枚举数
-        using var enumerator = JsonCanvas.AsArray().GetEnumerator();
-
-        // 定义索引变量用于记录数组中元素的位置
-        var index = 0;
-
-        // 遍历 JsonArray 每个元素
-        while (enumerator.MoveNext())
-        {
-            // 获取当前的元素
-            var current = enumerator.Current;
-
-            yield return new KeyValuePair<int, dynamic?>(index++, DeserializeNode(current, Options));
-        }
-    }
 
     /// <summary>
     ///     创建 <see cref="JsonNode" /> 选项

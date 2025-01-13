@@ -17,6 +17,9 @@
             <summary>
                 流变对象
             </summary>
+            <summary>
+                流变对象
+            </summary>
         </member>
         <member name="M:Shapeless.Clay.#ctor(System.Text.Json.Nodes.JsonNode,Shapeless.ClayOptions)">
             <summary>
@@ -45,9 +48,6 @@
             <summary>
                 单一对象自定义委托字典
             </summary>
-        </member>
-        <member name="M:Shapeless.Clay.System#Collections#IEnumerable#GetEnumerator">
-            <inheritdoc />
         </member>
         <member name="M:Shapeless.Clay.GetValue(System.Object)">
             <summary>
@@ -210,22 +210,6 @@
                 <see cref="T:System.String" />
             </returns>
         </member>
-        <member name="M:Shapeless.Clay.EnumerateObject">
-            <summary>
-                枚举 <see cref="P:Shapeless.Clay.JsonCanvas" /> 作为对象时的键值对
-            </summary>
-            <returns>
-                <see cref="T:System.Collections.Generic.IEnumerable`1" />
-            </returns>
-        </member>
-        <member name="M:Shapeless.Clay.EnumerateArray">
-            <summary>
-                枚举 <see cref="P:Shapeless.Clay.JsonCanvas" /> 作为数组时的元素
-            </summary>
-            <returns>
-                <see cref="T:System.Collections.Generic.IEnumerable`1" />
-            </returns>
-        </member>
         <member name="M:Shapeless.Clay.CreateJsonNodeOptions(Shapeless.ClayOptions)">
             <summary>
                 创建 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 选项
@@ -293,6 +277,71 @@
             </summary>
             <param name="method">方法名</param>
             <exception cref="T:System.NotSupportedException"></exception>
+        </member>
+        <member name="P:Shapeless.Clay.Count">
+            <summary>
+                元素数量
+            </summary>
+        </member>
+        <member name="P:Shapeless.Clay.Length">
+            <summary>
+                元素数量
+            </summary>
+        </member>
+        <member name="P:Shapeless.Clay.IsEmpty">
+            <summary>
+                是否为空元素
+            </summary>
+        </member>
+        <member name="P:Shapeless.Clay.Indexes">
+            <summary>
+                获取键或索引集合
+            </summary>
+        </member>
+        <member name="P:Shapeless.Clay.Keys">
+            <summary>
+                获取键或索引集合
+            </summary>
+        </member>
+        <member name="P:Shapeless.Clay.Values">
+            <summary>
+                获取值集合
+            </summary>
+        </member>
+        <member name="M:Shapeless.Clay.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:Shapeless.Clay.GetEnumerator">
+            <summary>
+                返回循环访问元素的枚举数
+            </summary>
+            <returns>
+                <see cref="T:System.Collections.Generic.IEnumerator`1" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.AsEnumerable">
+            <summary>
+                返回类型化为 <see cref="T:System.Collections.Generic.IEnumerable`1" /> 的输入
+            </summary>
+            <returns>
+                <see cref="T:System.Collections.Generic.IEnumerable`1" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.AsEnumerableObject">
+            <summary>
+                枚举 <see cref="P:Shapeless.Clay.JsonCanvas" /> 作为对象时的键值对
+            </summary>
+            <returns>
+                <see cref="T:System.Collections.Generic.IEnumerable`1" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.AsEnumerableArray">
+            <summary>
+                枚举 <see cref="P:Shapeless.Clay.JsonCanvas" /> 作为数组时的元素
+            </summary>
+            <returns>
+                <see cref="T:System.Collections.Generic.IEnumerable`1" />
+            </returns>
         </member>
         <member name="E:Shapeless.Clay.ValueChanging">
             <summary>
@@ -385,49 +434,8 @@
                 是否是集合（数组）
             </summary>
         </member>
-        <member name="P:Shapeless.Clay.Count">
-            <summary>
-                元素数量
-            </summary>
-        </member>
-        <member name="P:Shapeless.Clay.Length">
-            <summary>
-                元素数量
-            </summary>
-        </member>
-        <member name="P:Shapeless.Clay.IsEmpty">
-            <summary>
-                是否为空元素
-            </summary>
-        </member>
-        <member name="P:Shapeless.Clay.Indexes">
-            <summary>
-                获取键或索引集合
-            </summary>
-        </member>
-        <member name="P:Shapeless.Clay.Values">
-            <summary>
-                获取值集合
-            </summary>
-        </member>
-        <member name="M:Shapeless.Clay.GetEnumerator">
-            <summary>
-                返回循环访问元素的枚举数
-            </summary>
-            <returns>
-                <see cref="T:System.Collections.Generic.IEnumerator`1" />
-            </returns>
-        </member>
         <member name="M:Shapeless.Clay.ToString(System.String,System.IFormatProvider)">
             <inheritdoc />
-        </member>
-        <member name="M:Shapeless.Clay.AsEnumerable">
-            <summary>
-                返回类型化为 <see cref="T:System.Collections.Generic.IEnumerable`1" /> 的输入
-            </summary>
-            <returns>
-                <see cref="T:System.Collections.Generic.IEnumerable`1" />
-            </returns>
         </member>
         <member name="M:Shapeless.Clay.EmptyObject(Shapeless.ClayOptions)">
             <summary>
