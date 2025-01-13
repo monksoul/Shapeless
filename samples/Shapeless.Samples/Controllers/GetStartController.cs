@@ -272,4 +272,87 @@ public class GetStartController
 
         Debug.Assert(listArray.Count == 7);
     }
+
+    [HttpGet]
+    public object LambdaAndLinq()
+    {
+        // ===================== 遍历单一对象 =====================
+
+        dynamic clay = Clay.Parse("""{"id":1,"name":"shapeless"}""");
+
+        // 转换为 Clay 类型后遍历
+        var list1 = ((Clay)clay).Where(u => (string)u.Key == "id").OrderBy(u => u.Key).ToList();
+
+        // 转换为 IEnumerable<KeyValuePair<object, dynamic?>> 类型后遍历
+        var list2 = ((IEnumerable<KeyValuePair<object, dynamic?>>)clay).Where(u => (string)u.Key == "id")
+            .OrderBy(u => u.Key).FirstOrDefault();
+
+        // 声明为 Clay 类型再遍历（推荐方式，能够提供 IDE 智能提示）
+        Clay clayList = clay;
+        var list3 = clayList.Where(u => (string)u.Key == "id").OrderBy(u => u.Key).ToList();
+        // AsEnumerableObject 返回了 string 类型的 Key
+        var list31 = clayList.AsEnumerableObject().Where(u => u.Key == "id").ToList();
+
+        // 声明为 IEnumerable<KeyValuePair<object, dynamic?>> 类型再遍历
+        IEnumerable<KeyValuePair<object, dynamic?>> clayList2 = clay;
+        var list4 = clayList2.Where(u => (string)u.Key == "id").OrderBy(u => u.Key).ToList();
+
+        // Linq 查询
+        var query1 = from item in clayList
+            where (string)item.Key == "id"
+            orderby item.Key
+            select item;
+
+        // Linq 查询，AsEnumerableObject 返回了 string 类型的 Key
+        var query2 = from item in clayList.AsEnumerableObject()
+            where item.Key == "id"
+            orderby item.Key
+            select item;
+
+        var list5 = query1.ToList();
+        var list6 = query2.ToList();
+
+        // ===================== 遍历集合/数组 =====================
+
+        dynamic array = Clay.Parse("""[1,2,true,false,"Furion",{"id":1,"name":"shapeless"},null]""");
+
+        // 转换为 Clay 类型后遍历
+        var arrayList1 = ((Clay)array).Where(u => (int)u.Key > 2).OrderBy(u => u.Key).ToList();
+
+        // 转换为 IEnumerable<KeyValuePair<object, dynamic?>> 类型后遍历
+        var arrayList2 = ((IEnumerable<KeyValuePair<object, dynamic?>>)array).Where(u => (int)u.Key > 2)
+            .OrderBy(u => u.Key).FirstOrDefault();
+
+        // 声明为 Clay 类型再遍历（推荐方式，能够提供 IDE 智能提示）
+        Clay clayArray = array;
+        var arrayList3 = clayArray.Where(u => (int)u.Key > 2).OrderBy(u => u.Key).ToList();
+        // AsEnumerableArray 返回了 int 类型的索引
+        var arrayList31 = clayArray.AsEnumerableArray().Where(u => u.Key > 2).ToList();
+
+        // 声明为 IEnumerable<KeyValuePair<object, dynamic?>> 类型再遍历
+        IEnumerable<KeyValuePair<object, dynamic?>> clayArray2 = array;
+        var arrayList4 = clayArray2.Where(u => (int)u.Key > 2).OrderBy(u => u.Key).ToList();
+
+        // Linq 查询
+        var arrayQuery1 = from item in clayArray
+            where (int)item.Key > 2
+            orderby item.Key
+            select item;
+
+        // Linq 查询，AsEnumerableArray 返回了 int 类型的索引
+        var arrayQuery2 = from item in clayArray.AsEnumerableArray()
+            where item.Key > 2
+            orderby item.Key
+            select item;
+
+        var arrayList5 = arrayQuery1.ToList();
+        var arrayList6 = arrayQuery2.ToList();
+
+        return new
+        {
+            list1, list2, list3, list31, list4, list5, list6, arrayList1, arrayList2, arrayList3, arrayList31,
+            arrayList4,
+            arrayList5, arrayList6
+        };
+    }
 }
