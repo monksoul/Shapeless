@@ -1197,11 +1197,6 @@
                 帕斯卡（大驼峰）命名策略
             </summary>
         </member>
-        <member name="F:Shapeless.PascalCaseNamingPolicy._splitter">
-            <summary>
-                用于分割字符串中的单词的正则表达式
-            </summary>
-        </member>
         <member name="M:Shapeless.PascalCaseNamingPolicy.ConvertName(System.String)">
             <inheritdoc />
         </member>

@@ -11,7 +11,6 @@ public class PascalCaseNamingPolicyTests
     {
         var pascalCaseNamingPolicy = new PascalCaseNamingPolicy();
         Assert.NotNull(pascalCaseNamingPolicy);
-        Assert.NotNull(PascalCaseNamingPolicy._splitter);
     }
 
     [Theory]

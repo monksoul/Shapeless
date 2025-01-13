@@ -9,11 +9,6 @@ namespace Shapeless;
 /// </summary>
 public sealed partial class PascalCaseNamingPolicy : JsonNamingPolicy
 {
-    /// <summary>
-    ///     用于分割字符串中的单词的正则表达式
-    /// </summary>
-    internal static readonly Regex _splitter = WordBoundaryRegex();
-
     /// <inheritdoc />
     public override string ConvertName(string name)
     {
@@ -33,7 +28,7 @@ public sealed partial class PascalCaseNamingPolicy : JsonNamingPolicy
         var result = new StringBuilder();
 
         // 将字符串按非字母数字字符、大小写字母变化处分割成多个部分
-        var parts = _splitter.Split(name);
+        var parts = WordBoundaryRegex().Split(name);
 
         // 遍历并逐个处理各个部分
         foreach (var part in parts)
