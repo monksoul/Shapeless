@@ -346,7 +346,7 @@ public partial class Clay
 
         return IsClay(resultType)
             ? new Clay(jsonNode, Options)
-            : jsonNode.As(resultType, jsonSerializerOptions ?? Options.JsonSerializerOptions);
+            : Helpers.DeserializeNode(jsonNode, resultType, jsonSerializerOptions ?? Options.JsonSerializerOptions);
     }
 
     /// <summary>
@@ -525,10 +525,28 @@ public partial class Clay
     /// <returns>
     ///     <see cref="object" />
     /// </returns>
-    public object? As(Type resultType, JsonSerializerOptions? jsonSerializerOptions = null) =>
-        IsClay(resultType)
-            ? this
-            : JsonCanvas.As(resultType, jsonSerializerOptions ?? Options.JsonSerializerOptions);
+    public object? As(Type resultType, JsonSerializerOptions? jsonSerializerOptions = null)
+    {
+        // 检查是否是 Clay 类型或 IEnumerable<KeyValuePair<object, object?>> 类型
+        if (IsClay(resultType) || resultType == typeof(IEnumerable<KeyValuePair<object, object?>>))
+        {
+            return this;
+        }
+
+        // 检查是否是 IEnumerable<KeyValuePair<string, object?>> 类型且是单一对象
+        if (resultType == typeof(IEnumerable<KeyValuePair<string, object?>>) && IsObject)
+        {
+            return EnumerateObject();
+        }
+
+        // 检查是否是 IEnumerable<KeyValuePair<int, object?>> 类型且是集合/数组
+        if (resultType == typeof(IEnumerable<KeyValuePair<int, object?>>) && IsArray)
+        {
+            return EnumerateArray();
+        }
+
+        return Helpers.DeserializeNode(JsonCanvas, resultType, jsonSerializerOptions ?? Options.JsonSerializerOptions);
+    }
 
     /// <summary>
     ///     将 <see cref="Clay" /> 转换为目标类型

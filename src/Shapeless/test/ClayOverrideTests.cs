@@ -326,11 +326,13 @@ public class ClayOverrideTests
         Assert.True(clay.id(typeof(decimal)) is decimal);
         Assert.True(clay.datetime(typeof(DateTime)) is DateTime);
         Assert.True(clay.datetime(typeof(DateTime), new JsonSerializerOptions()) is DateTime);
+        Assert.True(clay.datetime(typeof(DateTime), null) is DateTime);
 
         Assert.True(clay.id<decimal>() is decimal);
         Assert.False(clay.datetime is DateTime);
         Assert.True(clay.datetime<DateTime>() is DateTime);
         Assert.True(clay.datetime<DateTime>(new JsonSerializerOptions()) is DateTime);
+        Assert.True(clay.datetime<DateTime>(null) is DateTime);
 
         var floatId = (float)clay.id;
         Assert.Equal(1, floatId);

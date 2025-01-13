@@ -133,11 +133,16 @@ public partial class Clay
                         return true;
                     // 处理 clay.Prop(Type) 情况
                     case [Type resultType]:
-                        result = FindNode(memberName).As(resultType, Options.JsonSerializerOptions);
+                        result = Helpers.DeserializeNode(FindNode(memberName), resultType,
+                            Options.JsonSerializerOptions);
                         return true;
                     // 处理 clay.Prop(Type, JsonSerializerOptions) 情况
                     case [Type resultType, JsonSerializerOptions jsonSerializerOptions]:
-                        result = FindNode(memberName).As(resultType, jsonSerializerOptions);
+                        result = Helpers.DeserializeNode(FindNode(memberName), resultType, jsonSerializerOptions);
+                        return true;
+                    // 处理 clay.Prop(Type, null) 情况
+                    case [Type resultType, null]:
+                        result = Helpers.DeserializeNode(FindNode(memberName), resultType);
                         return true;
                 }
 
@@ -148,11 +153,16 @@ public partial class Clay
                 {
                     // 处理 clay.Prop<T>() 情况
                     case { Length: 0 }:
-                        result = FindNode(memberName).As(typeArguments[0], Options.JsonSerializerOptions);
+                        result = Helpers.DeserializeNode(FindNode(memberName), typeArguments[0],
+                            Options.JsonSerializerOptions);
                         return true;
                     // 处理 clay.Prop<T>(JsonSerializerOptions) 情况
                     case [JsonSerializerOptions jsonSerializerOptions]:
-                        result = FindNode(memberName).As(typeArguments[0], jsonSerializerOptions);
+                        result = Helpers.DeserializeNode(FindNode(memberName), typeArguments[0], jsonSerializerOptions);
+                        return true;
+                    // 处理 clay.Prop<T>(null) 情况
+                    case [null]:
+                        result = Helpers.DeserializeNode(FindNode(memberName), typeArguments[0]);
                         return true;
                 }
 

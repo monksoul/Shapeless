@@ -823,6 +823,23 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.NotNull(model4);
         Assert.Equal(0, model4.Id);
         Assert.Null(model4.Name);
+
+        var model5 = clay.As<Clay>();
+        Assert.NotNull(model5);
+        Assert.Equal(clay.GetHashCode(), model5.GetHashCode());
+
+        var model6 = clay.As<IEnumerable<KeyValuePair<object, object?>>>();
+        Assert.NotNull(model6);
+        Assert.Equal(clay.GetHashCode(), model6.GetHashCode());
+
+        var model7 = clay.As<IEnumerable<KeyValuePair<string, object?>>>();
+        Assert.NotNull(model7);
+        Assert.Equal(["id", "name"], model7.Select(u => u.Key));
+
+        var array = Clay.Parse("[1,2,3]");
+        var model8 = array.As<IEnumerable<KeyValuePair<int, object?>>>();
+        Assert.NotNull(model8);
+        Assert.Equal([1, 2, 3], model8.Select(u => u.Value));
     }
 
     [Fact]

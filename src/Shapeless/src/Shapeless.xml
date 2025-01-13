@@ -1045,6 +1045,26 @@
                 <see cref="T:System.String" />
             </returns>
         </member>
+        <member name="T:Shapeless.Helpers">
+            <summary>
+                流变对象模块帮助类
+            </summary>
+        </member>
+        <member name="M:Shapeless.Helpers.DeserializeNode(System.Text.Json.Nodes.JsonNode,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+                将 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 转换为目标类型
+            </summary>
+            <param name="jsonNode">
+                <see cref="T:System.Text.Json.Nodes.JsonNode" />
+            </param>
+            <param name="resultType">转换的目标类型</param>
+            <param name="jsonSerializerOptions">
+                <see cref="T:System.Text.Json.JsonSerializerOptions" />
+            </param>
+            <returns>
+                <see cref="T:System.Object" />
+            </returns>
+        </member>
         <member name="T:Shapeless.ClayEventArgs">
             <summary>
                 <see cref="T:Shapeless.Clay" /> 对象事件数据
