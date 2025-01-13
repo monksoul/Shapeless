@@ -332,7 +332,17 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
             // 补位操作
             while (jsonArray.Count < intIndex)
             {
+                // 获取最新的数组索引
+                var addingIndex = jsonArray.Count;
+
+                // 触发数据变更之前事件
+                OnChanging(addingIndex);
+
+                // 追加 null
                 jsonArray.Add(null);
+
+                // 触发数据变更之后事件
+                OnChanged(addingIndex);
             }
 
             jsonArray.Add(SerializeToNode(value, Options));

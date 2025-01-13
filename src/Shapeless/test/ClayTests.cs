@@ -4,7 +4,7 @@
 
 namespace Shapeless.Tests;
 
-public class ClayTests
+public class ClayTests(ITestOutputHelper output)
 {
     [Fact]
     public void New_Invalid_Parameters() => Assert.Throws<ArgumentNullException>(() => new Clay((JsonNode?)null));
@@ -375,6 +375,31 @@ public class ClayTests
         var errorArray = new Clay(ClayType.Array,
             new ClayOptions { AllowIndexOutOfRange = true });
         errorArray.SetNodeInArray(3, null, out _);
+    }
+
+    [Fact]
+    public void SetNodeInArray_WithEvents_WhenExpandArray()
+    {
+        var clay = new Clay(ClayType.Array,
+            new ClayOptions { AllowIndexOutOfRange = true, AutoExpandArrayWithNulls = true });
+
+        var i = 0;
+        var j = 0;
+        clay.Changing += (sender, args) =>
+        {
+            output.WriteLine(args.Identifier.ToString());
+            i++;
+        };
+
+        clay.Changed += (sender, args) =>
+        {
+            j++;
+        };
+
+        Assert.True(clay.SetNodeInArray(3, "Furion", out _));
+        Assert.Equal(3, i);
+        Assert.Equal(3, j);
+        Assert.Equal("[null,null,null,\"Furion\"]", clay.ToJsonString());
     }
 
     [Fact]
