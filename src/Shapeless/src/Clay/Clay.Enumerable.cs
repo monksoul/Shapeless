@@ -25,12 +25,12 @@ public partial class Clay
     public bool IsEmpty => Count == 0;
 
     /// <summary>
-    ///     获取键或索引集合
+    ///     获取标识符集合
     /// </summary>
     public IEnumerable<object> Indexes => AsEnumerable().Select(u => u.Key);
 
     /// <summary>
-    ///     获取键或索引集合
+    ///     获取标识符集合
     /// </summary>
     public IEnumerable<object> Keys => Indexes;
 

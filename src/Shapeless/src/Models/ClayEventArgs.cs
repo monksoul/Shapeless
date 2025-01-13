@@ -7,16 +7,26 @@ namespace Shapeless;
 /// <summary>
 ///     <see cref="Clay" /> 对象事件数据
 /// </summary>
-public abstract class ClayEventArgs : EventArgs
+public sealed class ClayEventArgs : EventArgs
 {
     /// <summary>
     ///     <inheritdoc cref="ClayEventArgs" />
     /// </summary>
-    /// <param name="keyOrIndex">键或索引</param>
-    internal ClayEventArgs(object keyOrIndex) => KeyOrIndex = keyOrIndex;
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+    /// <param name="isFound">指示标识符是否存在</param>
+    internal ClayEventArgs(object identifier, bool isFound)
+    {
+        Identifier = identifier;
+        IsFound = isFound;
+    }
 
     /// <summary>
-    ///     键或索引
+    ///     标识符，可以是键（字符串）或索引（整数）
     /// </summary>
-    public virtual object KeyOrIndex { get; }
+    public object Identifier { get; }
+
+    /// <summary>
+    ///     指示标识符是否存在
+    /// </summary>
+    public bool IsFound { get; }
 }

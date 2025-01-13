@@ -59,101 +59,101 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     internal IDictionary<string, Delegate?> ObjectMethods { get; } = new Dictionary<string, Delegate?>();
 
     /// <summary>
-    ///     根据键或索引获取值
+    ///     根据标识符获取值
     /// </summary>
-    /// <param name="keyOrIndex">键或索引</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
     /// <returns>
     ///     <see cref="object" />
     /// </returns>
-    internal object? GetValue(object keyOrIndex)
+    internal object? GetValue(object identifier)
     {
         // 空检查
-        ArgumentNullException.ThrowIfNull(keyOrIndex);
+        ArgumentNullException.ThrowIfNull(identifier);
 
-        return TryGetDelegate(keyOrIndex, out var @delegate)
+        return TryGetDelegate(identifier, out var @delegate)
             ? @delegate
-            : DeserializeNode(FindNode(keyOrIndex), Options);
+            : DeserializeNode(FindNode(identifier), Options);
     }
 
     /// <summary>
-    ///     根据键或索引设置值
+    ///     根据标识符设置值
     /// </summary>
-    /// <param name="keyOrIndex">键或索引</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
     /// <param name="value">值</param>
     /// <param name="arrayInsert">是否作为在指定位置插入</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    internal bool SetValue(object keyOrIndex, object? value, bool arrayInsert = false)
+    internal bool SetValue(object identifier, object? value, bool arrayInsert = false)
     {
         // 确保当前实例不在只读模式下
         EnsureNotReadOnlyBeforeModify();
 
         // 空检查
-        ArgumentNullException.ThrowIfNull(keyOrIndex);
+        ArgumentNullException.ThrowIfNull(identifier);
 
-        // 触发值变更之前事件
-        OnValueChanging(keyOrIndex);
+        // 触发数据变更之前事件
+        OnChanging(identifier);
 
-        // 根据键或索引设置值并获取结果
+        // 根据标识符设置值并获取结果
         var result = IsObject
-            ? SetNodeInObject(keyOrIndex, value, out var finalIndex)
-            : SetNodeInArray(keyOrIndex, value, out finalIndex, arrayInsert);
+            ? SetNodeInObject(identifier, value, out var finalIndex)
+            : SetNodeInArray(identifier, value, out finalIndex, arrayInsert);
 
-        // 触发值变更之后事件
+        // 触发数据变更之后事件
         if (result)
         {
-            OnValueChanged(finalIndex);
+            OnChanged(finalIndex);
         }
 
         return result;
     }
 
     /// <summary>
-    ///     根据键或索引移除值
+    ///     根据标识符移除值
     /// </summary>
-    /// <param name="keyOrIndex">键或索引</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    internal bool RemoveValue(object keyOrIndex)
+    internal bool RemoveValue(object identifier)
     {
         // 确保当前实例不在只读模式下
         EnsureNotReadOnlyBeforeModify();
 
         // 空检查
-        ArgumentNullException.ThrowIfNull(keyOrIndex);
+        ArgumentNullException.ThrowIfNull(identifier);
 
-        // 触发键或索引移除之前事件
-        OnIndexRemoving(keyOrIndex);
+        // 触发移除数据之前事件
+        OnRemoving(identifier);
 
-        // 根据键或索引移除值并获取结果
+        // 根据标识符移除值并获取结果
         var result = IsObject
-            ? RemoveNodeFromObject(keyOrIndex, out var finalIndex)
-            : RemoveNodeFromArray(keyOrIndex, out finalIndex);
+            ? RemoveNodeFromObject(identifier, out var finalIndex)
+            : RemoveNodeFromArray(identifier, out finalIndex);
 
-        // 触发键或索引移除之后事件
+        // 触发移除数据之后事件
         if (result)
         {
-            OnIndexRemoved(finalIndex);
+            OnRemoved(finalIndex);
         }
 
         return result;
     }
 
     /// <summary>
-    ///     根据键或索引查找 <see cref="JsonNode" /> 节点
+    ///     根据标识符查找 <see cref="JsonNode" /> 节点
     /// </summary>
-    /// <param name="keyOrIndex">键或索引</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
     /// <returns>
     ///     <see cref="JsonNode" />
     /// </returns>
-    internal JsonNode? FindNode(object keyOrIndex)
+    internal JsonNode? FindNode(object identifier)
     {
         // 空检查
-        ArgumentNullException.ThrowIfNull(keyOrIndex);
+        ArgumentNullException.ThrowIfNull(identifier);
 
-        return IsObject ? GetNodeFromObject(keyOrIndex) : GetNodeFromArray(keyOrIndex);
+        return IsObject ? GetNodeFromObject(identifier) : GetNodeFromArray(identifier);
     }
 
     /// <summary>
@@ -169,14 +169,14 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
         // 将键转换为字符串类型
         var stringKey = key.ToString()!;
 
-        // 处理嵌套带空传播字符 ? 的索引键
-        var memberName = ProcessNestedNullPropagationIndexKey(stringKey);
+        // 处理嵌套带空传播字符 ? 的标识符
+        var identifier = ProcessNestedNullPropagationIdentifier(stringKey);
 
         // 将 JsonCanvas 转换为 JsonObject 实例
         var jsonObject = JsonCanvas.AsObject();
 
         // 根据键获取 JSON 节点
-        if (jsonObject.TryGetPropertyValue(memberName, out var jsonNode))
+        if (jsonObject.TryGetPropertyValue(identifier, out var jsonNode))
         {
             return jsonNode;
         }
@@ -184,17 +184,17 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
         // 检查是否允许访问不存在的属性
         if (!Options.AllowMissingProperty)
         {
-            throw new KeyNotFoundException($"The property `{memberName}` was not found in the Clay.");
+            throw new KeyNotFoundException($"The property `{identifier}` was not found in the Clay.");
         }
 
-        // 检查是否需要处理嵌套带空传播字符 ? 的索引键
-        if (memberName == stringKey || !Options.AutoCreateNestedObjects)
+        // 检查是否需要处理嵌套带空传播字符 ? 的标识符
+        if (identifier == stringKey || !Options.AutoCreateNestedObjects)
         {
             return null;
         }
 
-        SetValue(memberName, new Clay(Options));
-        return FindNode(memberName);
+        SetValue(identifier, new Clay(Options));
+        return FindNode(identifier);
     }
 
     /// <summary>
@@ -252,8 +252,8 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
         // 将键转换为字符串类型
         var stringKey = key.ToString()!;
 
-        // 处理嵌套带空传播字符 ? 的索引键
-        var memberName = ProcessNestedNullPropagationIndexKey(stringKey);
+        // 处理嵌套带空传播字符 ? 的标识符
+        var identifier = ProcessNestedNullPropagationIdentifier(stringKey);
 
         // 将 JsonCanvas 转换为 JsonObject 实例
         var jsonObject = JsonCanvas.AsObject();
@@ -262,17 +262,17 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
         if (value is Delegate @delegate)
         {
             // 移除可能存在的同名属性
-            jsonObject.Remove(memberName);
-            ObjectMethods[memberName] = @delegate;
+            jsonObject.Remove(identifier);
+            ObjectMethods[identifier] = @delegate;
         }
         else
         {
             // 移除可能存在的同名委托属性
-            ObjectMethods.Remove(memberName);
-            jsonObject[memberName] = SerializeToNode(value, Options);
+            ObjectMethods.Remove(identifier);
+            jsonObject[identifier] = SerializeToNode(value, Options);
         }
 
-        finalKey = memberName;
+        finalKey = identifier;
         return true;
     }
 
@@ -359,23 +359,23 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
         // 将键转换为字符串类型
         var stringKey = key.ToString()!;
 
-        // 处理嵌套带空传播字符 ? 的索引键
-        var memberName = ProcessNestedNullPropagationIndexKey(stringKey);
+        // 处理嵌套带空传播字符 ? 的标识符
+        var identifier = ProcessNestedNullPropagationIdentifier(stringKey);
 
         // 将 JsonCanvas 转换为 JsonObject 实例
         var jsonObject = JsonCanvas.AsObject();
 
         // 移除键
-        if (ObjectMethods.Remove(memberName) || jsonObject.Remove(memberName))
+        if (ObjectMethods.Remove(identifier) || jsonObject.Remove(identifier))
         {
-            finalKey = memberName;
+            finalKey = identifier;
             return true;
         }
 
         // 检查是否允许访问不存在的属性
         if (!Options.AllowMissingProperty)
         {
-            throw new KeyNotFoundException($"The property `{memberName}` was not found in the Clay.");
+            throw new KeyNotFoundException($"The property `{identifier}` was not found in the Clay.");
         }
 
         finalKey = null!;
@@ -438,10 +438,10 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
             return false;
         }
 
-        // 处理嵌套带空传播字符 ? 的索引键
-        var memberName = ProcessNestedNullPropagationIndexKey(key.ToString()!);
+        // 处理嵌套带空传播字符 ? 的标识符
+        var identifier = ProcessNestedNullPropagationIdentifier(key.ToString()!);
 
-        return ObjectMethods.TryGetValue(memberName, out @delegate);
+        return ObjectMethods.TryGetValue(identifier, out @delegate);
     }
 
     /// <summary>
@@ -520,14 +520,14 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     }
 
     /// <summary>
-    ///     处理嵌套带空传播字符 <c>?</c> 的索引键
+    ///     处理嵌套带空传播字符 <c>?</c> 的标识符
     /// </summary>
-    /// <param name="indexKey">索引键</param>
+    /// <param name="identifier">标识符</param>
     /// <returns>
     ///     <see cref="string" />
     /// </returns>
-    internal string ProcessNestedNullPropagationIndexKey(string indexKey) =>
-        !Options.AutoCreateNestedObjects ? indexKey : indexKey.TrimEnd('?');
+    internal string ProcessNestedNullPropagationIdentifier(string identifier) =>
+        !Options.AutoCreateNestedObjects ? identifier : identifier.TrimEnd('?');
 
     /// <summary>
     ///     创建 <see cref="JsonNode" /> 选项

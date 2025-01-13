@@ -427,13 +427,13 @@ public class ClayTests
     {
         var clay = new Clay();
         var keys = new List<object>();
-        clay.ValueChanging += (sender, args) =>
+        clay.Changing += (sender, args) =>
         {
-            keys.Add(args.KeyOrIndex);
+            keys.Add(args.Identifier);
         };
-        clay.ValueChanged += (sender, args) =>
+        clay.Changed += (sender, args) =>
         {
-            keys.Add(args.KeyOrIndex + "_Changed");
+            keys.Add(args.Identifier + "_Changed");
         };
 
         clay.SetValue("Name", "Furion");
@@ -485,11 +485,12 @@ public class ClayTests
     }
 
     [Fact]
-    public void ProcessNestedNullPropagationIndexKey_ReturnOK()
+    public void ProcessNestedNullPropagationIdentifier_ReturnOK()
     {
-        Assert.Equal("name?", new Clay().ProcessNestedNullPropagationIndexKey("name?"));
+        Assert.Equal("name?", new Clay().ProcessNestedNullPropagationIdentifier("name?"));
         Assert.Equal("name",
-            new Clay(new ClayOptions { AutoCreateNestedObjects = true }).ProcessNestedNullPropagationIndexKey("name?"));
+            new Clay(new ClayOptions { AutoCreateNestedObjects = true })
+                .ProcessNestedNullPropagationIdentifier("name?"));
     }
 
     [Fact]
@@ -611,13 +612,13 @@ public class ClayTests
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\",\"arr\":[1,2,3]}");
         var keys = new List<object>();
-        clay.IndexRemoving += (sender, args) =>
+        clay.Removing += (sender, args) =>
         {
-            keys.Add(args.KeyOrIndex);
+            keys.Add(args.Identifier);
         };
-        clay.IndexRemoved += (sender, args) =>
+        clay.Removed += (sender, args) =>
         {
-            keys.Add(args.KeyOrIndex + "_Removed");
+            keys.Add(args.Identifier + "_Removed");
         };
 
         clay.RemoveValue("id");

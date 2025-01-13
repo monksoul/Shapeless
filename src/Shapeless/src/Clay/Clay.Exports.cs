@@ -47,21 +47,21 @@ public partial class Clay
     /// <summary>
     ///     字符串索引
     /// </summary>
-    /// <param name="keyOrIndex">键或索引</param>
-    public object? this[string keyOrIndex]
+    /// <param name="key">键</param>
+    public object? this[string key]
     {
-        get => GetValue(keyOrIndex);
-        set => SetValue(keyOrIndex, value);
+        get => GetValue(key);
+        set => SetValue(key, value);
     }
 
     /// <summary>
     ///     字符索引
     /// </summary>
-    /// <param name="keyOrIndex">键或索引</param>
-    public object? this[char keyOrIndex]
+    /// <param name="key">键</param>
+    public object? this[char key]
     {
-        get => GetValue(keyOrIndex);
-        set => SetValue(keyOrIndex, value);
+        get => GetValue(key);
+        set => SetValue(key, value);
     }
 
     /// <summary>
@@ -223,28 +223,28 @@ public partial class Clay
         Parse(utf8JsonReader.GetRawText(), options, useObjectForDictionaryJson);
 
     /// <summary>
-    ///     检查键或索引是否定义
+    ///     检查标识符是否定义
     /// </summary>
-    /// <param name="keyOrIndex">键或索引</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    public bool Contains(object keyOrIndex)
+    public bool Contains(object identifier)
     {
         // 空检查
-        ArgumentNullException.ThrowIfNull(keyOrIndex);
+        ArgumentNullException.ThrowIfNull(identifier);
 
-        // 将索引转换为字符串类型
-        var stringIndex = keyOrIndex.ToString()!;
+        // 将标识符转换为字符串类型
+        var stringIdentifier = identifier.ToString()!;
 
         // 检查是否是单一对象
         if (IsObject)
         {
-            return ObjectMethods.ContainsKey(stringIndex) || JsonCanvas.AsObject().ContainsKey(stringIndex);
+            return ObjectMethods.ContainsKey(stringIdentifier) || JsonCanvas.AsObject().ContainsKey(stringIdentifier);
         }
 
-        // 尝试将字符串索引转换为整数索引
-        if (int.TryParse(stringIndex, out var intIndex))
+        // 尝试将字符串标识符转换为整数索引
+        if (int.TryParse(stringIdentifier, out var intIndex))
         {
             return intIndex >= 0 && intIndex < JsonCanvas.AsArray().Count;
         }
@@ -253,28 +253,28 @@ public partial class Clay
     }
 
     /// <summary>
-    ///     检查键或索引是否定义
+    ///     检查标识符是否定义
     /// </summary>
     /// <remarks>兼容旧版本粘土对象。</remarks>
-    /// <param name="keyOrIndex">键或索引</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    public bool IsDefined(object keyOrIndex) => Contains(keyOrIndex);
+    public bool IsDefined(object identifier) => Contains(identifier);
 
     /// <summary>
-    ///     根据键或索引获取值
+    ///     根据标识符获取值
     /// </summary>
-    /// <param name="keyOrIndex">键或索引</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
     /// <returns>
     ///     <see cref="object" />
     /// </returns>
-    public object? Get(object keyOrIndex) => GetValue(keyOrIndex);
+    public object? Get(object identifier) => GetValue(identifier);
 
     /// <summary>
-    ///     根据键或索引获取目标类型的值
+    ///     根据标识符获取目标类型的值
     /// </summary>
-    /// <param name="keyOrIndex">键或索引</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
     /// <param name="resultType">转换的目标类型</param>
     /// <param name="jsonSerializerOptions">
     ///     <see cref="JsonSerializerOptions" />
@@ -283,10 +283,10 @@ public partial class Clay
     ///     <see cref="object" />
     /// </returns>
     /// <exception cref="InvalidCastException"></exception>
-    public object? Get(object keyOrIndex, Type resultType, JsonSerializerOptions? jsonSerializerOptions = null)
+    public object? Get(object identifier, Type resultType, JsonSerializerOptions? jsonSerializerOptions = null)
     {
         // 尝试根据键获取委托
-        if (TryGetDelegate(keyOrIndex, out var @delegate))
+        if (TryGetDelegate(identifier, out var @delegate))
         {
             // 空检查或检查目标委托类型是否一致
             if (@delegate is null || @delegate.GetType() == resultType)
@@ -298,8 +298,8 @@ public partial class Clay
                 $"The delegate type `{@delegate.GetType().FullName}` cannot be cast to the target type `{resultType.FullName}`.");
         }
 
-        // 根据键或索引查找 JsonNode 节点
-        var jsonNode = FindNode(keyOrIndex);
+        // 根据标识符查找 JsonNode 节点
+        var jsonNode = FindNode(identifier);
 
         return IsClay(resultType)
             ? new Clay(jsonNode, Options)
@@ -307,9 +307,9 @@ public partial class Clay
     }
 
     /// <summary>
-    ///     根据键或索引获取目标类型的值
+    ///     根据标识符获取目标类型的值
     /// </summary>
-    /// <param name="keyOrIndex">键或索引</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
     /// <param name="jsonSerializerOptions">
     ///     <see cref="JsonSerializerOptions" />
     /// </param>
@@ -317,24 +317,24 @@ public partial class Clay
     /// <returns>
     ///     <typeparamref name="TResult" />
     /// </returns>
-    public TResult? Get<TResult>(object keyOrIndex, JsonSerializerOptions? jsonSerializerOptions = null) =>
-        (TResult?)Get(keyOrIndex, typeof(TResult), jsonSerializerOptions);
+    public TResult? Get<TResult>(object identifier, JsonSerializerOptions? jsonSerializerOptions = null) =>
+        (TResult?)Get(identifier, typeof(TResult), jsonSerializerOptions);
 
     /// <summary>
     ///     获取 <see cref="JsonNode" /> 实例
     /// </summary>
-    /// <param name="keyOrIndex">键或索引</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
     /// <returns>
     ///     <see cref="JsonNode" />
     /// </returns>
-    public JsonNode? GetNode(object keyOrIndex) => FindNode(keyOrIndex);
+    public JsonNode? GetNode(object identifier) => FindNode(identifier);
 
     /// <summary>
-    ///     根据键或索引设置值
+    ///     根据标识符设置值
     /// </summary>
-    /// <param name="keyOrIndex">键或索引</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
     /// <param name="value">值</param>
-    public void Set(object keyOrIndex, object? value) => SetValue(keyOrIndex, value);
+    public void Set(object identifier, object? value) => SetValue(identifier, value);
 
     /// <summary>
     ///     在指定索引处插入项
@@ -454,23 +454,23 @@ public partial class Clay
     }
 
     /// <summary>
-    ///     根据键或索引删除数据
+    ///     根据标识符删除数据
     /// </summary>
-    /// <param name="keyOrIndex">键或索引</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    public bool Remove(object keyOrIndex) => RemoveValue(keyOrIndex);
+    public bool Remove(object identifier) => RemoveValue(identifier);
 
     /// <summary>
-    ///     根据键或索引删除数据
+    ///     根据标识符删除数据
     /// </summary>
     /// <remarks>兼容旧版本粘土对象。</remarks>
-    /// <param name="keyOrIndex">键或索引</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    public bool Delete(object keyOrIndex) => Remove(keyOrIndex);
+    public bool Delete(object identifier) => Remove(identifier);
 
     /// <summary>
     ///     将 <see cref="Clay" /> 转换为目标类型
@@ -531,7 +531,7 @@ public partial class Clay
     public Clay DeepClone(ClayOptions? options = null) => new Clay(JsonCanvas.DeepClone()).Rebuilt(options);
 
     /// <summary>
-    ///     删除所有键或索引
+    ///     删除所有标识符
     /// </summary>
     public void Clear()
     {
@@ -563,19 +563,19 @@ public partial class Clay
         JsonCanvas.WriteTo(writer, jsonSerializerOptions ?? Options.JsonSerializerOptions);
 
     /// <summary>
-    ///     尝试根据键或索引获取值
+    ///     尝试根据标识符获取值
     /// </summary>
-    /// <param name="keyOrIndex">键或索引</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
     /// <param name="value">值</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    public bool TryGet(object keyOrIndex, out object? value)
+    public bool TryGet(object identifier, out object? value)
     {
-        // 检查键或索引是否定义
-        if (Contains(keyOrIndex))
+        // 检查标识符是否定义
+        if (Contains(identifier))
         {
-            value = Get(keyOrIndex);
+            value = Get(identifier);
             return true;
         }
 
@@ -584,9 +584,9 @@ public partial class Clay
     }
 
     /// <summary>
-    ///     尝试根据键或索引获取目标类型的值
+    ///     尝试根据标识符获取目标类型的值
     /// </summary>
-    /// <param name="keyOrIndex">键或索引</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
     /// <param name="resultType">转换的目标类型</param>
     /// <param name="value">值</param>
     /// <param name="jsonSerializerOptions">
@@ -595,13 +595,13 @@ public partial class Clay
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    public bool TryGet(object keyOrIndex, Type resultType, out object? value,
+    public bool TryGet(object identifier, Type resultType, out object? value,
         JsonSerializerOptions? jsonSerializerOptions = null)
     {
-        // 检查键或索引是否定义
-        if (Contains(keyOrIndex))
+        // 检查标识符是否定义
+        if (Contains(identifier))
         {
-            value = Get(keyOrIndex, resultType, jsonSerializerOptions);
+            value = Get(identifier, resultType, jsonSerializerOptions);
             return true;
         }
 
@@ -610,9 +610,9 @@ public partial class Clay
     }
 
     /// <summary>
-    ///     尝试根据键或索引获取目标类型的值
+    ///     尝试根据标识符获取目标类型的值
     /// </summary>
-    /// <param name="keyOrIndex">键或索引</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
     /// <param name="value">值</param>
     /// <param name="jsonSerializerOptions">
     ///     <see cref="JsonSerializerOptions" />
@@ -621,13 +621,13 @@ public partial class Clay
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    public bool TryGet<TResult>(object keyOrIndex, out TResult? value,
+    public bool TryGet<TResult>(object identifier, out TResult? value,
         JsonSerializerOptions? jsonSerializerOptions = null)
     {
-        // 检查键或索引是否定义
-        if (Contains(keyOrIndex))
+        // 检查标识符是否定义
+        if (Contains(identifier))
         {
-            value = Get<TResult>(keyOrIndex, jsonSerializerOptions);
+            value = Get<TResult>(identifier, jsonSerializerOptions);
             return true;
         }
 
@@ -636,19 +636,19 @@ public partial class Clay
     }
 
     /// <summary>
-    ///     尝试根据键或索引设置值
+    ///     尝试根据标识符设置值
     /// </summary>
-    /// <param name="keyOrIndex">键或索引</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
     /// <param name="value">值</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
     /// <exception cref="JsonException"></exception>
-    public bool TrySet(object keyOrIndex, object? value)
+    public bool TrySet(object identifier, object? value)
     {
         try
         {
-            Set(keyOrIndex, value);
+            Set(identifier, value);
             return true;
         }
         catch (JsonException)
@@ -695,23 +695,23 @@ public partial class Clay
     }
 
     /// <summary>
-    ///     尝试根据键或索引删除数据
+    ///     尝试根据标识符删除数据
     /// </summary>
-    /// <param name="keyOrIndex">键或索引</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    public bool TryRemove(object keyOrIndex) => Contains(keyOrIndex) && RemoveValue(keyOrIndex);
+    public bool TryRemove(object identifier) => Contains(identifier) && RemoveValue(identifier);
 
     /// <summary>
-    ///     尝试根据键或索引删除数据
+    ///     尝试根据标识符删除数据
     /// </summary>
     /// <remarks>兼容旧版本粘土对象。</remarks>
-    /// <param name="keyOrIndex">键或索引</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    public bool TryDelete(object keyOrIndex) => TryRemove(keyOrIndex);
+    public bool TryDelete(object identifier) => TryRemove(identifier);
 
     /// <summary>
     ///     设置为只读模式

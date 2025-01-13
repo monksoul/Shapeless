@@ -5,55 +5,81 @@
 namespace Shapeless;
 
 /// <summary>
+///     流变对象事件委托
+/// </summary>
+public delegate void ClayEventHandler(dynamic sender, ClayEventArgs args);
+
+/// <summary>
 ///     流变对象
 /// </summary>
 public partial class Clay
 {
     /// <summary>
-    ///     值变更之前事件
+    ///     数据变更之前事件
     /// </summary>
-    public event EventHandler<ClayValueChangingEventArgs>? ValueChanging;
+    public event ClayEventHandler? Changing;
 
     /// <summary>
-    ///     值变更之后事件
+    ///     数据变更之后事件
     /// </summary>
-    public event EventHandler<ClayValueChangedEventArgs>? ValueChanged;
+    public event ClayEventHandler? Changed;
 
     /// <summary>
-    ///     键或索引移除之前事件
+    ///     移除数据之前事件
     /// </summary>
-    public event EventHandler<ClayIndexRemovingEventArgs>? IndexRemoving;
+    public event ClayEventHandler? Removing;
 
     /// <summary>
-    ///     键或索引移除之后事件
+    ///     移除数据之后事件
     /// </summary>
-    public event EventHandler<ClayIndexRemovedEventArgs>? IndexRemoved;
+    public event ClayEventHandler? Removed;
 
     /// <summary>
-    ///     触发值变更之前事件
+    ///     触发数据变更之前事件
     /// </summary>
-    /// <param name="keyOrIndex">键或索引</param>
-    internal void OnValueChanging(object keyOrIndex) =>
-        ValueChanging?.TryInvoke(this, new ClayValueChangingEventArgs(keyOrIndex));
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+    internal void OnChanging(object identifier) => TryInvoke(Changing, identifier);
 
     /// <summary>
-    ///     触发值变更之后事件
+    ///     触发数据变更之后事件
     /// </summary>
-    /// <param name="keyOrIndex">键或索引</param>
-    internal void OnValueChanged(object keyOrIndex) =>
-        ValueChanged?.TryInvoke(this, new ClayValueChangedEventArgs(keyOrIndex));
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+    internal void OnChanged(object identifier) => TryInvoke(Changed, identifier);
 
     /// <summary>
-    ///     触发键或索引移除之前事件
+    ///     触发移除数据之前事件
     /// </summary>
-    /// <param name="keyOrIndex">键或索引</param>
-    internal void OnIndexRemoving(object keyOrIndex) =>
-        IndexRemoving?.TryInvoke(this, new ClayIndexRemovingEventArgs(keyOrIndex));
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+    internal void OnRemoving(object identifier) => TryInvoke(Removing, identifier);
 
     /// <summary>
-    ///     触发键或索引移除之后事件
+    ///     触发移除数据之后事件
     /// </summary>
-    /// <param name="keyOrIndex">键或索引</param>
-    internal void OnIndexRemoved(object keyOrIndex) =>
-        IndexRemoved?.TryInvoke(this, new ClayIndexRemovedEventArgs(keyOrIndex));
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+    internal void OnRemoved(object identifier) => TryInvoke(Removed, identifier);
+
+    /// <summary>
+    ///     尝试执行事件处理程序
+    /// </summary>
+    /// <param name="handler">
+    ///     <see cref="ClayEventHandler" />
+    /// </param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+    internal void TryInvoke(ClayEventHandler? handler, object identifier)
+    {
+        // 空检查
+        if (handler is null)
+        {
+            return;
+        }
+
+        try
+        {
+            handler(this, new ClayEventArgs(identifier, Contains(identifier)));
+        }
+        catch (Exception)
+        {
+            // ignored
+        }
+    }
 }

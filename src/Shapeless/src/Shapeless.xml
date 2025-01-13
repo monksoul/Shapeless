@@ -51,18 +51,18 @@
         </member>
         <member name="M:Shapeless.Clay.GetValue(System.Object)">
             <summary>
-                根据键或索引获取值
+                根据标识符获取值
             </summary>
-            <param name="keyOrIndex">键或索引</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
             <returns>
                 <see cref="T:System.Object" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.SetValue(System.Object,System.Object,System.Boolean)">
             <summary>
-                根据键或索引设置值
+                根据标识符设置值
             </summary>
-            <param name="keyOrIndex">键或索引</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
             <param name="value">值</param>
             <param name="arrayInsert">是否作为在指定位置插入</param>
             <returns>
@@ -71,18 +71,18 @@
         </member>
         <member name="M:Shapeless.Clay.RemoveValue(System.Object)">
             <summary>
-                根据键或索引移除值
+                根据标识符移除值
             </summary>
-            <param name="keyOrIndex">键或索引</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.FindNode(System.Object)">
             <summary>
-                根据键或索引查找 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 节点
+                根据标识符查找 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 节点
             </summary>
-            <param name="keyOrIndex">键或索引</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
             <returns>
                 <see cref="T:System.Text.Json.Nodes.JsonNode" />
             </returns>
@@ -201,11 +201,11 @@
                 <see cref="T:Shapeless.Clay" />
             </returns>
         </member>
-        <member name="M:Shapeless.Clay.ProcessNestedNullPropagationIndexKey(System.String)">
+        <member name="M:Shapeless.Clay.ProcessNestedNullPropagationIdentifier(System.String)">
             <summary>
-                处理嵌套带空传播字符 <c>?</c> 的索引键
+                处理嵌套带空传播字符 <c>?</c> 的标识符
             </summary>
-            <param name="indexKey">索引键</param>
+            <param name="identifier">标识符</param>
             <returns>
                 <see cref="T:System.String" />
             </returns>
@@ -295,12 +295,12 @@
         </member>
         <member name="P:Shapeless.Clay.Indexes">
             <summary>
-                获取键或索引集合
+                获取标识符集合
             </summary>
         </member>
         <member name="P:Shapeless.Clay.Keys">
             <summary>
-                获取键或索引集合
+                获取标识符集合
             </summary>
         </member>
         <member name="P:Shapeless.Clay.Values">
@@ -343,49 +343,58 @@
                 <see cref="T:System.Collections.Generic.IEnumerable`1" />
             </returns>
         </member>
-        <member name="E:Shapeless.Clay.ValueChanging">
+        <member name="E:Shapeless.Clay.Changing">
             <summary>
-                值变更之前事件
+                数据变更之前事件
             </summary>
         </member>
-        <member name="E:Shapeless.Clay.ValueChanged">
+        <member name="E:Shapeless.Clay.Changed">
             <summary>
-                值变更之后事件
+                数据变更之后事件
             </summary>
         </member>
-        <member name="E:Shapeless.Clay.IndexRemoving">
+        <member name="E:Shapeless.Clay.Removing">
             <summary>
-                键或索引移除之前事件
+                移除数据之前事件
             </summary>
         </member>
-        <member name="E:Shapeless.Clay.IndexRemoved">
+        <member name="E:Shapeless.Clay.Removed">
             <summary>
-                键或索引移除之后事件
+                移除数据之后事件
             </summary>
         </member>
-        <member name="M:Shapeless.Clay.OnValueChanging(System.Object)">
+        <member name="M:Shapeless.Clay.OnChanging(System.Object)">
             <summary>
-                触发值变更之前事件
+                触发数据变更之前事件
             </summary>
-            <param name="keyOrIndex">键或索引</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
         </member>
-        <member name="M:Shapeless.Clay.OnValueChanged(System.Object)">
+        <member name="M:Shapeless.Clay.OnChanged(System.Object)">
             <summary>
-                触发值变更之后事件
+                触发数据变更之后事件
             </summary>
-            <param name="keyOrIndex">键或索引</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
         </member>
-        <member name="M:Shapeless.Clay.OnIndexRemoving(System.Object)">
+        <member name="M:Shapeless.Clay.OnRemoving(System.Object)">
             <summary>
-                触发键或索引移除之前事件
+                触发移除数据之前事件
             </summary>
-            <param name="keyOrIndex">键或索引</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
         </member>
-        <member name="M:Shapeless.Clay.OnIndexRemoved(System.Object)">
+        <member name="M:Shapeless.Clay.OnRemoved(System.Object)">
             <summary>
-                触发键或索引移除之后事件
+                触发移除数据之后事件
             </summary>
-            <param name="keyOrIndex">键或索引</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+        </member>
+        <member name="M:Shapeless.Clay.TryInvoke(Shapeless.ClayEventHandler,System.Object)">
+            <summary>
+                尝试执行事件处理程序
+            </summary>
+            <param name="handler">
+                <see cref="T:Shapeless.ClayEventHandler" />
+            </param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
         </member>
         <member name="M:Shapeless.Clay.#ctor(Shapeless.ClayOptions)">
             <summary>
@@ -410,13 +419,13 @@
             <summary>
                 字符串索引
             </summary>
-            <param name="keyOrIndex">键或索引</param>
+            <param name="key">键</param>
         </member>
         <member name="P:Shapeless.Clay.Item(System.Char)">
             <summary>
                 字符索引
             </summary>
-            <param name="keyOrIndex">键或索引</param>
+            <param name="key">键</param>
         </member>
         <member name="P:Shapeless.Clay.Item(System.Int32)">
             <summary>
@@ -491,37 +500,37 @@
         </member>
         <member name="M:Shapeless.Clay.Contains(System.Object)">
             <summary>
-                检查键或索引是否定义
+                检查标识符是否定义
             </summary>
-            <param name="keyOrIndex">键或索引</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.IsDefined(System.Object)">
             <summary>
-                检查键或索引是否定义
+                检查标识符是否定义
             </summary>
             <remarks>兼容旧版本粘土对象。</remarks>
-            <param name="keyOrIndex">键或索引</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.Get(System.Object)">
             <summary>
-                根据键或索引获取值
+                根据标识符获取值
             </summary>
-            <param name="keyOrIndex">键或索引</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
             <returns>
                 <see cref="T:System.Object" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.Get(System.Object,System.Type,System.Text.Json.JsonSerializerOptions)">
             <summary>
-                根据键或索引获取目标类型的值
+                根据标识符获取目标类型的值
             </summary>
-            <param name="keyOrIndex">键或索引</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
             <param name="resultType">转换的目标类型</param>
             <param name="jsonSerializerOptions">
                 <see cref="T:System.Text.Json.JsonSerializerOptions" />
@@ -533,9 +542,9 @@
         </member>
         <member name="M:Shapeless.Clay.Get``1(System.Object,System.Text.Json.JsonSerializerOptions)">
             <summary>
-                根据键或索引获取目标类型的值
+                根据标识符获取目标类型的值
             </summary>
-            <param name="keyOrIndex">键或索引</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
             <param name="jsonSerializerOptions">
                 <see cref="T:System.Text.Json.JsonSerializerOptions" />
             </param>
@@ -548,16 +557,16 @@
             <summary>
                 获取 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 实例
             </summary>
-            <param name="keyOrIndex">键或索引</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
             <returns>
                 <see cref="T:System.Text.Json.Nodes.JsonNode" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.Set(System.Object,System.Object)">
             <summary>
-                根据键或索引设置值
+                根据标识符设置值
             </summary>
-            <param name="keyOrIndex">键或索引</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
             <param name="value">值</param>
         </member>
         <member name="M:Shapeless.Clay.Insert(System.Int32,System.Object)">
@@ -623,19 +632,19 @@
         </member>
         <member name="M:Shapeless.Clay.Remove(System.Object)">
             <summary>
-                根据键或索引删除数据
+                根据标识符删除数据
             </summary>
-            <param name="keyOrIndex">键或索引</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.Delete(System.Object)">
             <summary>
-                根据键或索引删除数据
+                根据标识符删除数据
             </summary>
             <remarks>兼容旧版本粘土对象。</remarks>
-            <param name="keyOrIndex">键或索引</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
@@ -678,7 +687,7 @@
         </member>
         <member name="M:Shapeless.Clay.Clear">
             <summary>
-                删除所有键或索引
+                删除所有标识符
             </summary>
         </member>
         <member name="M:Shapeless.Clay.WriteTo(System.Text.Json.Utf8JsonWriter,System.Text.Json.JsonSerializerOptions)">
@@ -694,9 +703,9 @@
         </member>
         <member name="M:Shapeless.Clay.TryGet(System.Object,System.Object@)">
             <summary>
-                尝试根据键或索引获取值
+                尝试根据标识符获取值
             </summary>
-            <param name="keyOrIndex">键或索引</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
             <param name="value">值</param>
             <returns>
                 <see cref="T:System.Boolean" />
@@ -704,9 +713,9 @@
         </member>
         <member name="M:Shapeless.Clay.TryGet(System.Object,System.Type,System.Object@,System.Text.Json.JsonSerializerOptions)">
             <summary>
-                尝试根据键或索引获取目标类型的值
+                尝试根据标识符获取目标类型的值
             </summary>
-            <param name="keyOrIndex">键或索引</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
             <param name="resultType">转换的目标类型</param>
             <param name="value">值</param>
             <param name="jsonSerializerOptions">
@@ -718,9 +727,9 @@
         </member>
         <member name="M:Shapeless.Clay.TryGet``1(System.Object,``0@,System.Text.Json.JsonSerializerOptions)">
             <summary>
-                尝试根据键或索引获取目标类型的值
+                尝试根据标识符获取目标类型的值
             </summary>
-            <param name="keyOrIndex">键或索引</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
             <param name="value">值</param>
             <param name="jsonSerializerOptions">
                 <see cref="T:System.Text.Json.JsonSerializerOptions" />
@@ -732,9 +741,9 @@
         </member>
         <member name="M:Shapeless.Clay.TrySet(System.Object,System.Object)">
             <summary>
-                尝试根据键或索引设置值
+                尝试根据标识符设置值
             </summary>
-            <param name="keyOrIndex">键或索引</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
             <param name="value">值</param>
             <returns>
                 <see cref="T:System.Boolean" />
@@ -756,19 +765,19 @@
         </member>
         <member name="M:Shapeless.Clay.TryRemove(System.Object)">
             <summary>
-                尝试根据键或索引删除数据
+                尝试根据标识符删除数据
             </summary>
-            <param name="keyOrIndex">键或索引</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.TryDelete(System.Object)">
             <summary>
-                尝试根据键或索引删除数据
+                尝试根据标识符删除数据
             </summary>
             <remarks>兼容旧版本粘土对象。</remarks>
-            <param name="keyOrIndex">键或索引</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
@@ -892,6 +901,11 @@
         <member name="M:Shapeless.Clay.TryConvert(System.Dynamic.ConvertBinder,System.Object@)">
             <inheritdoc />
         </member>
+        <member name="T:Shapeless.ClayEventHandler">
+            <summary>
+                流变对象事件委托
+            </summary>
+        </member>
         <member name="T:Shapeless.ClayType">
             <summary>
                 流变对象的基本类型
@@ -919,26 +933,6 @@
         </member>
         <member name="M:Shapeless.ClayJsonConverter.Write(System.Text.Json.Utf8JsonWriter,Shapeless.Clay,System.Text.Json.JsonSerializerOptions)">
             <inheritdoc />
-        </member>
-        <member name="T:Shapeless.Core.Extensions.EventHandlerExtensions">
-            <summary>
-                <see cref="T:System.EventHandler`1" /> 拓展类
-            </summary>
-        </member>
-        <member name="M:Shapeless.Core.Extensions.EventHandlerExtensions.TryInvoke``1(System.EventHandler{``0},System.Object,``0)">
-            <summary>
-                尝试执行事件处理程序
-            </summary>
-            <param name="handler">
-                <see cref="T:System.EventHandler`1" />
-            </param>
-            <param name="sender">
-                <see cref="T:System.Object" />
-            </param>
-            <param name="args">
-                <typeparamref name="TEventArgs" />
-            </param>
-            <typeparam name="TEventArgs">事件参数</typeparam>
         </member>
         <member name="T:Shapeless.Core.Extensions.ICollectionExtensions">
             <summary>
@@ -1078,60 +1072,22 @@
                 <see cref="T:Shapeless.Clay" /> 对象事件数据
             </summary>
         </member>
-        <member name="M:Shapeless.ClayEventArgs.#ctor(System.Object)">
+        <member name="M:Shapeless.ClayEventArgs.#ctor(System.Object,System.Boolean)">
             <summary>
                 <inheritdoc cref="T:Shapeless.ClayEventArgs" />
             </summary>
-            <param name="keyOrIndex">键或索引</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+            <param name="isFound">指示标识符是否存在</param>
         </member>
-        <member name="P:Shapeless.ClayEventArgs.KeyOrIndex">
+        <member name="P:Shapeless.ClayEventArgs.Identifier">
             <summary>
-                键或索引
+                标识符，可以是键（字符串）或索引（整数）
             </summary>
         </member>
-        <member name="T:Shapeless.ClayIndexRemovedEventArgs">
+        <member name="P:Shapeless.ClayEventArgs.IsFound">
             <summary>
-                键或索引移除之后事件数据
+                指示标识符是否存在
             </summary>
-        </member>
-        <member name="M:Shapeless.ClayIndexRemovedEventArgs.#ctor(System.Object)">
-            <summary>
-                <inheritdoc cref="T:Shapeless.ClayIndexRemovedEventArgs" />
-            </summary>
-            <param name="keyOrIndex">键或索引</param>
-        </member>
-        <member name="T:Shapeless.ClayIndexRemovingEventArgs">
-            <summary>
-                键或索引移除之前事件数据
-            </summary>
-        </member>
-        <member name="M:Shapeless.ClayIndexRemovingEventArgs.#ctor(System.Object)">
-            <summary>
-                <inheritdoc cref="T:Shapeless.ClayIndexRemovingEventArgs" />
-            </summary>
-            <param name="keyOrIndex">键或索引</param>
-        </member>
-        <member name="T:Shapeless.ClayValueChangedEventArgs">
-            <summary>
-                值变更之后事件数据
-            </summary>
-        </member>
-        <member name="M:Shapeless.ClayValueChangedEventArgs.#ctor(System.Object)">
-            <summary>
-                <inheritdoc cref="T:Shapeless.ClayValueChangedEventArgs" />
-            </summary>
-            <param name="keyOrIndex">键或索引</param>
-        </member>
-        <member name="T:Shapeless.ClayValueChangingEventArgs">
-            <summary>
-                值变更之前事件数据
-            </summary>
-        </member>
-        <member name="M:Shapeless.ClayValueChangingEventArgs.#ctor(System.Object)">
-            <summary>
-                <inheritdoc cref="T:Shapeless.ClayValueChangingEventArgs" />
-            </summary>
-            <param name="keyOrIndex">键或索引</param>
         </member>
         <member name="T:Shapeless.Utf8StringWriter">
             <summary>

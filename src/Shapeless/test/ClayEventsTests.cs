@@ -12,28 +12,35 @@ public class ClayEventsTests
         var clay = new Clay();
         var events = new string[4];
 
-        clay.ValueChanging += (s, e) =>
+        clay.Changing += (s, e) =>
         {
-            events[0] = nameof(clay.ValueChanging);
+            events[0] = nameof(clay.Changing);
         };
-        clay.ValueChanged += (s, e) =>
+        clay.Changed += (s, e) =>
         {
-            events[1] = nameof(clay.ValueChanged);
+            events[1] = nameof(clay.Changed);
         };
-        clay.IndexRemoving += (s, e) =>
+        clay.Removing += (s, e) =>
         {
-            events[2] = nameof(clay.IndexRemoving);
+            events[2] = nameof(clay.Removing);
         };
-        clay.IndexRemoved += (s, e) =>
+        clay.Removed += (s, e) =>
         {
-            events[3] = nameof(clay.IndexRemoved);
+            events[3] = nameof(clay.Removed);
         };
 
-        clay.OnValueChanging("name");
-        clay.OnValueChanged(0);
-        clay.OnIndexRemoving("name");
-        clay.OnIndexRemoved(0);
+        clay.OnChanging("name");
+        clay.OnChanged(0);
+        clay.OnRemoving("name");
+        clay.OnRemoved(0);
 
-        Assert.Equal(["ValueChanging", "ValueChanged", "IndexRemoving", "IndexRemoved"], events);
+        Assert.Equal(["Changing", "Changed", "Removing", "Removed"], events);
+    }
+
+    [Fact]
+    public void TryInvoke_ReturnOK()
+    {
+        var clay = new Clay();
+        clay.TryInvoke(null, "name");
     }
 }

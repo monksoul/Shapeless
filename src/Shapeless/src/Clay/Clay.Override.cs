@@ -108,11 +108,11 @@ public partial class Clay
     /// <inheritdoc />
     public override bool TryInvokeMember(InvokeMemberBinder binder, object?[]? args, out object? result)
     {
-        // 获取成员名称
-        var memberName = binder.Name;
+        // 获取标识符
+        var identifier = binder.Name;
 
         // 检查该成员是否是一个委托
-        if (ObjectMethods.TryGetValue(memberName, out var @delegate))
+        if (ObjectMethods.TryGetValue(identifier, out var @delegate))
         {
             result = @delegate?.DynamicInvoke(args);
             return true;
@@ -129,20 +129,20 @@ public partial class Clay
                 {
                     // 处理 clay.Prop() 情况
                     case { Length: 0 }:
-                        result = Contains(memberName);
+                        result = Contains(identifier);
                         return true;
                     // 处理 clay.Prop(Type) 情况
                     case [Type resultType]:
-                        result = Helpers.DeserializeNode(FindNode(memberName), resultType,
+                        result = Helpers.DeserializeNode(FindNode(identifier), resultType,
                             Options.JsonSerializerOptions);
                         return true;
                     // 处理 clay.Prop(Type, JsonSerializerOptions) 情况
                     case [Type resultType, JsonSerializerOptions jsonSerializerOptions]:
-                        result = Helpers.DeserializeNode(FindNode(memberName), resultType, jsonSerializerOptions);
+                        result = Helpers.DeserializeNode(FindNode(identifier), resultType, jsonSerializerOptions);
                         return true;
                     // 处理 clay.Prop(Type, null) 情况
                     case [Type resultType, null]:
-                        result = Helpers.DeserializeNode(FindNode(memberName), resultType);
+                        result = Helpers.DeserializeNode(FindNode(identifier), resultType);
                         return true;
                 }
 
@@ -153,16 +153,16 @@ public partial class Clay
                 {
                     // 处理 clay.Prop<T>() 情况
                     case { Length: 0 }:
-                        result = Helpers.DeserializeNode(FindNode(memberName), typeArguments[0],
+                        result = Helpers.DeserializeNode(FindNode(identifier), typeArguments[0],
                             Options.JsonSerializerOptions);
                         return true;
                     // 处理 clay.Prop<T>(JsonSerializerOptions) 情况
                     case [JsonSerializerOptions jsonSerializerOptions]:
-                        result = Helpers.DeserializeNode(FindNode(memberName), typeArguments[0], jsonSerializerOptions);
+                        result = Helpers.DeserializeNode(FindNode(identifier), typeArguments[0], jsonSerializerOptions);
                         return true;
                     // 处理 clay.Prop<T>(null) 情况
                     case [null]:
-                        result = Helpers.DeserializeNode(FindNode(memberName), typeArguments[0]);
+                        result = Helpers.DeserializeNode(FindNode(identifier), typeArguments[0]);
                         return true;
                 }
 

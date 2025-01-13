@@ -218,7 +218,7 @@ public class GetStartController
     [HttpGet]
     public void Foreach()
     {
-        // ===================== 遍历单一对象 =====================
+        // ===================== 单一对象 =====================
 
         dynamic clay = Clay.Parse("""{"id":1,"name":"shapeless"}""");
 
@@ -245,7 +245,7 @@ public class GetStartController
 
         Debug.Assert(listObject.Count == 2);
 
-        // ===================== 遍历集合/数组 =====================
+        // ===================== 集合/数组 =====================
 
         dynamic array = Clay.Parse("""[1,2,true,false,"Furion",{"id":1,"name":"shapeless"},null]""");
 
@@ -276,7 +276,7 @@ public class GetStartController
     [HttpGet]
     public object LambdaAndLinq()
     {
-        // ===================== 遍历单一对象 =====================
+        // ===================== 单一对象 =====================
 
         dynamic clay = Clay.Parse("""{"id":1,"name":"shapeless"}""");
 
@@ -312,7 +312,7 @@ public class GetStartController
         var list5 = query1.ToList();
         var list6 = query2.ToList();
 
-        // ===================== 遍历集合/数组 =====================
+        // ===================== 集合/数组 =====================
 
         dynamic array = Clay.Parse("""[1,2,true,false,"Furion",{"id":1,"name":"shapeless"},null]""");
 
@@ -354,5 +354,84 @@ public class GetStartController
             arrayList4,
             arrayList5, arrayList6
         };
+    }
+
+    [HttpGet]
+    public void Events()
+    {
+        // ===================== 单一对象 =====================
+        
+        dynamic clay = Clay.Parse("""{"id":1,"name":"shapeless"}""");
+
+        // 数据变更之前
+        ((Clay)clay).Changing += (sender, args) =>
+        {
+            Console.WriteLine(args.IsFound
+                ? $"变更之前 (键：{args.Identifier}，值：{sender[args.Identifier]})"
+                : $"变更之前 (键: {args.Identifier}) 不存在");
+        };
+
+        // 数据变更之后
+        ((Clay)clay).Changed += (sender, args) =>
+        {
+            Console.WriteLine($"变更之后 (键：{args.Identifier}，值：{sender[args.Identifier]})");
+        };
+
+        // 移除数据之前
+        ((Clay)clay).Removing += (sender, args) =>
+        {
+            Console.WriteLine(args.IsFound
+                ? $"移除之前 (键：{args.Identifier}，值：{sender[args.Identifier]})"
+                : $"移除之前 (键: {args.Identifier}) 不存在");
+        };
+
+        // 移除数据之后
+        ((Clay)clay).Removed += (sender, args) =>
+        {
+            Console.WriteLine($"移除之后 (键: {args.Identifier}) 不存在");
+        };
+
+        clay.id = 2;
+        clay.name = "Shapeless";
+        clay.author = "百小僧";
+
+        clay.Delete("author");
+        
+        // ===================== 集合/数组 =====================
+        
+        dynamic array = Clay.Parse("[1,2,10.3,true,false]");
+        
+        // 数据变更之前
+        ((Clay)array).Changing += (sender, args) =>
+        {
+            Console.WriteLine(args.IsFound
+                ? $"变更之前 (索引：{args.Identifier}，值：{sender[args.Identifier]})"
+                : $"变更之前 (索引: {args.Identifier}) 不存在");
+        };
+
+        // 数据变更之后
+        ((Clay)array).Changed += (sender, args) =>
+        {
+            Console.WriteLine($"变更之后 (索引：{args.Identifier}，值：{sender[args.Identifier]})");
+        };
+
+        // 移除数据之前
+        ((Clay)array).Removing += (sender, args) =>
+        {
+            Console.WriteLine(args.IsFound
+                ? $"移除之前 (索引：{args.Identifier}，值：{sender[args.Identifier]})"
+                : $"移除之前 (索引: {args.Identifier}) 不存在");
+        };
+
+        // 移除数据之后
+        ((Clay)array).Removed += (sender, args) =>
+        {
+            Console.WriteLine($"移除之后 (索引: {args.Identifier}) 不存在");
+        };
+
+        array.Add("Furion");
+        array.Insert(0, "One");
+
+        array.Delete(3);
     }
 }
