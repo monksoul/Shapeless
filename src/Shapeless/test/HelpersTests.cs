@@ -98,6 +98,14 @@ public class HelpersTests
         var clay = Helpers.DeserializeNode(jsonNode1, typeof(Clay)) as Clay;
         Assert.NotNull(clay);
         Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay.ToJsonString());
+
+        var jsonValue5 = JsonNode.Parse("\"True\"");
+        Assert.Equal(true, Helpers.DeserializeNode(jsonValue5, typeof(bool)));
+        var jsonValue6 = JsonNode.Parse("\"False\"");
+        Assert.Equal(false, Helpers.DeserializeNode(jsonValue6, typeof(bool)));
+
+        var jsonValue7 = JsonNode.Parse("\"2025-01-14T00:00:00\"");
+        Assert.Equal(2025, (Helpers.DeserializeNode(jsonValue7, typeof(DateTime)) as DateTime?)?.Year);
     }
 }
 

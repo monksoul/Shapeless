@@ -60,6 +60,19 @@ internal static class JsonExtensions
                 : jsonNode.ToJsonString(jsonSerializerOptions);
         }
 
+        // 处理目标类型为 bool 且值是 "True" 或 "False" 情况
+        if (resultType == typeof(bool) && jsonNode.GetValueKind() is JsonValueKind.String)
+        {
+            // 获取字符串值
+            var stringValue = jsonNode.GetValue<string>();
+
+            // 检查字符串是否是 "True" 或 "False"
+            if (stringValue == bool.TrueString || stringValue == bool.FalseString)
+            {
+                return Convert.ToBoolean(stringValue);
+            }
+        }
+
         // 处理目标类型为 XElement 类型
         if (resultType == typeof(XElement))
         {

@@ -321,13 +321,19 @@ public partial class Clay
         (TResult?)Get(identifier, typeof(TResult), jsonSerializerOptions);
 
     /// <summary>
-    ///     获取 <see cref="JsonNode" /> 实例
+    ///     根据标识符查找 <see cref="JsonNode" /> 节点
     /// </summary>
     /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
     /// <returns>
     ///     <see cref="JsonNode" />
     /// </returns>
-    public JsonNode? GetNode(object identifier) => FindNode(identifier);
+    public JsonNode? FindNode(object identifier)
+    {
+        // 空检查
+        ArgumentNullException.ThrowIfNull(identifier);
+
+        return IsObject ? GetNodeFromObject(identifier) : GetNodeFromArray(identifier);
+    }
 
     /// <summary>
     ///     根据标识符设置值

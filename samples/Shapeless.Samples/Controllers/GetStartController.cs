@@ -46,6 +46,10 @@ public class GetStartController
         return clay;
     }
 
+    /// <summary>
+    ///     创建集合/数组
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public Clay ArrayCollection()
     {
@@ -88,6 +92,10 @@ public class GetStartController
         return clay;
     }
 
+    /// <summary>
+    ///     解析 JSON 字符串
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public Clay ParseJson()
     {
@@ -135,6 +143,10 @@ public class GetStartController
         return Clay.Parse(new { clay, array, any, custom, dicObject });
     }
 
+    /// <summary>
+    ///     解析 C# 对象
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public Clay ParseObject()
     {
@@ -189,6 +201,10 @@ public class GetStartController
         return Clay.Parse(new { clay1, clay2, clay3, clay4, clay5, clay6, clay7, clay8, clay9, clay10 });
     }
 
+    /// <summary>
+    ///     更多使用例子
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public Clay MoreUsage()
     {
@@ -215,6 +231,9 @@ public class GetStartController
         return clay;
     }
 
+    /// <summary>
+    ///     遍历操作
+    /// </summary>
     [HttpGet]
     public void Foreach()
     {
@@ -273,6 +292,10 @@ public class GetStartController
         Debug.Assert(listArray.Count == 7);
     }
 
+    /// <summary>
+    ///     Lambda 和 Linq 操作
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public object LambdaAndLinq()
     {
@@ -356,11 +379,14 @@ public class GetStartController
         };
     }
 
+    /// <summary>
+    ///     事件监听
+    /// </summary>
     [HttpGet]
     public void Events()
     {
         // ===================== 单一对象 =====================
-        
+
         dynamic clay = Clay.Parse("""{"id":1,"name":"shapeless"}""");
 
         // 数据变更之前
@@ -386,21 +412,18 @@ public class GetStartController
         };
 
         // 移除数据之后
-        ((Clay)clay).Removed += (sender, args) =>
-        {
-            Console.WriteLine($"移除之后 (键: {args.Identifier}) 不存在");
-        };
+        ((Clay)clay).Removed += (sender, args) => { Console.WriteLine($"移除之后 (键: {args.Identifier}) 不存在"); };
 
         clay.id = 2;
         clay.name = "Shapeless";
         clay.author = "百小僧";
 
         clay.Delete("author");
-        
+
         // ===================== 集合/数组 =====================
-        
+
         dynamic array = Clay.Parse("[1,2,10.3,true,false]");
-        
+
         // 数据变更之前
         ((Clay)array).Changing += (sender, args) =>
         {
@@ -424,14 +447,98 @@ public class GetStartController
         };
 
         // 移除数据之后
-        ((Clay)array).Removed += (sender, args) =>
-        {
-            Console.WriteLine($"移除之后 (索引: {args.Identifier}) 不存在");
-        };
+        ((Clay)array).Removed += (sender, args) => { Console.WriteLine($"移除之后 (索引: {args.Identifier}) 不存在"); };
 
         array.Add("Furion");
         array.Insert(0, "One");
 
         array.Delete(3);
+    }
+
+    /// <summary>
+    ///     类型转换
+    /// </summary>
+    [HttpGet]
+    public void TypeConvert()
+    {
+        dynamic clay =
+            Clay.Parse("""{"id":1,"name":"shapeless","date":"2025-01-14T00:00:00","isTrue":true}"""); // ISO 8601 时间格式
+
+        // ===================== 属性类型转换 =====================
+
+        // 通过 属性<T> 方式
+        var date = clay.date<DateTime>();
+        var isTrue = clay.isTrue<bool>();
+        var date11 = clay.date<DateTime>(new JsonSerializerOptions()); // 支持传递序列化参数
+
+        Console.WriteLine(date);
+        Console.WriteLine(isTrue);
+        Console.WriteLine(date11);
+
+        // 通过 属性(Type) 方式
+        var date2 = clay.date(typeof(DateTime)) as DateTime?;
+        var isTrue2 = clay.isTrue(typeof(bool)) as bool?;
+        var date21 =
+            clay.date(typeof(DateTime),
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) as DateTime?; // 支持传递序列化参数
+
+        Console.WriteLine(date2);
+        Console.WriteLine(isTrue2);
+        Console.WriteLine(date21);
+
+        // 通过 Get<T> 方式
+        var date3 = clay.Get<DateTime>("date");
+        var isTrue3 = clay.Get<bool>("isTrue");
+        var date31 =
+            clay.Get<DateTime>("date", new JsonSerializerOptions { PropertyNameCaseInsensitive = true }); // 支持传递序列化参数
+
+        Console.WriteLine(date3);
+        Console.WriteLine(isTrue3);
+        Console.WriteLine(date31);
+
+        // 通过 Get(Type) 方式
+        var date4 = clay.Get("date", typeof(DateTime)) as DateTime?;
+        var isTrue4 = clay.Get("isTrue", typeof(bool)) as bool?;
+        var date41 =
+            clay.Get("date", typeof(DateTime),
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) as DateTime?; // 支持传递序列化参数
+
+        Console.WriteLine(date4);
+        Console.WriteLine(isTrue4);
+        Console.WriteLine(date41);
+
+        // 通过 属性(Func<string?, object?>) 方式
+        var date5 = clay.date(new Func<string?, object?>(u => Convert.ToDateTime(u)));
+        Console.WriteLine(date5);
+
+        // ===================== 流变对象转换 =====================
+
+        // 声明方式自动转换
+        ClayModel clayModel = clay;
+        Console.WriteLine($"{clayModel.Id} {clayModel.Name} {clayModel.Date} {clayModel.IsTrue}");
+
+        // 强制转换
+        var clayModel2 = (ClayModel)clay;
+        Console.WriteLine($"{clayModel2.Id} {clayModel2.Name} {clayModel2.Date} {clayModel2.IsTrue}");
+
+        // 通过 As<T> 方式
+        var clayModel3 = clay.As<ClayModel>();
+        var clayModel31 =
+            clay.As<ClayModel>(new JsonSerializerOptions { PropertyNameCaseInsensitive = true }); // 支持传递序列化参数
+        Console.WriteLine($"{clayModel3.Id} {clayModel3.Name} {clayModel3.Date} {clayModel3.IsTrue}");
+        Console.WriteLine($"{clayModel31.Id} {clayModel31.Name} {clayModel31.Date} {clayModel31.IsTrue}");
+
+        // 通过 As(Type) 方式
+        var clayModel4 = clay.As(typeof(ClayModel)) as ClayModel;
+        var clayModel41 =
+            clay.As(typeof(ClayModel),
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) as ClayModel; // 支持传递序列化参数
+        Console.WriteLine($"{clayModel4?.Id} {clayModel4?.Name} {clayModel4?.Date} {clayModel4?.IsTrue}");
+        Console.WriteLine($"{clayModel41?.Id} {clayModel41?.Name} {clayModel4?.Date} {clayModel41?.IsTrue}");
+
+        // 通过反序列化方式
+        var clayModel5 = JsonSerializer.Deserialize<ClayModel>(clay.ToString(),
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        Console.WriteLine($"{clayModel5.Id} {clayModel5.Name} {clayModel5.Date} {clayModel5.IsTrue}");
     }
 }

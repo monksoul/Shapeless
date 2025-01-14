@@ -142,30 +142,6 @@ public class ClayTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void FindNode_Invalid_Parameters()
-    {
-        var clay = new Clay();
-        Assert.Throws<ArgumentNullException>(() => clay.FindNode(null!));
-    }
-
-    [Fact]
-    public void FindNode_ReturnOK()
-    {
-        dynamic clay = new Clay();
-        clay.Name = "Furion";
-
-        var jsonNode = ((Clay)clay).FindNode("Name");
-        Assert.NotNull(jsonNode);
-        Assert.Equal("Furion", jsonNode.GetValue<string>());
-
-        dynamic clay2 = new Clay(ClayType.Array);
-        clay2[0] = "Furion";
-        var jsonNode2 = ((Clay)clay2).FindNode(0);
-        Assert.NotNull(jsonNode2);
-        Assert.Equal("Furion", jsonNode2.GetValue<string>());
-    }
-
-    [Fact]
     public void Rebuilt_ReturnOK()
     {
         dynamic clay = new Clay();

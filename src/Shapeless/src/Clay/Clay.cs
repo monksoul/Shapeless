@@ -142,21 +142,6 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     }
 
     /// <summary>
-    ///     根据标识符查找 <see cref="JsonNode" /> 节点
-    /// </summary>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
-    /// <returns>
-    ///     <see cref="JsonNode" />
-    /// </returns>
-    internal JsonNode? FindNode(object identifier)
-    {
-        // 空检查
-        ArgumentNullException.ThrowIfNull(identifier);
-
-        return IsObject ? GetNodeFromObject(identifier) : GetNodeFromArray(identifier);
-    }
-
-    /// <summary>
     ///     根据键获取 <see cref="JsonNode" /> 节点
     /// </summary>
     /// <param name="key">键</param>

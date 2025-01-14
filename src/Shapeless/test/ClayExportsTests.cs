@@ -679,11 +679,27 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void GetNode_ReturnOK()
+    public void FindNode_Invalid_Parameters()
     {
-        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
-        Assert.Equal(1, clay.GetNode("id")?.GetValue<int>());
-        Assert.Equal("furion", clay.GetNode("name")?.GetValue<string>());
+        var clay = new Clay();
+        Assert.Throws<ArgumentNullException>(() => clay.FindNode(null!));
+    }
+
+    [Fact]
+    public void FindNode_ReturnOK()
+    {
+        dynamic clay = new Clay();
+        clay.Name = "Furion";
+
+        var jsonNode = ((Clay)clay).FindNode("Name");
+        Assert.NotNull(jsonNode);
+        Assert.Equal("Furion", jsonNode.GetValue<string>());
+
+        dynamic clay2 = new Clay(ClayType.Array);
+        clay2[0] = "Furion";
+        var jsonNode2 = ((Clay)clay2).FindNode(0);
+        Assert.NotNull(jsonNode2);
+        Assert.Equal("Furion", jsonNode2.GetValue<string>());
     }
 
     [Fact]
@@ -1208,5 +1224,16 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.Equal(
             "[2,\"Insert\",true,\"Furion\",{\"id\":1,\"name\":\"Furion\"},{\"id\":2,\"name\":\"shapeless\"},2,3]",
             clay2.ToJsonString());
+    }
+
+    /// <summary>
+    ///     内部属性冲突
+    /// </summary>
+    [Fact]
+    public void VisitConflictKey_ReturnOK()
+    {
+        dynamic clay = Clay.Parse("{\"id\":1,\"name\":\"furion\",\"Count\":30}");
+        Assert.Equal(3, clay.Count);
+        Assert.Equal(30, clay["Count"]);
     }
 }

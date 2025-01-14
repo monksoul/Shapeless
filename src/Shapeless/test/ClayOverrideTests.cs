@@ -319,6 +319,7 @@ public class ClayOverrideTests
         clay.id = 1;
         clay.name = "furion";
         clay.datetime = "2024-12-26T00:00:00"; // ISO 8601
+        clay.datetime_nostandard = "2024-12-26 00:00:00";
 
         Assert.True(clay.id());
         Assert.False(clay.Id());
@@ -340,6 +341,9 @@ public class ClayOverrideTests
         Assert.Throws<RuntimeBinderException>(() => clay.name(1));
         Assert.Throws<RuntimeBinderException>(() => clay.name<string>(1));
         Assert.Throws<RuntimeBinderException>(() => clay.id(typeof(decimal), 1));
+
+        var dateTime = clay.datetime_nostandard(new Func<string?, object?>(u => Convert.ToDateTime(u))) as DateTime?;
+        Assert.Equal(2024, dateTime?.Year);
     }
 
     [Fact]

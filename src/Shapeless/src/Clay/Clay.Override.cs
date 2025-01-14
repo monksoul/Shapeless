@@ -121,6 +121,7 @@ public partial class Clay
         // 获取调用方法的泛型参数数组
         var typeArguments = _getCSharpInvokeMemberBinderTypeArguments.Value.Invoke(binder) as Type[];
 
+        // 处理类型转换操作
         switch (typeArguments)
         {
             // 处理空泛型参数情况
@@ -133,16 +134,19 @@ public partial class Clay
                         return true;
                     // 处理 clay.Prop(Type) 情况
                     case [Type resultType]:
-                        result = Helpers.DeserializeNode(FindNode(identifier), resultType,
-                            Options.JsonSerializerOptions);
+                        result = Get(identifier, resultType);
                         return true;
                     // 处理 clay.Prop(Type, JsonSerializerOptions) 情况
                     case [Type resultType, JsonSerializerOptions jsonSerializerOptions]:
-                        result = Helpers.DeserializeNode(FindNode(identifier), resultType, jsonSerializerOptions);
+                        result = Get(identifier, resultType, jsonSerializerOptions);
                         return true;
                     // 处理 clay.Prop(Type, null) 情况
                     case [Type resultType, null]:
-                        result = Helpers.DeserializeNode(FindNode(identifier), resultType);
+                        result = Get(identifier, resultType);
+                        return true;
+                    // 处理 clay.Prop(Func<string, object?>) 情况
+                    case [Func<string?, object?> converter]:
+                        result = converter(FindNode(identifier).As<string>());
                         return true;
                 }
 
@@ -153,16 +157,15 @@ public partial class Clay
                 {
                     // 处理 clay.Prop<T>() 情况
                     case { Length: 0 }:
-                        result = Helpers.DeserializeNode(FindNode(identifier), typeArguments[0],
-                            Options.JsonSerializerOptions);
+                        result = Get(identifier, typeArguments[0]);
                         return true;
                     // 处理 clay.Prop<T>(JsonSerializerOptions) 情况
                     case [JsonSerializerOptions jsonSerializerOptions]:
-                        result = Helpers.DeserializeNode(FindNode(identifier), typeArguments[0], jsonSerializerOptions);
+                        result = Get(identifier, typeArguments[0], jsonSerializerOptions);
                         return true;
                     // 处理 clay.Prop<T>(null) 情况
                     case [null]:
-                        result = Helpers.DeserializeNode(FindNode(identifier), typeArguments[0]);
+                        result = Get(identifier, typeArguments[0]);
                         return true;
                 }
 
@@ -178,7 +181,7 @@ public partial class Clay
         // 转换为目标类型
         result = As(binder.Type, Options.JsonSerializerOptions);
 
-        // 检查是否启用转换后执行数据校验
+        // 检查是否启用转换后执行模型验证
         if (result is not null && Options.ValidateAfterConversion)
         {
             Validator.ValidateObject(result, new ValidationContext(result), true);
