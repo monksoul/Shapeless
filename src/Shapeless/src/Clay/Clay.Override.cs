@@ -144,7 +144,7 @@ public partial class Clay
                     case [Type resultType, null]:
                         result = Get(identifier, resultType);
                         return true;
-                    // 处理 clay.Prop(Func<string, object?>) 情况
+                    // 处理 clay.Prop(Func<string?, object?>) 情况
                     case [Func<string?, object?> converter]:
                         result = converter(FindNode(identifier).As<string>());
                         return true;
