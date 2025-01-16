@@ -540,6 +540,10 @@ public class GetStartController
         var clayModel5 = JsonSerializer.Deserialize<ClayModel>(clay.ToString(),
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         Console.WriteLine($"{clayModel5.Id} {clayModel5.Name} {clayModel5.Date} {clayModel5.IsTrue}");
+
+        // 转换为 XElement 对象
+        var xElement = clay.As<XElement>();
+        Console.WriteLine(xElement);
     }
 
     /// <summary>
