@@ -17,6 +17,7 @@ public class ClayTests(ITestOutputHelper output)
         Assert.NotNull(clay.JsonCanvas);
         Assert.True(clay.IsObject);
         Assert.False(clay.IsArray);
+        Assert.Equal(ClayType.Object, clay.Type);
         Assert.NotNull(clay.ObjectMethods);
         Assert.Empty(clay.ObjectMethods);
 
@@ -25,6 +26,7 @@ public class ClayTests(ITestOutputHelper output)
         Assert.NotNull(clay2.JsonCanvas);
         Assert.False(clay2.IsObject);
         Assert.True(clay2.IsArray);
+        Assert.Equal(ClayType.Array, clay2.Type);
 
         Assert.NotNull(Clay._getCSharpInvokeMemberBinderTypeArguments);
         Assert.NotNull(Clay._getCSharpInvokeMemberBinderTypeArguments.Value);

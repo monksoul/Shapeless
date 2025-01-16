@@ -42,6 +42,7 @@ public partial class Clay
 
         IsObject = clayType is ClayType.Object;
         IsArray = clayType is ClayType.Array;
+        Type = clayType;
     }
 
     /// <summary>
@@ -84,6 +85,10 @@ public partial class Clay
     /// </summary>
     public bool IsArray { get; }
 
+    /// <summary>
+    ///     <see cref="ClayType" />
+    /// </summary>
+    public ClayType Type { get; }
 
     // /// <summary>
     // ///     反序列化时没有匹配的属性字典集合
@@ -367,7 +372,7 @@ public partial class Clay
     /// <param name="index">索引</param>
     /// <param name="values">值集合</param>
     /// <exception cref="NotSupportedException"></exception>
-    public void InsertRange(int index, params IEnumerable<object?> values)
+    public void InsertRange(int index, params object?[] values)
     {
         // 检查是否是单一对象实例调用
         ThrowIfMethodCalledOnSingleObject(nameof(InsertRange));
@@ -405,7 +410,7 @@ public partial class Clay
     /// <remarks>当 <see cref="IsArray" /> 为 <c>true</c> 时有效。</remarks>
     /// <param name="values">值集合</param>
     /// <exception cref="NotSupportedException"></exception>
-    public void AddRange(params IEnumerable<object?> values)
+    public void AddRange(params object?[] values)
     {
         // 空检查
         ArgumentNullException.ThrowIfNull(values);
@@ -457,6 +462,87 @@ public partial class Clay
         var maxIndex = JsonCanvas.AsArray().Count - 1;
 
         return maxIndex > -1 && RemoveValue(maxIndex);
+    }
+
+    /// <summary>
+    ///     反转 <see cref="Clay" /> 并返回新 <see cref="Clay" />
+    /// </summary>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    public Clay Reverse(ClayOptions? options = null) =>
+        Parse(IsObject ? AsEnumerableObject().Reverse() : Values.Reverse(), options, true);
+
+    /// <summary>
+    ///     遍历 <see cref="Clay" />
+    /// </summary>
+    public void ForEach(Action<dynamic> action)
+    {
+        // 空检查
+        ArgumentNullException.ThrowIfNull(action);
+
+        ForEach((_, item) => action(item));
+    }
+
+    /// <summary>
+    ///     遍历 <see cref="Clay" />
+    /// </summary>
+    public void ForEach(Action<object, dynamic> action)
+    {
+        ArgumentNullException.ThrowIfNull(action);
+
+        // 逐条遍历
+        foreach (var (index, item) in AsEnumerable())
+        {
+            action(index, item);
+        }
+    }
+
+    /// <summary>
+    ///     组合多个 <see cref="Clay" /> 并返回新 <see cref="Clay" />
+    /// </summary>
+    /// <param name="clays">
+    ///     <see cref="Clay" /> 集合
+    /// </param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="InvalidOperationException"></exception>
+    public Clay Combine(params Clay[] clays)
+    {
+        // 空检查
+        ArgumentNullException.ThrowIfNull(clays);
+
+        // 检查是否有任何 Clay 对象为空
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+        if (clays.Any(clay => clay is null))
+        {
+            throw new ArgumentException("Clay array contains one or more null elements.", nameof(clays));
+        }
+
+        // 检查是流变对象类型是否一致
+        if (clays.Any(u => u.Type != Type))
+        {
+            throw new InvalidOperationException("All Clay objects must be of the same type.");
+        }
+
+        // 检查是否是集合（数组）
+        if (IsArray)
+        {
+            return Parse(Values.Concat(clays.SelectMany(u => u.Values)));
+        }
+
+        // 深度克隆当前 Clay 实例
+        var combineClay = DeepClone();
+
+        // 遍历所有 Clay 并设置新值或替换旧值
+        foreach (var clay in clays)
+        {
+            clay.ForEach((key, value) => combineClay[$"{key}"] = value);
+        }
+
+        return combineClay;
     }
 
     /// <summary>

@@ -442,6 +442,11 @@
                 是否是集合（数组）
             </summary>
         </member>
+        <member name="P:Shapeless.Clay.Type">
+            <summary>
+                <see cref="T:Shapeless.ClayType" />
+            </summary>
+        </member>
         <member name="M:Shapeless.Clay.ToString(System.String,System.IFormatProvider)">
             <inheritdoc />
         </member>
@@ -580,7 +585,7 @@
             </returns>
             <exception cref="T:System.NotSupportedException"></exception>
         </member>
-        <member name="M:Shapeless.Clay.InsertRange(System.Int32,System.Collections.Generic.IEnumerable{System.Object})">
+        <member name="M:Shapeless.Clay.InsertRange(System.Int32,System.Object[])">
             <summary>
                 在指定索引处批量插入项
             </summary>
@@ -600,7 +605,7 @@
             </returns>
             <exception cref="T:System.NotSupportedException"></exception>
         </member>
-        <member name="M:Shapeless.Clay.AddRange(System.Collections.Generic.IEnumerable{System.Object})">
+        <member name="M:Shapeless.Clay.AddRange(System.Object[])">
             <summary>
                 在末尾处批量添加项
             </summary>
@@ -628,6 +633,37 @@
                 <see cref="T:System.Boolean" />
             </returns>
             <exception cref="T:System.NotSupportedException"></exception>
+        </member>
+        <member name="M:Shapeless.Clay.Reverse(Shapeless.ClayOptions)">
+            <summary>
+                反转 <see cref="T:Shapeless.Clay" /> 并返回新 <see cref="T:Shapeless.Clay" />
+            </summary>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.ForEach(System.Action{System.Object})">
+            <summary>
+                遍历 <see cref="T:Shapeless.Clay" />
+            </summary>
+        </member>
+        <member name="M:Shapeless.Clay.ForEach(System.Action{System.Object,System.Object})">
+            <summary>
+                遍历 <see cref="T:Shapeless.Clay" />
+            </summary>
+        </member>
+        <member name="M:Shapeless.Clay.Combine(Shapeless.Clay[])">
+            <summary>
+                组合多个 <see cref="T:Shapeless.Clay" /> 并返回新 <see cref="T:Shapeless.Clay" />
+            </summary>
+            <param name="clays">
+                <see cref="T:Shapeless.Clay" /> 集合
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+            <exception cref="T:System.ArgumentException"></exception>
+            <exception cref="T:System.InvalidOperationException"></exception>
         </member>
         <member name="M:Shapeless.Clay.Remove(System.Object)">
             <summary>
@@ -830,7 +866,7 @@
                 检查类型是否是 <see cref="T:Shapeless.Clay" /> 类型
             </summary>
             <param name="type">
-                <see cref="T:System.Type" />
+                <see cref="P:Shapeless.Clay.Type" />
             </param>
             <returns>
                 <see cref="T:System.Boolean" />

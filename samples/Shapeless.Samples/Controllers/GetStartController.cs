@@ -110,7 +110,7 @@ public class GetStartController
         clay.Add("Furion");
         clay.Add(false);
 
-        // 追加对象
+        // 追加对象或匿名对象
         clay.Add(new { id = 1, name = "Furion" });
 
         // 追加流变对象
@@ -119,7 +119,7 @@ public class GetStartController
         // 批量追加项
         clay.AddRange(new object[] { 2, 3, "will be deleted" });
 
-        // 修改项
+        // 修改指定索引项
         clay[0] += 1; // 或使用 clay.Set(0, 2);
 
         // 在索引为 1 处插入
@@ -136,6 +136,12 @@ public class GetStartController
 
         // 输出字符串
         Console.WriteLine(clay); // 或使用 clay.ToString();
+
+        // 反转集合/数组
+        var array = clay.Reverse();
+
+        // 输出字符串
+        Console.WriteLine(array); // 或使用 array.ToString();
 
         return clay;
     }
@@ -285,6 +291,8 @@ public class GetStartController
     [HttpGet]
     public void Foreach()
     {
+        // TODO: ForEach 方法例子
+
         // ===================== 单一对象 =====================
 
         dynamic clay = Clay.Parse("""{"id":1,"name":"shapeless"}""");

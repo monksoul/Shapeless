@@ -40,6 +40,7 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
 
         IsObject = JsonCanvas is JsonObject;
         IsArray = JsonCanvas is JsonArray;
+        Type = IsObject ? ClayType.Object : ClayType.Array;
     }
 
     /// <summary>

@@ -13,6 +13,7 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.NotNull(clay);
         Assert.True(clay.IsObject);
         Assert.False(clay.IsArray);
+        Assert.Equal(ClayType.Object, clay.Type);
         Assert.NotNull(clay.JsonCanvas);
         Assert.NotNull(clay.JsonCanvas.Options);
         Assert.False(clay.JsonCanvas.Options?.PropertyNameCaseInsensitive);
@@ -124,9 +125,16 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.NotNull(clay);
         Assert.True(clay.IsObject);
         Assert.False(clay.IsArray);
+        Assert.Equal(ClayType.Object, clay.Type);
         Assert.NotNull(clay.JsonCanvas);
         Assert.NotNull(clay.JsonCanvas.Options);
         Assert.False(clay.JsonCanvas.Options?.PropertyNameCaseInsensitive);
+
+        var arr1 = Clay.Parse("[]");
+        Assert.NotNull(arr1);
+        Assert.False(arr1.IsObject);
+        Assert.True(arr1.IsArray);
+        Assert.Equal(ClayType.Array, arr1.Type);
 
         var clay2 = Clay.Parse("{}", new ClayOptions { PropertyNameCaseInsensitive = true });
         Assert.NotNull(clay2.JsonCanvas);
@@ -979,12 +987,12 @@ public class ClayExportsTests(ITestOutputHelper output)
     public void InsertRange_Invalid_Parameters()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
-        var exception = Assert.Throws<NotSupportedException>(() => clay.InsertRange(0, ["furion"]));
+        var exception = Assert.Throws<NotSupportedException>(() => clay.InsertRange(0, "furion"));
         Assert.Equal("`InsertRange` method can only be used for array or collection operations.", exception.Message);
 
         var clay2 = Clay.Parse("[1,2,3]");
         var exception2 =
-            Assert.Throws<ArgumentOutOfRangeException>(() => clay2.InsertRange(-1, ["furion"]));
+            Assert.Throws<ArgumentOutOfRangeException>(() => clay2.InsertRange(-1, "furion"));
         Assert.Equal("Negative indices are not allowed. Index must be greater than or equal to 0. (Parameter 'index')",
             exception2.Message);
     }
@@ -993,7 +1001,7 @@ public class ClayExportsTests(ITestOutputHelper output)
     public void InsertRange_ReturnOK()
     {
         var clay = Clay.Parse("[1,2,3]");
-        clay.InsertRange(0, [-3, -2, -1, 0]);
+        clay.InsertRange(0, -3, -2, -1, 0);
         Assert.Equal("[-3,-2,-1,0,1,2,3]", clay.ToJsonString());
     }
 
@@ -1075,7 +1083,7 @@ public class ClayExportsTests(ITestOutputHelper output)
 
         Assert.Throws<ArgumentNullException>(() => clay.AddRange(null!));
 
-        var exception = Assert.Throws<NotSupportedException>(() => clay.AddRange(["furion"]));
+        var exception = Assert.Throws<NotSupportedException>(() => clay.AddRange("furion"));
         Assert.Equal("`AddRange` method can only be used for array or collection operations.", exception.Message);
     }
 
@@ -1083,7 +1091,7 @@ public class ClayExportsTests(ITestOutputHelper output)
     public void AddRange_ReturnOK()
     {
         var clay = Clay.Parse("[1,2,3]");
-        clay.AddRange([4, 5, 6]);
+        clay.AddRange(4, 5, 6);
         Assert.Equal("[1,2,3,4,5,6]", clay.ToJsonString());
     }
 
@@ -1131,6 +1139,88 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.Equal("[]", clay.ToJsonString());
         Assert.False(clay.Pop());
         Assert.Equal("[]", clay.ToJsonString());
+    }
+
+    [Fact]
+    public void Reverse_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        var clay2 = clay.Reverse();
+        Assert.Equal("{\"name\":\"furion\",\"id\":1}", clay2.ToJsonString());
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay.ToJsonString());
+
+        var array = Clay.Parse("[1,2,3]");
+        var array2 = array.Reverse();
+        Assert.Equal("[3,2,1]", array2.ToJsonString());
+        Assert.Equal("[1,2,3]", array.ToJsonString());
+    }
+
+    [Fact]
+    public void ForEach_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        Assert.Throws<ArgumentNullException>(() => clay.ForEach((Action<dynamic>)null!));
+        Assert.Throws<ArgumentNullException>(() => clay.ForEach((Action<object, dynamic>)null!));
+    }
+
+    [Fact]
+    public void ForEach_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        clay.ForEach(item =>
+        {
+            output.WriteLine($"Value:{item}");
+        });
+
+        clay.ForEach((key, item) =>
+        {
+            output.WriteLine($"Key: {key}, Value:{item}");
+        });
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay.ToJsonString());
+
+        var array = Clay.Parse("[1,2,3]");
+        array.ForEach(item =>
+        {
+            output.WriteLine($"Value:{item}");
+        });
+
+        array.ForEach((index, item) =>
+        {
+            output.WriteLine($"Index: {index}, Value:{item}");
+        });
+
+        Assert.Equal("[1,2,3]", array.ToJsonString());
+    }
+
+    [Fact]
+    public void Combine_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        Assert.Throws<ArgumentNullException>(() => clay.Combine(null!));
+
+        var exception = Assert.Throws<ArgumentException>(() => clay.Combine(new Clay(), null!));
+        Assert.Equal("Clay array contains one or more null elements. (Parameter 'clays')", exception.Message);
+
+        var exception2 = Assert.Throws<InvalidOperationException>(() => clay.Combine(new Clay(), new Clay.Array()));
+        Assert.Equal("All Clay objects must be of the same type.", exception2.Message);
+    }
+
+    [Fact]
+    public void Combine_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        var clay2 = Clay.Parse("{\"id\":2,\"age\":30}");
+        var clay3 = Clay.Parse("{\"age\":31,\"address\":\"广东省中山市\"}");
+
+        var clay4 = clay.Combine(clay2, clay3);
+        Assert.Equal("{\"id\":2,\"name\":\"furion\",\"age\":31,\"address\":\"广东省中山市\"}", clay4.ToJsonString());
+
+        var array = Clay.Parse("[1,2,3]");
+        var array2 = Clay.Parse("[2,3,4]");
+        var array3 = Clay.Parse("[true,{\"id\":1,\"name\":\"furion\"}]");
+
+        var array4 = array.Combine(array2, array3);
+        Assert.Equal("[1,2,3,2,3,4,true,{\"id\":1,\"name\":\"furion\"}]", array4.ToJsonString());
     }
 
     [Fact]
