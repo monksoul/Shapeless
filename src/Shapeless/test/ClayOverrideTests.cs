@@ -303,6 +303,8 @@ public class ClayOverrideTests
         dynamic clay2 = Clay.Parse("[1,2,3]");
         Assert.Equal(2, clay2(1));
         Assert.Equal(new[] { 1, 2, 3 }, clay2(typeof(int[])));
+        Assert.Equal(2, clay2[^2]);
+        Assert.Equal("[1,2]", clay2(..^1).ToJsonString());
 
         Assert.Throws<KeyNotFoundException>(() => clay.Id);
         clay(new ClayOptions { PropertyNameCaseInsensitive = true });

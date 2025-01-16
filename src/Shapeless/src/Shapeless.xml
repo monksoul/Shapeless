@@ -53,7 +53,7 @@
             <summary>
                 根据标识符获取值
             </summary>
-            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
             <returns>
                 <see cref="T:System.Object" />
             </returns>
@@ -62,7 +62,7 @@
             <summary>
                 根据标识符设置值
             </summary>
-            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
             <param name="value">值</param>
             <param name="insert">是否作为在指定位置插入</param>
             <returns>
@@ -73,7 +73,7 @@
             <summary>
                 根据标识符移除值
             </summary>
-            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
@@ -86,6 +86,7 @@
             <returns>
                 <see cref="T:System.Text.Json.Nodes.JsonNode" />
             </returns>
+            <exception cref="T:System.NotSupportedException"></exception>
             <exception cref="T:System.Collections.Generic.KeyNotFoundException"></exception>
         </member>
         <member name="M:Shapeless.Clay.GetNodeFromArray(System.Object)">
@@ -108,6 +109,7 @@
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
+            <exception cref="T:System.NotSupportedException"></exception>
         </member>
         <member name="M:Shapeless.Clay.SetNodeInArray(System.Object,System.Object,System.Object@,System.Boolean)">
             <summary>
@@ -120,6 +122,7 @@
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
+            <exception cref="T:System.NotSupportedException"></exception>
         </member>
         <member name="M:Shapeless.Clay.RemoveNodeFromObject(System.Object,System.Object@)">
             <summary>
@@ -130,6 +133,7 @@
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
+            <exception cref="T:System.NotSupportedException"></exception>
         </member>
         <member name="M:Shapeless.Clay.RemoveNodeFromArray(System.Object,System.Object@)">
             <summary>
@@ -137,6 +141,17 @@
             </summary>
             <param name="index">索引</param>
             <param name="finalIndex">最终移除索引</param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.RemoveNodeFromArrayByRange(System.Range)">
+            <summary>
+                根据 <see cref="T:System.Range" /> 删除 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 节点
+            </summary>
+            <param name="range">
+                <see cref="T:System.Range" />
+            </param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
@@ -277,6 +292,13 @@
             <param name="method">方法名</param>
             <exception cref="T:System.NotSupportedException"></exception>
         </member>
+        <member name="M:Shapeless.Clay.ThrowIfUnsupportedKeyType(System.Object)">
+            <summary>
+                如果使用不受支持的键类型，则抛出异常
+            </summary>
+            <param name="key">键</param>
+            <exception cref="T:System.NotSupportedException"></exception>
+        </member>
         <member name="P:Shapeless.Clay.Count">
             <summary>
                 元素数量
@@ -366,25 +388,25 @@
             <summary>
                 触发数据变更之前事件
             </summary>
-            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
         </member>
         <member name="M:Shapeless.Clay.OnChanged(System.Object)">
             <summary>
                 触发数据变更之后事件
             </summary>
-            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
         </member>
         <member name="M:Shapeless.Clay.OnRemoving(System.Object)">
             <summary>
                 触发移除数据之前事件
             </summary>
-            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
         </member>
         <member name="M:Shapeless.Clay.OnRemoved(System.Object)">
             <summary>
                 触发移除数据之后事件
             </summary>
-            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
         </member>
         <member name="M:Shapeless.Clay.TryInvoke(Shapeless.ClayEventHandler,System.Object)">
             <summary>
@@ -393,7 +415,7 @@
             <param name="handler">
                 <see cref="T:Shapeless.ClayEventHandler" />
             </param>
-            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
         </member>
         <member name="M:Shapeless.Clay.#ctor(Shapeless.ClayOptions)">
             <summary>
@@ -431,6 +453,22 @@
                 整数索引
             </summary>
             <param name="index">索引</param>
+        </member>
+        <member name="P:Shapeless.Clay.Item(System.Index)">
+            <summary>
+                <see cref="T:System.Index" /> 索引
+            </summary>
+            <param name="index">
+                <see cref="T:System.Index" />
+            </param>
+        </member>
+        <member name="P:Shapeless.Clay.Item(System.Range)">
+            <summary>
+                <see cref="T:System.Range" /> 索引
+            </summary>
+            <param name="range">
+                <see cref="T:System.Range" />
+            </param>
         </member>
         <member name="P:Shapeless.Clay.IsObject">
             <summary>
@@ -506,7 +544,7 @@
             <summary>
                 检查标识符是否定义
             </summary>
-            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
@@ -516,7 +554,7 @@
                 检查标识符是否定义
             </summary>
             <remarks>兼容旧版本粘土对象。</remarks>
-            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
@@ -525,7 +563,7 @@
             <summary>
                 根据标识符获取值
             </summary>
-            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
             <returns>
                 <see cref="T:System.Object" />
             </returns>
@@ -534,7 +572,7 @@
             <summary>
                 根据标识符获取目标类型的值
             </summary>
-            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
             <param name="resultType">转换的目标类型</param>
             <param name="jsonSerializerOptions">
                 <see cref="T:System.Text.Json.JsonSerializerOptions" />
@@ -548,7 +586,7 @@
             <summary>
                 根据标识符获取目标类型的值
             </summary>
-            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
             <param name="jsonSerializerOptions">
                 <see cref="T:System.Text.Json.JsonSerializerOptions" />
             </param>
@@ -561,7 +599,7 @@
             <summary>
                 根据标识符查找 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 节点
             </summary>
-            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
             <returns>
                 <see cref="T:System.Text.Json.Nodes.JsonNode" />
             </returns>
@@ -570,7 +608,7 @@
             <summary>
                 根据标识符设置值
             </summary>
-            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
             <param name="value">值</param>
         </member>
         <member name="M:Shapeless.Clay.Insert(System.Int32,System.Object)">
@@ -585,7 +623,28 @@
             </returns>
             <exception cref="T:System.NotSupportedException"></exception>
         </member>
+        <member name="M:Shapeless.Clay.Insert(System.Index,System.Object)">
+            <summary>
+                在指定索引处插入项
+            </summary>
+            <remarks>当 <see cref="P:Shapeless.Clay.IsArray" /> 为 <c>true</c> 时有效。</remarks>
+            <param name="index">索引</param>
+            <param name="value">值</param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+            <exception cref="T:System.NotSupportedException"></exception>
+        </member>
         <member name="M:Shapeless.Clay.InsertRange(System.Int32,System.Object[])">
+            <summary>
+                在指定索引处批量插入项
+            </summary>
+            <remarks>当 <see cref="P:Shapeless.Clay.IsArray" /> 为 <c>true</c> 时有效。</remarks>
+            <param name="index">索引</param>
+            <param name="values">值集合</param>
+            <exception cref="T:System.NotSupportedException"></exception>
+        </member>
+        <member name="M:Shapeless.Clay.InsertRange(System.Index,System.Object[])">
             <summary>
                 在指定索引处批量插入项
             </summary>
@@ -642,6 +701,29 @@
                 <see cref="T:Shapeless.Clay" />
             </returns>
         </member>
+        <member name="M:Shapeless.Clay.Slice(System.Range)">
+            <summary>
+                截取 <see cref="T:Shapeless.Clay" /> 并返回新的 <see cref="T:Shapeless.Clay" />
+            </summary>
+            <param name="range">
+                <see cref="T:System.Range" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+        </member>
+        <member name="M:Shapeless.Clay.Slice(System.Int32,System.Int32)">
+            <summary>
+                截取 <see cref="T:Shapeless.Clay" /> 并返回新的 <see cref="T:Shapeless.Clay" />
+            </summary>
+            <param name="start">起始位置</param>
+            <param name="end">结束位置（不含）</param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+        </member>
         <member name="M:Shapeless.Clay.ForEach(System.Action{System.Object})">
             <summary>
                 遍历 <see cref="T:Shapeless.Clay" />
@@ -669,7 +751,17 @@
             <summary>
                 根据标识符删除数据
             </summary>
-            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.Remove(System.Int32,System.Int32)">
+            <summary>
+                根据范围删除数据
+            </summary>
+            <param name="start">起始位置</param>
+            <param name="end">结束位置（不含）</param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
@@ -679,7 +771,17 @@
                 根据标识符删除数据
             </summary>
             <remarks>兼容旧版本粘土对象。</remarks>
-            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.Delete(System.Int32,System.Int32)">
+            <summary>
+                根据范围删除数据
+            </summary>
+            <param name="start">起始位置</param>
+            <param name="end">结束位置（不含）</param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
@@ -740,7 +842,7 @@
             <summary>
                 尝试根据标识符获取值
             </summary>
-            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
             <param name="value">值</param>
             <returns>
                 <see cref="T:System.Boolean" />
@@ -750,7 +852,7 @@
             <summary>
                 尝试根据标识符获取目标类型的值
             </summary>
-            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
             <param name="resultType">转换的目标类型</param>
             <param name="value">值</param>
             <param name="jsonSerializerOptions">
@@ -764,7 +866,7 @@
             <summary>
                 尝试根据标识符获取目标类型的值
             </summary>
-            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
             <param name="value">值</param>
             <param name="jsonSerializerOptions">
                 <see cref="T:System.Text.Json.JsonSerializerOptions" />
@@ -778,7 +880,7 @@
             <summary>
                 尝试根据标识符设置值
             </summary>
-            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
             <param name="value">值</param>
             <returns>
                 <see cref="T:System.Boolean" />
@@ -798,11 +900,34 @@
             <exception cref="T:System.NotSupportedException"></exception>
             <exception cref="T:System.Text.Json.JsonException"></exception>
         </member>
+        <member name="M:Shapeless.Clay.TryInsert(System.Index,System.Object)">
+            <summary>
+                尝试在指定索引处插入值
+            </summary>
+            <remarks>当 <see cref="P:Shapeless.Clay.IsArray" /> 为 <c>true</c> 时有效。</remarks>
+            <param name="index">索引</param>
+            <param name="value">值</param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+            <exception cref="T:System.NotSupportedException"></exception>
+            <exception cref="T:System.Text.Json.JsonException"></exception>
+        </member>
         <member name="M:Shapeless.Clay.TryRemove(System.Object)">
             <summary>
                 尝试根据标识符删除数据
             </summary>
-            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.TryRemove(System.Int32,System.Int32)">
+            <summary>
+                尝试根据范围删除数据
+            </summary>
+            <param name="start">起始位置</param>
+            <param name="end">结束位置（不含）</param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
@@ -812,7 +937,18 @@
                 尝试根据标识符删除数据
             </summary>
             <remarks>兼容旧版本粘土对象。</remarks>
-            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.TryDelete(System.Int32,System.Int32)">
+            <summary>
+                尝试根据范围删除数据
+            </summary>
+            <remarks>兼容旧版本粘土对象。</remarks>
+            <param name="start">起始位置</param>
+            <param name="end">结束位置（不含）</param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
@@ -1133,12 +1269,12 @@
             <summary>
                 <inheritdoc cref="T:Shapeless.ClayEventArgs" />
             </summary>
-            <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+            <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
             <param name="isFound">指示标识符是否存在</param>
         </member>
         <member name="P:Shapeless.ClayEventArgs.Identifier">
             <summary>
-                标识符，可以是键（字符串）或索引（整数）
+                标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）
             </summary>
         </member>
         <member name="P:Shapeless.ClayEventArgs.IsFound">

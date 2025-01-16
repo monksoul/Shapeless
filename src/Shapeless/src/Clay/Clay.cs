@@ -62,7 +62,7 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     /// <summary>
     ///     根据标识符获取值
     /// </summary>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
     /// <returns>
     ///     <see cref="object" />
     /// </returns>
@@ -79,7 +79,7 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     /// <summary>
     ///     根据标识符设置值
     /// </summary>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
     /// <param name="value">值</param>
     /// <param name="insert">是否作为在指定位置插入</param>
     /// <returns>
@@ -113,7 +113,7 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     /// <summary>
     ///     根据标识符移除值
     /// </summary>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
@@ -124,6 +124,12 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
 
         // 空检查
         ArgumentNullException.ThrowIfNull(identifier);
+
+        // 检查是否是集合/数组且标识符是 Range 实例
+        if (IsArray && identifier is Range range)
+        {
+            return RemoveNodeFromArrayByRange(range);
+        }
 
         // 触发移除数据之前事件
         OnRemoving(identifier);
@@ -149,9 +155,13 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     /// <returns>
     ///     <see cref="JsonNode" />
     /// </returns>
+    /// <exception cref="NotSupportedException"></exception>
     /// <exception cref="KeyNotFoundException"></exception>
     internal JsonNode? GetNodeFromObject(object key)
     {
+        // 检查键是否是不受支持的类型
+        ThrowIfUnsupportedKeyType(key);
+
         // 将键转换为字符串类型
         var stringKey = key.ToString()!;
 
@@ -193,11 +203,22 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     internal JsonNode? GetNodeFromArray(object index)
     {
-        // 检查数组索引合法性
-        EnsureLegalArrayIndex(index, out var intIndex);
-
         // 将 JsonCanvas 转换为 JsonArray 实例
         var jsonArray = JsonCanvas.AsArray();
+
+        // 检查是否是 Range 范围运算符
+        if (index is Range range)
+        {
+            return new JsonArray(jsonArray.Select(u => u?.DeepClone()).ToArray()[range]);
+        }
+
+        // 检查是否是 Index 运算符
+        var arrayIndex = index is Index idx
+            ? idx.IsFromEnd ? jsonArray.Count - idx.Value : idx.Value
+            : index;
+
+        // 检查数组索引合法性
+        EnsureLegalArrayIndex(arrayIndex, out var intIndex);
 
         // 获取 JsonArray 长度
         var count = jsonArray.Count;
@@ -233,8 +254,12 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
+    /// <exception cref="NotSupportedException"></exception>
     internal bool SetNodeInObject(object key, object? value, out object finalKey)
     {
+        // 检查键是否是不受支持的类型
+        ThrowIfUnsupportedKeyType(key);
+
         // 将键转换为字符串类型
         var stringKey = key.ToString()!;
 
@@ -272,13 +297,25 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
+    /// <exception cref="NotSupportedException"></exception>
     internal bool SetNodeInArray(object index, object? value, out object finalIndex, bool insert = false)
     {
-        // 检查数组索引合法性
-        EnsureLegalArrayIndex(index, out var intIndex);
+        // 检查是否是 Range 范围运算符
+        if (index is Range)
+        {
+            throw new NotSupportedException("Setting values using a System.Range is not supported in the Clay.");
+        }
 
         // 将 JsonCanvas 转换为 JsonArray 实例
         var jsonArray = JsonCanvas.AsArray();
+
+        // 检查是否是 Index 运算符
+        var arrayIndex = index is Index idx
+            ? idx.IsFromEnd ? jsonArray.Count - idx.Value : idx.Value
+            : index;
+
+        // 检查数组索引合法性
+        EnsureLegalArrayIndex(arrayIndex, out var intIndex);
 
         // 获取 JsonArray 长度
         var count = jsonArray.Count;
@@ -341,8 +378,12 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
+    /// <exception cref="NotSupportedException"></exception>
     internal bool RemoveNodeFromObject(object key, out object finalKey)
     {
+        // 检查键是否是不受支持的类型
+        ThrowIfUnsupportedKeyType(key);
+
         // 将键转换为字符串类型
         var stringKey = key.ToString()!;
 
@@ -379,11 +420,16 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     /// </returns>
     internal bool RemoveNodeFromArray(object index, out object finalIndex)
     {
-        // 检查数组索引合法性
-        EnsureLegalArrayIndex(index, out var intIndex);
-
         // 将 JsonCanvas 转换为 JsonArray 实例
         var jsonArray = JsonCanvas.AsArray();
+
+        // 检查是否是 Index 运算符
+        var arrayIndex = index is Index idx
+            ? idx.IsFromEnd ? jsonArray.Count - idx.Value : idx.Value
+            : index;
+
+        // 检查数组索引合法性
+        EnsureLegalArrayIndex(arrayIndex, out var intIndex);
 
         // 获取 JsonArray 长度
         var count = jsonArray.Count;
@@ -404,6 +450,29 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
 
         finalIndex = null!;
         return false;
+    }
+
+    /// <summary>
+    ///     根据 <see cref="Range" /> 删除 <see cref="JsonNode" /> 节点
+    /// </summary>
+    /// <param name="range">
+    ///     <see cref="Range" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
+    internal bool RemoveNodeFromArrayByRange(Range range)
+    {
+        // 计算范围对象的开始偏移量和长度
+        var (offset, length) = range.GetOffsetAndLength(JsonCanvas.AsArray().Count);
+
+        // 移除指定范围内的元素
+        for (var i = 0; i < length; i++)
+        {
+            RemoveValue(offset);
+        }
+
+        return true;
     }
 
     /// <summary>
@@ -721,6 +790,26 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
         {
             throw new NotSupportedException(
                 $"`{method}` method can only be used for single object operations.");
+        }
+    }
+
+    /// <summary>
+    ///     如果使用不受支持的键类型，则抛出异常
+    /// </summary>
+    /// <param name="key">键</param>
+    /// <exception cref="NotSupportedException"></exception>
+    internal static void ThrowIfUnsupportedKeyType(object key)
+    {
+        switch (key)
+        {
+            // 检查是否是 Index 运算符
+            case Index:
+                throw new NotSupportedException(
+                    "Accessing or setting properties using System.Index is not supported in the Clay.");
+            // 检查是否是 Range 运算符
+            case Range:
+                throw new NotSupportedException(
+                    "Accessing or setting properties using System.Range is not supported in the Clay.");
         }
     }
 }

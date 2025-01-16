@@ -47,6 +47,14 @@ public class ClayTests(ITestOutputHelper output)
         var clay = new Clay();
         var exception = Assert.Throws<KeyNotFoundException>(() => clay.GetNodeFromObject("Name"));
         Assert.Equal("The property `Name` was not found in the Clay.", exception.Message);
+
+        var exception2 = Assert.Throws<NotSupportedException>(() => clay.GetNodeFromObject(^1));
+        Assert.Equal("Accessing or setting properties using System.Index is not supported in the Clay.",
+            exception2.Message);
+
+        var exception3 = Assert.Throws<NotSupportedException>(() => clay.GetNodeFromObject(1..^1));
+        Assert.Equal("Accessing or setting properties using System.Range is not supported in the Clay.",
+            exception3.Message);
     }
 
     [Fact]
@@ -141,6 +149,12 @@ public class ClayTests(ITestOutputHelper output)
                 AllowIndexOutOfRange = true, AutoCreateNestedArrays = true, AutoExpandArrayWithNulls = true
             });
         Assert.Equal("[]", clay3.GetNodeFromArray(2)!.ToJsonString());
+
+        var array = Clay.Parse("[1,2,3,4]");
+        Assert.Equal(3, array.GetNodeFromArray(^2)?.GetValue<int>()); // 末尾运算符（Hat 运算符）
+
+        var rangeArray = array.GetNodeFromArray(1..^1); // 范围运算符
+        Assert.Equal("[2,3]", rangeArray?.ToJsonString());
     }
 
     [Fact]
@@ -248,6 +262,19 @@ public class ClayTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void SetNodeInObject_Invalid_Parameters()
+    {
+        var clay = new Clay();
+        var exception = Assert.Throws<NotSupportedException>(() => clay.SetNodeInObject(^1, "furion", out _));
+        Assert.Equal("Accessing or setting properties using System.Index is not supported in the Clay.",
+            exception.Message);
+
+        var exception2 = Assert.Throws<NotSupportedException>(() => clay.SetNodeInObject(1..^1, "furion", out _));
+        Assert.Equal("Accessing or setting properties using System.Range is not supported in the Clay.",
+            exception2.Message);
+    }
+
+    [Fact]
     public void SetNodeInObject_ReturnOK()
     {
         var clay = new Clay();
@@ -319,6 +346,10 @@ public class ClayTests(ITestOutputHelper output)
         var exception5 = Assert.Throws<InvalidOperationException>(() => clay.SetNodeInArray("name", null, out _));
         Assert.Equal("The property `name` was not found in the Clay or is not a valid array index.",
             exception5.Message);
+
+        var exception6 = Assert.Throws<NotSupportedException>(() => clay.SetNodeInArray(1..^2, null, out _));
+        Assert.Equal("Setting values using a System.Range is not supported in the Clay.",
+            exception6.Message);
     }
 
     [Fact]
@@ -353,6 +384,10 @@ public class ClayTests(ITestOutputHelper output)
         var errorArray = new Clay(ClayType.Array,
             new ClayOptions { AllowIndexOutOfRange = true });
         errorArray.SetNodeInArray(3, null, out _);
+
+        var array2 = Clay.Parse("[1,2,3,4]");
+        array2.SetNodeInArray(^2, 5, out _); // 末尾运算符（Hat 运算符）
+        Assert.Equal("[1,2,5,4]", array2.ToJsonString());
     }
 
     [Fact]
@@ -526,6 +561,10 @@ public class ClayTests(ITestOutputHelper output)
         var clay = new Clay();
         var exception = Assert.Throws<KeyNotFoundException>(() => clay.RemoveNodeFromObject("Name", out _));
         Assert.Equal("The property `Name` was not found in the Clay.", exception.Message);
+
+        var exception2 = Assert.Throws<NotSupportedException>(() => clay.RemoveNodeFromObject(^1, out _));
+        Assert.Equal("Accessing or setting properties using System.Index is not supported in the Clay.",
+            exception2.Message);
     }
 
     [Fact]
@@ -595,6 +634,18 @@ public class ClayTests(ITestOutputHelper output)
         var clay2 = Clay.Parse("[1,2,3]", new ClayOptions { AllowIndexOutOfRange = true });
         Assert.False(clay2.RemoveNodeFromArray(3, out _));
         Assert.Equal("[1,2,3]", clay2.ToJsonString());
+
+        var array = Clay.Parse("[1,2,3,4]");
+        Assert.True(array.RemoveNodeFromArray(^2, out _)); // 末尾运算符（Hat 运算符）
+        Assert.Equal("[1,2,4]", array.ToJsonString());
+    }
+
+    [Fact]
+    public void RemoveNodeFromArrayByRange_ReturnOK()
+    {
+        var clay = Clay.Parse("[1,2,3,4]");
+        clay.RemoveNodeFromArrayByRange(1..^1);
+        Assert.Equal("[1,4]", clay.ToJsonString());
     }
 
     [Fact]
@@ -608,6 +659,10 @@ public class ClayTests(ITestOutputHelper output)
         dynamic array = clay["arr"]!;
         Assert.True(array.RemoveValue(0));
         Assert.Equal("{\"arr\":[2,3]}", clay.ToJsonString());
+
+        var array2 = Clay.Parse("[1,2,3,4]");
+        array2.RemoveValue(1..^1);
+        Assert.Equal("[1,4]", array2.ToJsonString());
     }
 
     [Fact]
@@ -837,6 +892,21 @@ public class ClayTests(ITestOutputHelper output)
         clay.ExpandArrayWithNulls(clay.JsonCanvas.AsArray());
         Assert.Equal(1, i);
         Assert.Equal(1, j);
+    }
+
+    [Fact]
+    public void ThrowIfUnsupportedKeyType_ReturnOK()
+    {
+        Clay.ThrowIfUnsupportedKeyType("name");
+        Clay.ThrowIfUnsupportedKeyType(0);
+
+        var exception = Assert.Throws<NotSupportedException>(() => Clay.ThrowIfUnsupportedKeyType(^1));
+        Assert.Equal("Accessing or setting properties using System.Index is not supported in the Clay.",
+            exception.Message);
+
+        var exception2 = Assert.Throws<NotSupportedException>(() => Clay.ThrowIfUnsupportedKeyType(1..^1));
+        Assert.Equal("Accessing or setting properties using System.Range is not supported in the Clay.",
+            exception2.Message);
     }
 }
 

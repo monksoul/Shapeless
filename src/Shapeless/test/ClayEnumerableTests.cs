@@ -7,20 +7,6 @@ namespace Shapeless.Tests;
 public class ClayEnumerableTests(ITestOutputHelper output)
 {
     [Fact]
-    public void Index_ReturnOK()
-    {
-        var clay = new Clay { ["Name"] = "Furion" };
-        Assert.Equal("Furion", clay["Name"]);
-        clay["Name"] = "百小僧";
-        clay['a'] = 10;
-        Assert.Equal(10, clay['a']);
-
-        var array = new Clay(ClayType.Array) { [0] = "Furion" };
-        Assert.Equal("Furion", array[0]);
-        Assert.Equal("Furion", array["0"]);
-    }
-
-    [Fact]
     public void Count_ReturnOK()
     {
         dynamic clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");

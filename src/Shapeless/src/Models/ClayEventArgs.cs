@@ -12,7 +12,7 @@ public sealed class ClayEventArgs : EventArgs
     /// <summary>
     ///     <inheritdoc cref="ClayEventArgs" />
     /// </summary>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
     /// <param name="isFound">指示标识符是否存在</param>
     internal ClayEventArgs(object identifier, bool isFound)
     {
@@ -21,7 +21,7 @@ public sealed class ClayEventArgs : EventArgs
     }
 
     /// <summary>
-    ///     标识符，可以是键（字符串）或索引（整数）
+    ///     标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）
     /// </summary>
     public object Identifier { get; }
 

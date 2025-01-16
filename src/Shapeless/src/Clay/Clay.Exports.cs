@@ -76,6 +76,26 @@ public partial class Clay
     }
 
     /// <summary>
+    ///     <see cref="Index" /> 索引
+    /// </summary>
+    /// <param name="index">
+    ///     <see cref="Index" />
+    /// </param>
+    public object? this[Index index]
+    {
+        get => GetValue(index);
+        set => SetValue(index, value);
+    }
+
+    /// <summary>
+    ///     <see cref="Range" /> 索引
+    /// </summary>
+    /// <param name="range">
+    ///     <see cref="Range" />
+    /// </param>
+    public Clay? this[Range range] => GetValue(range) as Clay;
+
+    /// <summary>
     ///     是否是单一对象
     /// </summary>
     public bool IsObject { get; }
@@ -230,7 +250,7 @@ public partial class Clay
     /// <summary>
     ///     检查标识符是否定义
     /// </summary>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
@@ -239,19 +259,36 @@ public partial class Clay
         // 空检查
         ArgumentNullException.ThrowIfNull(identifier);
 
-        // 将标识符转换为字符串类型
-        var stringIdentifier = identifier.ToString()!;
-
         // 检查是否是单一对象
         if (IsObject)
         {
-            return ObjectMethods.ContainsKey(stringIdentifier) || JsonCanvas.AsObject().ContainsKey(stringIdentifier);
+            // 检查键是否是不受支持的类型
+            ThrowIfUnsupportedKeyType(identifier);
+
+            // 将标识符转换为字符串类型
+            var propertyName = identifier.ToString()!;
+
+            return ObjectMethods.ContainsKey(propertyName) || JsonCanvas.AsObject().ContainsKey(propertyName);
         }
 
-        // 尝试将字符串标识符转换为整数索引
-        if (int.TryParse(stringIdentifier, out var intIndex))
+        // 检查是否是 Range 范围运算符
+        if (identifier is Range)
         {
-            return intIndex >= 0 && intIndex < JsonCanvas.AsArray().Count;
+            throw new NotSupportedException("Checking containment using a System.Range is not supported in the Clay.");
+        }
+
+        // 将 JsonCanvas 转换为 JsonArray 实例
+        var jsonArray = JsonCanvas.AsArray();
+
+        // 检查是否是 Index 运算符
+        var stringIndex = (identifier is Index idx
+            ? idx.IsFromEnd ? jsonArray.Count - idx.Value : idx.Value
+            : identifier).ToString();
+
+        // 尝试将字符串标识符转换为整数索引
+        if (int.TryParse(stringIndex, out var intIndex))
+        {
+            return intIndex >= 0 && intIndex < jsonArray.Count;
         }
 
         return false;
@@ -261,7 +298,7 @@ public partial class Clay
     ///     检查标识符是否定义
     /// </summary>
     /// <remarks>兼容旧版本粘土对象。</remarks>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
@@ -270,7 +307,7 @@ public partial class Clay
     /// <summary>
     ///     根据标识符获取值
     /// </summary>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
     /// <returns>
     ///     <see cref="object" />
     /// </returns>
@@ -279,7 +316,7 @@ public partial class Clay
     /// <summary>
     ///     根据标识符获取目标类型的值
     /// </summary>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
     /// <param name="resultType">转换的目标类型</param>
     /// <param name="jsonSerializerOptions">
     ///     <see cref="JsonSerializerOptions" />
@@ -314,7 +351,7 @@ public partial class Clay
     /// <summary>
     ///     根据标识符获取目标类型的值
     /// </summary>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
     /// <param name="jsonSerializerOptions">
     ///     <see cref="JsonSerializerOptions" />
     /// </param>
@@ -328,7 +365,7 @@ public partial class Clay
     /// <summary>
     ///     根据标识符查找 <see cref="JsonNode" /> 节点
     /// </summary>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
     /// <returns>
     ///     <see cref="JsonNode" />
     /// </returns>
@@ -343,7 +380,7 @@ public partial class Clay
     /// <summary>
     ///     根据标识符设置值
     /// </summary>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
     /// <param name="value">值</param>
     public void Set(object identifier, object? value) => SetValue(identifier, value);
 
@@ -366,6 +403,24 @@ public partial class Clay
     }
 
     /// <summary>
+    ///     在指定索引处插入项
+    /// </summary>
+    /// <remarks>当 <see cref="IsArray" /> 为 <c>true</c> 时有效。</remarks>
+    /// <param name="index">索引</param>
+    /// <param name="value">值</param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
+    /// <exception cref="NotSupportedException"></exception>
+    public bool Insert(Index index, object? value)
+    {
+        // 检查是否是单一对象实例调用
+        ThrowIfMethodCalledOnSingleObject(nameof(Insert));
+
+        return Insert(index.IsFromEnd ? JsonCanvas.AsArray().Count - index.Value : index.Value, value);
+    }
+
+    /// <summary>
     ///     在指定索引处批量插入项
     /// </summary>
     /// <remarks>当 <see cref="IsArray" /> 为 <c>true</c> 时有效。</remarks>
@@ -385,6 +440,21 @@ public partial class Clay
         {
             SetValue(currentIndex++, value, true);
         }
+    }
+
+    /// <summary>
+    ///     在指定索引处批量插入项
+    /// </summary>
+    /// <remarks>当 <see cref="IsArray" /> 为 <c>true</c> 时有效。</remarks>
+    /// <param name="index">索引</param>
+    /// <param name="values">值集合</param>
+    /// <exception cref="NotSupportedException"></exception>
+    public void InsertRange(Index index, params object?[] values)
+    {
+        // 检查是否是单一对象实例调用
+        ThrowIfMethodCalledOnSingleObject(nameof(InsertRange));
+
+        InsertRange(index.IsFromEnd ? JsonCanvas.AsArray().Count - index.Value : index.Value, values);
     }
 
     /// <summary>
@@ -474,6 +544,41 @@ public partial class Clay
         Parse(IsObject ? AsEnumerableObject().Reverse() : Values.Reverse(), options, true);
 
     /// <summary>
+    ///     截取 <see cref="Clay" /> 并返回新的 <see cref="Clay" />
+    /// </summary>
+    /// <param name="range">
+    ///     <see cref="Range" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    public Clay? Slice(Range range)
+    {
+        // 检查是否是单一对象实例调用
+        ThrowIfMethodCalledOnSingleObject(nameof(Slice));
+
+        return this[range];
+    }
+
+    /// <summary>
+    ///     截取 <see cref="Clay" /> 并返回新的 <see cref="Clay" />
+    /// </summary>
+    /// <param name="start">起始位置</param>
+    /// <param name="end">结束位置（不含）</param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    public Clay? Slice(int start, int end)
+    {
+        // 检查是否是单一对象实例调用
+        ThrowIfMethodCalledOnSingleObject(nameof(Slice));
+
+        return Slice(new Range(start, end));
+    }
+
+    /// <summary>
     ///     遍历 <see cref="Clay" />
     /// </summary>
     public void ForEach(Action<dynamic> action)
@@ -548,21 +653,53 @@ public partial class Clay
     /// <summary>
     ///     根据标识符删除数据
     /// </summary>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
     public bool Remove(object identifier) => RemoveValue(identifier);
 
     /// <summary>
+    ///     根据范围删除数据
+    /// </summary>
+    /// <param name="start">起始位置</param>
+    /// <param name="end">结束位置（不含）</param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
+    public bool Remove(int start, int end)
+    {
+        // 检查是否是单一对象实例调用
+        ThrowIfMethodCalledOnSingleObject(nameof(Remove));
+
+        return Remove(new Range(start, end));
+    }
+
+    /// <summary>
     ///     根据标识符删除数据
     /// </summary>
     /// <remarks>兼容旧版本粘土对象。</remarks>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
     public bool Delete(object identifier) => Remove(identifier);
+
+    /// <summary>
+    ///     根据范围删除数据
+    /// </summary>
+    /// <param name="start">起始位置</param>
+    /// <param name="end">结束位置（不含）</param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
+    public bool Delete(int start, int end)
+    {
+        // 检查是否是单一对象实例调用
+        ThrowIfMethodCalledOnSingleObject(nameof(Delete));
+
+        return Remove(start, end);
+    }
 
     /// <summary>
     ///     将 <see cref="Clay" /> 转换为目标类型
@@ -657,7 +794,7 @@ public partial class Clay
     /// <summary>
     ///     尝试根据标识符获取值
     /// </summary>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
     /// <param name="value">值</param>
     /// <returns>
     ///     <see cref="bool" />
@@ -678,7 +815,7 @@ public partial class Clay
     /// <summary>
     ///     尝试根据标识符获取目标类型的值
     /// </summary>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
     /// <param name="resultType">转换的目标类型</param>
     /// <param name="value">值</param>
     /// <param name="jsonSerializerOptions">
@@ -704,7 +841,7 @@ public partial class Clay
     /// <summary>
     ///     尝试根据标识符获取目标类型的值
     /// </summary>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
     /// <param name="value">值</param>
     /// <param name="jsonSerializerOptions">
     ///     <see cref="JsonSerializerOptions" />
@@ -730,7 +867,7 @@ public partial class Clay
     /// <summary>
     ///     尝试根据标识符设置值
     /// </summary>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
     /// <param name="value">值</param>
     /// <returns>
     ///     <see cref="bool" />
@@ -787,23 +924,87 @@ public partial class Clay
     }
 
     /// <summary>
-    ///     尝试根据标识符删除数据
+    ///     尝试在指定索引处插入值
     /// </summary>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+    /// <remarks>当 <see cref="IsArray" /> 为 <c>true</c> 时有效。</remarks>
+    /// <param name="index">索引</param>
+    /// <param name="value">值</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    public bool TryRemove(object identifier) => Contains(identifier) && RemoveValue(identifier);
+    /// <exception cref="NotSupportedException"></exception>
+    /// <exception cref="JsonException"></exception>
+    public bool TryInsert(Index index, object? value)
+    {
+        // 检查是否是单一对象实例调用
+        ThrowIfMethodCalledOnSingleObject(nameof(TryInsert));
+
+        return TryInsert(index.IsFromEnd ? JsonCanvas.AsArray().Count - index.Value : index.Value, value);
+    }
+
+    /// <summary>
+    ///     尝试根据标识符删除数据
+    /// </summary>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
+    public bool TryRemove(object identifier) =>
+        (identifier is Range || Contains(identifier)) && RemoveValue(identifier);
+
+    /// <summary>
+    ///     尝试根据范围删除数据
+    /// </summary>
+    /// <param name="start">起始位置</param>
+    /// <param name="end">结束位置（不含）</param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
+    public bool TryRemove(int start, int end)
+    {
+        // 检查是否是单一对象实例调用
+        ThrowIfMethodCalledOnSingleObject(nameof(TryRemove));
+
+        try
+        {
+            return Remove(start, end);
+        }
+        catch (JsonException)
+        {
+            throw;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
 
     /// <summary>
     ///     尝试根据标识符删除数据
     /// </summary>
     /// <remarks>兼容旧版本粘土对象。</remarks>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
     public bool TryDelete(object identifier) => TryRemove(identifier);
+
+    /// <summary>
+    ///     尝试根据范围删除数据
+    /// </summary>
+    /// <remarks>兼容旧版本粘土对象。</remarks>
+    /// <param name="start">起始位置</param>
+    /// <param name="end">结束位置（不含）</param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
+    public bool TryDelete(int start, int end)
+    {
+        // 检查是否是单一对象实例调用
+        ThrowIfMethodCalledOnSingleObject(nameof(TryDelete));
+
+        return TryRemove(start, end);
+    }
 
     /// <summary>
     ///     设置为只读模式

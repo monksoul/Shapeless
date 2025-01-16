@@ -147,7 +147,7 @@ public class GetStartController
     }
 
     /// <summary>
-    ///     解析 JSON 字符串
+    /// 从 JSON 字符串创建
     /// </summary>
     /// <returns></returns>
     [HttpGet]
@@ -155,29 +155,52 @@ public class GetStartController
     {
         // 从 JSON 对象字符串创建
         dynamic clay = Clay.Parse("""{"id":1,"name":"Furion"}""");
-        var id = clay.id; // 1
-        var name = clay["name"]; // "Furion"
+
+        // 添加新属性
         clay.age = 30;
 
+        // 访问属性
+        var id = clay.id; // 1
+        var name = clay["name"]; // "Furion"
+        var age = clay.age; // 30
+
+        // 输出字符串
         Console.WriteLine(clay);
 
         // 从 JSON 数组字符串创建
         dynamic array = Clay.Parse("[1,2,3,true,\"Furion\"]");
+
+        // 追加新项
         array.Add(false);
         array.Add(clay);
 
+        // 访问项
+        var first = array[0]; // 1
+        var second = array[1]; // 2
+        var last = array[^1]; // "{\"id\":1,\"name\":\"Furion\",\"age\":30}"
+
+        // 输出字符串
         Console.WriteLine(array);
 
         // 从任意 JSON 字面量字符串创建
-        dynamic any = Clay.Parse("true");
-        Console.WriteLine(any);
+        dynamic scalar = Clay.Parse("true");
+        
+        // 访问值
+        var value = scalar.data;
+
+        // 输出字符串
+        Console.WriteLine(scalar);
 
         // 自定义包装字面量的键名
-        dynamic custom = Clay.Parse("true", new ClayOptions
+        dynamic wrapper = Clay.Parse("true", new ClayOptions
         {
             ScalarValueKey = "value"
         });
-        Console.WriteLine(custom);
+        // 访问值
+        var data = wrapper.value;
+
+        // 输出字符串
+        Console.WriteLine(wrapper);
 
         // 从 JSON 字典格式字符串创建
         dynamic dicObject = Clay.Parse("""
@@ -192,9 +215,11 @@ public class GetStartController
                                          }
                                        ]
                                        """, useObjectForDictionaryJson: true);
+
+        // 输出字符串
         Console.WriteLine(dicObject);
 
-        return Clay.Parse(new { clay, array, any, custom, dicObject });
+        return Clay.Parse(new { clay, array, any = scalar, custom = wrapper, dicObject });
     }
 
     /// <summary>

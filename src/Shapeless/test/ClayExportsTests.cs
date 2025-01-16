@@ -62,6 +62,27 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void Index_ReturnOK()
+    {
+        var clay = new Clay { ["Name"] = "Furion" };
+        Assert.Equal("Furion", clay["Name"]);
+        clay["Name"] = "百小僧";
+        clay['a'] = 10;
+        Assert.Equal(10, clay['a']);
+
+        var array = new Clay(ClayType.Array) { [0] = "Furion" };
+        Assert.Equal("Furion", array[0]);
+        Assert.Equal("Furion", array["0"]);
+
+        var array2 = Clay.Parse("[1,2,3,4]");
+        array2[^2] = 5; // 末尾运算符（Hat 运算符）
+        Assert.Equal(5, array2[^2]);
+
+        var rangeArray = array2[1..^1]; // 范围运算符
+        Assert.Equal("[2,5]", rangeArray?.ToJsonString());
+    }
+
+    [Fact]
     public void EmptyObject_ReturnOK()
     {
         var clay = Clay.EmptyObject();
@@ -606,6 +627,24 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void Contains_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        var exception = Assert.Throws<NotSupportedException>(() => clay.Contains(^1));
+        Assert.Equal("Accessing or setting properties using System.Index is not supported in the Clay.",
+            exception.Message);
+
+        var exception2 = Assert.Throws<NotSupportedException>(() => clay.Contains(1..^1));
+        Assert.Equal("Accessing or setting properties using System.Range is not supported in the Clay.",
+            exception2.Message);
+
+        var array = Clay.Parse("[1,2,3]");
+        var exception3 = Assert.Throws<NotSupportedException>(() => array.Contains(1..^2));
+        Assert.Equal("Checking containment using a System.Range is not supported in the Clay.",
+            exception3.Message);
+    }
+
+    [Fact]
     public void Contains_ReturnOK()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
@@ -622,6 +661,8 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.True(clay2.Contains(2));
         Assert.False(clay2.Contains(-1));
         Assert.False(clay2.Contains(3));
+        Assert.True(clay2.Contains(^1));
+        Assert.True(clay2.Contains("1"));
     }
 
     [Fact]
@@ -728,6 +769,15 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void Remove_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+
+        var exception = Assert.Throws<NotSupportedException>(() => clay.Remove(0, 1));
+        Assert.Equal("`Remove` method can only be used for array or collection operations.", exception.Message);
+    }
+
+    [Fact]
     public void Remove_ReturnOK()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\",\"arr\":[1,2,3]}");
@@ -738,6 +788,23 @@ public class ClayExportsTests(ITestOutputHelper output)
         dynamic array = clay["arr"]!;
         Assert.True(array.Remove(0));
         Assert.Equal("{\"arr\":[2,3]}", clay.ToJsonString());
+
+        var array2 = Clay.Parse("[1,2,3,4]");
+        Assert.True(array2.Remove(1..^1));
+        Assert.Equal("[1,4]", array2.ToJsonString());
+
+        var array3 = Clay.Parse("[1,2,3,4]");
+        Assert.True(array3.Remove(1, 3));
+        Assert.Equal("[1,4]", array3.ToJsonString());
+    }
+
+    [Fact]
+    public void Delete_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+
+        var exception = Assert.Throws<NotSupportedException>(() => clay.Delete(0, 1));
+        Assert.Equal("`Delete` method can only be used for array or collection operations.", exception.Message);
     }
 
     [Fact]
@@ -751,6 +818,14 @@ public class ClayExportsTests(ITestOutputHelper output)
         dynamic array = clay["arr"]!;
         Assert.True(array.Delete(0));
         Assert.Equal("{\"arr\":[2,3]}", clay.ToJsonString());
+
+        var array2 = Clay.Parse("[1,2,3,4]");
+        Assert.True(array2.Delete(1..^1));
+        Assert.Equal("[1,4]", array2.ToJsonString());
+
+        var array3 = Clay.Parse("[1,2,3,4]");
+        Assert.True(array3.Delete(1, 3));
+        Assert.Equal("[1,4]", array3.ToJsonString());
     }
 
     [Fact]
@@ -914,6 +989,15 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void TryRemove_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+
+        var exception = Assert.Throws<NotSupportedException>(() => clay.TryRemove(0, 1));
+        Assert.Equal("`TryRemove` method can only be used for array or collection operations.", exception.Message);
+    }
+
+    [Fact]
     public void TryRemove_ReturnOK()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
@@ -929,6 +1013,23 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.True(clay2.TryRemove(0));
         Assert.False(clay2.TryRemove(3));
         Assert.True(clay2.IsEmpty);
+
+        var array2 = Clay.Parse("[1,2,3,4]");
+        Assert.True(array2.TryRemove(1..^1));
+        Assert.Equal("[1,4]", array2.ToJsonString());
+
+        var array3 = Clay.Parse("[1,2,3,4]");
+        Assert.True(array3.TryRemove(1, 3));
+        Assert.Equal("[1,4]", array3.ToJsonString());
+    }
+
+    [Fact]
+    public void TryDelete_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+
+        var exception = Assert.Throws<NotSupportedException>(() => clay.TryDelete(0, 1));
+        Assert.Equal("`TryDelete` method can only be used for array or collection operations.", exception.Message);
     }
 
     [Fact]
@@ -947,6 +1048,14 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.True(clay2.TryDelete(0));
         Assert.False(clay2.TryDelete(3));
         Assert.True(clay2.IsEmpty);
+
+        var array2 = Clay.Parse("[1,2,3,4]");
+        Assert.True(array2.TryDelete(1..^1));
+        Assert.Equal("[1,4]", array2.ToJsonString());
+
+        var array3 = Clay.Parse("[1,2,3,4]");
+        Assert.True(array3.TryDelete(1, 3));
+        Assert.Equal("[1,4]", array3.ToJsonString());
     }
 
     [Fact]
@@ -981,6 +1090,9 @@ public class ClayExportsTests(ITestOutputHelper output)
         clay.Options.AutoExpandArrayWithNulls = true;
         clay.Insert(7, 7);
         Assert.Equal("[0,4,1,2,5,3,null,7]", clay.ToJsonString());
+
+        clay.Insert(^2, 10);
+        Assert.Equal("[0,4,1,2,5,3,10,null,7]", clay.ToJsonString());
     }
 
     [Fact]
@@ -1003,6 +1115,9 @@ public class ClayExportsTests(ITestOutputHelper output)
         var clay = Clay.Parse("[1,2,3]");
         clay.InsertRange(0, -3, -2, -1, 0);
         Assert.Equal("[-3,-2,-1,0,1,2,3]", clay.ToJsonString());
+
+        clay.InsertRange(^2, 10, 20, 30);
+        Assert.Equal("[-3,-2,-1,0,1,10,20,30,2,3]", clay.ToJsonString());
     }
 
     [Fact]
@@ -1037,6 +1152,9 @@ public class ClayExportsTests(ITestOutputHelper output)
         clay.Options.AutoExpandArrayWithNulls = true;
         Assert.True(clay.TryInsert(7, 7));
         Assert.Equal("[0,4,1,2,5,3,null,7]", clay.ToJsonString());
+
+        clay.TryInsert(^2, 10);
+        Assert.Equal("[0,4,1,2,5,3,10,null,7]", clay.ToJsonString());
     }
 
     [Fact]
@@ -1153,6 +1271,22 @@ public class ClayExportsTests(ITestOutputHelper output)
         var array2 = array.Reverse();
         Assert.Equal("[3,2,1]", array2.ToJsonString());
         Assert.Equal("[1,2,3]", array.ToJsonString());
+    }
+
+    [Fact]
+    public void Slice_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        var exception = Assert.Throws<NotSupportedException>(() => clay.Slice(..^1));
+        Assert.Equal("`Slice` method can only be used for array or collection operations.", exception.Message);
+    }
+
+    [Fact]
+    public void Slice_ReturnOK()
+    {
+        var clay = Clay.Parse("[1,2,3,4]");
+        Assert.Equal("[2,3]", clay.Slice(1, 3)?.ToJsonString());
+        Assert.Equal("[2,3]", clay.Slice(1..^1)?.ToJsonString());
     }
 
     [Fact]
