@@ -14,34 +14,82 @@ public class GetStartController
         // 创建空的单一对象
         dynamic clay = new Clay(); // 或使用 Clay.EmptyObject(); 或 new Clay.Object();
 
-        // 属性或索引方式设置值
+        // 属性方式（添加）设置值
         clay.Id = 1;
-        clay["Name"] = "Shapeless";
-        clay.IsDynamic = true;
-        clay.IsArray = false;
+        clay.Name = "Shapeless";
 
-        // 设置匿名对象
-        clay.sub = new
+        // 索引方式（添加）设置值
+        clay["IsDynamic"] = true;
+        clay["IsArray"] = false;
+
+        // 设置对象或匿名对象
+        clay.Author = new
         {
+            Nickname = "MonkSoul",
             HomePage = new[] { "https://furion.net", "https://baiqian.com" }
         };
-        // 继续添加数组内容
-        clay.sub.HomePage[2] = "https://baiqian.ltd"; // 使用索引方式
-        clay.sub.HomePage.Add("https://百签.com"); // 使用 Add 方法
 
-        // 嵌套设置流变对象
+        // 属性或索引或它们组合方式（修改）设置值
+        clay.Author.Nickname = "百小僧";
+        clay["Author"].Age = 30;
+        clay["Author"]["Gender"] = "男";
+        clay.Author["E-Mail"] = "monksoul@outlook.com";
+
+        // 通过索引或 Add/Push 方法添加数组项
+        clay.Author.HomePage[2] = "https://baiqian.ltd"; // 使用索引方式
+
+        var homePage = clay.Author.HomePage; // 简化 clay.Author.HomePage[2] 操作
+        homePage[homePage.Length] = "https://chinadot.net"; // 使用数组长度作为索引
+        homePage.Add("https://百签.com"); // 或使用 homePage.Push("https://百签.com");
+
+        // 设置嵌套流变对象
         clay.extend = new Clay();
         clay.extend.username = "MonkSoul";
+        clay.extend.gitee = "https://gitee.com/monksoul";
 
-        // 删除 IsArray 属性
+        // 删除（移除）属性
         clay.Remove("IsArray"); // 或使用 clay.Delete("IsArray")
 
-        // 支持输出字符串格式化：U（取消中文 Unicode 编码）
+        // 访问并修改属性
+        clay.Id += 1;
+
+        // 输出字符串
+        Console.WriteLine(clay); // 或使用 clay.ToString();
+
+        // 输出字符串（U：取消中文 Unicode 编码）
         Console.WriteLine($"{clay:U}"); // 或使用 clay.ToString("U");
 
-        // C：输出小驼峰键命名；P：输出帕斯卡（大驼峰）键命名
+        // 调用 ToJsonString 方法并设置 JsonSerializerOptions，指定 Encoder 属性
+        Console.WriteLine(clay.ToJsonString(new JsonSerializerOptions
+            { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping }));
+
+        // 输出字符串（C：输出小驼峰键命名；P：输出帕斯卡（大驼峰）键命名）
         Console.WriteLine($"{clay:UC}"); // 或使用 clay.ToString("UC");
         Console.WriteLine($"{clay:UP}"); // 或使用 clay.ToString("UP");
+
+        // 调用 ToJsonString 方法并设置 JsonSerializerOptions，指定 WriteIndented 属性
+        Console.WriteLine(clay.ToJsonString(new JsonSerializerOptions
+        {
+            WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        }));
+
+        // 调用 ToJsonString 方法并设置 JsonSerializerOptions，指定 WriteIndented 属性
+        Console.WriteLine(clay.ToJsonString(new JsonSerializerOptions
+        {
+            WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            PropertyNamingPolicy = new PascalCaseNamingPolicy()
+        }));
+
+        // 输出字符串（Z：压缩（取消格式化））
+        Console.WriteLine($"{clay:Z}"); // 或使用 clay.ToString("Z");
+
+        // 调用 ToJsonString 方法并设置 JsonSerializerOptions，指定 WriteIndented 属性
+        Console.WriteLine(clay.ToJsonString(new JsonSerializerOptions
+            { WriteIndented = false }));
+
+        // 组合使用格式化符
+        Console.WriteLine($"{clay:ZUC}");
 
         return clay;
     }
