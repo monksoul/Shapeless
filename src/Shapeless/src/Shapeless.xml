@@ -64,7 +64,7 @@
             </summary>
             <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
             <param name="value">值</param>
-            <param name="arrayInsert">是否作为在指定位置插入</param>
+            <param name="insert">是否作为在指定位置插入</param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
@@ -116,7 +116,7 @@
             <param name="index">索引</param>
             <param name="value">元素值</param>
             <param name="finalIndex">最终设置索引</param>
-            <param name="arrayInsert">是否作为在指定位置插入</param>
+            <param name="insert">是否作为在指定位置插入</param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
@@ -881,6 +881,28 @@
             </param>
             <returns>
                 <see cref="T:System.Boolean" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.KSort(Shapeless.ClayOptions)">
+            <summary>
+                按照键升序排序并返回新的 <see cref="T:Shapeless.Clay" />
+            </summary>
+            <param name="options">
+                <see cref="T:Shapeless.ClayOptions" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.KRSort(Shapeless.ClayOptions)">
+            <summary>
+                按照键降序排序并返回新的 <see cref="T:Shapeless.Clay" />
+            </summary>
+            <param name="options">
+                <see cref="T:Shapeless.ClayOptions" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
             </returns>
         </member>
         <member name="T:Shapeless.Clay.Object">

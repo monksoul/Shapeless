@@ -1326,4 +1326,44 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.Equal(3, clay.Count);
         Assert.Equal(30, clay["Count"]);
     }
+
+    [Fact]
+    public void KSort_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("[1,2,3]");
+        var exception = Assert.Throws<NotSupportedException>(() => clay.KSort());
+        Assert.Equal("`KSort` method can only be used for single object operations.", exception.Message);
+    }
+
+    [Fact]
+    public void KSort_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        var kSortClay = clay.KSort();
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", kSortClay.ToJsonString());
+
+        var clay2 = Clay.Parse("{\"name\":\"furion\",\"id\":1}");
+        var kSortClay2 = clay2.KSort();
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", kSortClay2.ToJsonString());
+    }
+
+    [Fact]
+    public void KRSort_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("[1,2,3]");
+        var exception = Assert.Throws<NotSupportedException>(() => clay.KRSort());
+        Assert.Equal("`KRSort` method can only be used for single object operations.", exception.Message);
+    }
+
+    [Fact]
+    public void KRSort_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        var kRSortClay = clay.KRSort();
+        Assert.Equal("{\"name\":\"furion\",\"id\":1}", kRSortClay.ToJsonString());
+
+        var clay2 = Clay.Parse("{\"name\":\"furion\",\"id\":1}");
+        var kRSortClay2 = clay2.KRSort();
+        Assert.Equal("{\"name\":\"furion\",\"id\":1}", kRSortClay2.ToJsonString());
+    }
 }

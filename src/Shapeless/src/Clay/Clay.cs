@@ -81,11 +81,11 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     /// </summary>
     /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）</param>
     /// <param name="value">值</param>
-    /// <param name="arrayInsert">是否作为在指定位置插入</param>
+    /// <param name="insert">是否作为在指定位置插入</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    internal bool SetValue(object identifier, object? value, bool arrayInsert = false)
+    internal bool SetValue(object identifier, object? value, bool insert = false)
     {
         // 确保当前实例不在只读模式下
         EnsureNotReadOnlyBeforeModify();
@@ -99,7 +99,7 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
         // 根据标识符设置值并获取结果
         var result = IsObject
             ? SetNodeInObject(identifier, value, out var finalIndex)
-            : SetNodeInArray(identifier, value, out finalIndex, arrayInsert);
+            : SetNodeInArray(identifier, value, out finalIndex, insert);
 
         // 触发数据变更之后事件
         if (result)
@@ -268,11 +268,11 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     /// <param name="index">索引</param>
     /// <param name="value">元素值</param>
     /// <param name="finalIndex">最终设置索引</param>
-    /// <param name="arrayInsert">是否作为在指定位置插入</param>
+    /// <param name="insert">是否作为在指定位置插入</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    internal bool SetNodeInArray(object index, object? value, out object finalIndex, bool arrayInsert = false)
+    internal bool SetNodeInArray(object index, object? value, out object finalIndex, bool insert = false)
     {
         // 检查数组索引合法性
         EnsureLegalArrayIndex(index, out var intIndex);
@@ -290,7 +290,7 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
             var jsonNodeValue = SerializeToNode(value, Options);
 
             // 替换指定位置的值
-            if (!arrayInsert)
+            if (!insert)
             {
                 jsonArray[intIndex] = jsonNodeValue;
             }

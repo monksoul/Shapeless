@@ -900,6 +900,59 @@ public partial class Clay
     public static bool IsClay(object? obj) => obj is not null && IsClay(obj as Type ?? obj.GetType());
 
     /// <summary>
+    ///     按照键升序排序并返回新的 <see cref="Clay" />
+    /// </summary>
+    /// <param name="options">
+    ///     <see cref="ClayOptions" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    public Clay KSort(ClayOptions? options = null)
+    {
+        // 检查是否是集合（数组）实例调用
+        ThrowIfMethodCalledOnArrayCollection(nameof(KSort));
+
+        // 初始化升序排序字典
+        var sorted =
+            new SortedDictionary<string, JsonNode?>(JsonCanvas.AsObject().ToDictionary(u => u.Key, u => u.Value));
+
+        return Parse(sorted, options);
+    }
+
+    /// <summary>
+    ///     按照键降序排序并返回新的 <see cref="Clay" />
+    /// </summary>
+    /// <param name="options">
+    ///     <see cref="ClayOptions" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    // ReSharper disable once InconsistentNaming
+    public Clay KRSort(ClayOptions? options = null)
+    {
+        // 检查是否是集合（数组）实例调用
+        ThrowIfMethodCalledOnArrayCollection(nameof(KRSort));
+
+        // 初始化降序排序字典
+        var sortedDesc =
+            new SortedDictionary<string, JsonNode?>(Comparer<string>.Create((x, y) =>
+                string.Compare(y, x, StringComparison.InvariantCulture)));
+
+        // 将 JsonCanvas 转换为 JsonObject 实例
+        var jsonObject = JsonCanvas.AsObject();
+
+        // 遍历 JsonObject 所有键并追加到字典中
+        foreach (var property in jsonObject)
+        {
+            sortedDesc.Add(property.Key, property.Value);
+        }
+
+        return Parse(sortedDesc, options);
+    }
+
+    /// <summary>
     ///     单一对象
     /// </summary>
     public sealed class Object : Clay
