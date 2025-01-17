@@ -121,6 +121,7 @@ public class GetStartController
 
         // 修改指定索引项
         clay[0] += 1; // 或使用 clay.Set(0, 2);
+        // clay[^1] = "Last";  // 或使用 clay.Set(^1, 2);
 
         // 在索引为 1 处插入
         clay.Insert(1, "Insert");
@@ -130,6 +131,10 @@ public class GetStartController
 
         // 删除项
         clay.Remove(4); // 或使用 clay.Delete(4)
+
+        // 删除指定索引范围项
+        // clay.Remove(1, 4); // 或使用 clay.Delete(4);
+        // clay.Remove(1..^4); // clay.Delete(1..^4);
 
         // 删除末项
         clay.Pop();
@@ -142,6 +147,12 @@ public class GetStartController
 
         // 输出字符串
         Console.WriteLine(array); // 或使用 array.ToString();
+
+        // 截取数组
+        var parts = array[2..^4]; // 或使用 array.Slice(2, 4);
+
+        // 输出字符串
+        Console.WriteLine(parts); // 或使用 parts.ToString();
 
         return clay;
     }
@@ -184,7 +195,7 @@ public class GetStartController
 
         // 从任意 JSON 字面量字符串创建
         dynamic scalar = Clay.Parse("true");
-        
+
         // 访问值
         var value = scalar.data;
 

@@ -151,7 +151,7 @@ public class ClayTests(ITestOutputHelper output)
         Assert.Equal("[]", clay3.GetNodeFromArray(2)!.ToJsonString());
 
         var array = Clay.Parse("[1,2,3,4]");
-        Assert.Equal(3, array.GetNodeFromArray(^2)?.GetValue<int>()); // 末尾运算符（Hat 运算符）
+        Assert.Equal(3, array.GetNodeFromArray(^2)?.GetValue<int>()); // 索引运算符（Hat 运算符）
 
         var rangeArray = array.GetNodeFromArray(1..^1); // 范围运算符
         Assert.Equal("[2,3]", rangeArray?.ToJsonString());
@@ -386,7 +386,7 @@ public class ClayTests(ITestOutputHelper output)
         errorArray.SetNodeInArray(3, null, out _);
 
         var array2 = Clay.Parse("[1,2,3,4]");
-        array2.SetNodeInArray(^2, 5, out _); // 末尾运算符（Hat 运算符）
+        array2.SetNodeInArray(^2, 5, out _); // 索引运算符（Hat 运算符）
         Assert.Equal("[1,2,5,4]", array2.ToJsonString());
     }
 
@@ -636,7 +636,7 @@ public class ClayTests(ITestOutputHelper output)
         Assert.Equal("[1,2,3]", clay2.ToJsonString());
 
         var array = Clay.Parse("[1,2,3,4]");
-        Assert.True(array.RemoveNodeFromArray(^2, out _)); // 末尾运算符（Hat 运算符）
+        Assert.True(array.RemoveNodeFromArray(^2, out _)); // 索引运算符（Hat 运算符）
         Assert.Equal("[1,2,4]", array.ToJsonString());
     }
 

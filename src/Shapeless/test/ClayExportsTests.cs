@@ -75,7 +75,7 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.Equal("Furion", array["0"]);
 
         var array2 = Clay.Parse("[1,2,3,4]");
-        array2[^2] = 5; // 末尾运算符（Hat 运算符）
+        array2[^2] = 5; // 索引运算符（Hat 运算符）
         Assert.Equal(5, array2[^2]);
 
         var rangeArray = array2[1..^1]; // 范围运算符

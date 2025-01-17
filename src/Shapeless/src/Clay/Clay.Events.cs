@@ -37,25 +37,25 @@ public partial class Clay
     /// <summary>
     ///     触发数据变更之前事件
     /// </summary>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或索引运算符（Index）或范围运算符（Range）</param>
     internal void OnChanging(object identifier) => TryInvoke(Changing, identifier);
 
     /// <summary>
     ///     触发数据变更之后事件
     /// </summary>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或索引运算符（Index）或范围运算符（Range）</param>
     internal void OnChanged(object identifier) => TryInvoke(Changed, identifier);
 
     /// <summary>
     ///     触发移除数据之前事件
     /// </summary>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或索引运算符（Index）或范围运算符（Range）</param>
     internal void OnRemoving(object identifier) => TryInvoke(Removing, identifier);
 
     /// <summary>
     ///     触发移除数据之后事件
     /// </summary>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或索引运算符（Index）或范围运算符（Range）</param>
     internal void OnRemoved(object identifier) => TryInvoke(Removed, identifier);
 
     /// <summary>
@@ -64,7 +64,7 @@ public partial class Clay
     /// <param name="handler">
     ///     <see cref="ClayEventHandler" />
     /// </param>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或索引运算符（Index）或范围运算符（Range）</param>
     internal void TryInvoke(ClayEventHandler? handler, object identifier)
     {
         // 空检查

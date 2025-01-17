@@ -62,7 +62,7 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     /// <summary>
     ///     根据标识符获取值
     /// </summary>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或索引运算符（Index）或范围运算符（Range）</param>
     /// <returns>
     ///     <see cref="object" />
     /// </returns>
@@ -79,7 +79,7 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     /// <summary>
     ///     根据标识符设置值
     /// </summary>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或索引运算符（Index）或范围运算符（Range）</param>
     /// <param name="value">值</param>
     /// <param name="insert">是否作为在指定位置插入</param>
     /// <returns>
@@ -113,7 +113,7 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     /// <summary>
     ///     根据标识符移除值
     /// </summary>
-    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或末尾运算符（Index）或范围运算符（Range）</param>
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或索引运算符（Index）或范围运算符（Range）</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
@@ -206,13 +206,13 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
         // 将 JsonCanvas 转换为 JsonArray 实例
         var jsonArray = JsonCanvas.AsArray();
 
-        // 检查是否是 Range 范围运算符
+        // 检查是否是 Range 实例
         if (index is Range range)
         {
             return new JsonArray(jsonArray.Select(u => u?.DeepClone()).ToArray()[range]);
         }
 
-        // 检查是否是 Index 运算符
+        // 检查是否是 Index 实例
         var arrayIndex = index is Index idx
             ? idx.IsFromEnd ? jsonArray.Count - idx.Value : idx.Value
             : index;
@@ -300,7 +300,7 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     /// <exception cref="NotSupportedException"></exception>
     internal bool SetNodeInArray(object index, object? value, out object finalIndex, bool insert = false)
     {
-        // 检查是否是 Range 范围运算符
+        // 检查是否是 Range 实例
         if (index is Range)
         {
             throw new NotSupportedException("Setting values using a System.Range is not supported in the Clay.");
@@ -309,7 +309,7 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
         // 将 JsonCanvas 转换为 JsonArray 实例
         var jsonArray = JsonCanvas.AsArray();
 
-        // 检查是否是 Index 运算符
+        // 检查是否是 Index 实例
         var arrayIndex = index is Index idx
             ? idx.IsFromEnd ? jsonArray.Count - idx.Value : idx.Value
             : index;
@@ -423,7 +423,7 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
         // 将 JsonCanvas 转换为 JsonArray 实例
         var jsonArray = JsonCanvas.AsArray();
 
-        // 检查是否是 Index 运算符
+        // 检查是否是 Index 实例
         var arrayIndex = index is Index idx
             ? idx.IsFromEnd ? jsonArray.Count - idx.Value : idx.Value
             : index;
@@ -802,11 +802,11 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     {
         switch (key)
         {
-            // 检查是否是 Index 运算符
+            // 检查是否是 Index 实例
             case Index:
                 throw new NotSupportedException(
                     "Accessing or setting properties using System.Index is not supported in the Clay.");
-            // 检查是否是 Range 运算符
+            // 检查是否是 Range 实例
             case Range:
                 throw new NotSupportedException(
                     "Accessing or setting properties using System.Range is not supported in the Clay.");
