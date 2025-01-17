@@ -207,6 +207,7 @@ public class GetStartController
         {
             ScalarValueKey = "value"
         });
+
         // 访问值
         var data = wrapper.value;
 
@@ -226,6 +227,10 @@ public class GetStartController
                                          }
                                        ]
                                        """, useObjectForDictionaryJson: true);
+
+        // 访问值
+        var id0 = dicObject.id; // 1
+        var name0 = dicObject.name; // "Furion"
 
         // 输出字符串
         Console.WriteLine(dicObject);
