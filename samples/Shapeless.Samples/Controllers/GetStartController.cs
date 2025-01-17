@@ -95,13 +95,13 @@ public class GetStartController
     }
 
     /// <summary>
-    ///     创建集合/数组
+    ///     创建集合或数组
     /// </summary>
     /// <returns></returns>
     [HttpGet]
     public Clay ArrayCollection()
     {
-        // 创建空的集合/数组
+        // 创建空的集合或数组
         dynamic clay = new Clay(ClayType.Array); // 或使用 Clay.EmptyArray(); 或 new Clay.Array();
 
         // 追加项
@@ -142,7 +142,7 @@ public class GetStartController
         // 输出字符串
         Console.WriteLine(clay); // 或使用 clay.ToString();
 
-        // 反转集合/数组
+        // 反转集合或数组
         var array = clay.Reverse();
 
         // 输出字符串
@@ -158,7 +158,7 @@ public class GetStartController
     }
 
     /// <summary>
-    /// 从 JSON 字符串创建
+    ///     从 JSON 字符串创建
     /// </summary>
     /// <returns></returns>
     [HttpGet]
@@ -239,14 +239,14 @@ public class GetStartController
     }
 
     /// <summary>
-    ///     解析 C# 对象
+    ///     从 C# 对象创建
     /// </summary>
     /// <returns></returns>
     [HttpGet]
     public Clay ParseObject()
     {
-        // 从现有的对象创建
-        dynamic clay1 = Clay.Parse(new Model { Id = 1, Name = "Shapeless" });
+        // 从具体类型对象创建
+        dynamic clay1 = Clay.Parse(new YourModel { Id = 1, Name = "Shapeless" });
 
         // 从匿名对象创建
         dynamic clay2 = Clay.Parse(new { id = 1, name = "Furion" });
@@ -254,29 +254,43 @@ public class GetStartController
         // 从字典对象创建
         dynamic clay3 = Clay.Parse(new Dictionary<string, object> { { "id", 1 }, { "name", "Furion" } });
 
-        // 从集合/数组创建
-        dynamic clay4 = Clay.Parse(new List<Model>
+        // 从键值对集合或数组创建
+        dynamic clay4 = Clay.Parse(new[]
+        {
+            new KeyValuePair<string, object?>("id", 1), new KeyValuePair<string, object?>("name", "furion")
+        }.ToDictionary());
+
+        // 从集合或数组（具体类型或匿名类型）创建
+        dynamic clay5 = Clay.Parse(new List<YourModel>
             { new() { Id = 1, Name = "Furion" }, new() { Id = 2, Name = "Shapeless" } });
 
-        // 从 Byte[] 中创建
-        dynamic clay5 = Clay.Parse("{\"id\":1,\"name\":\"furion\"}"u8.ToArray());
+        // 从字节数组（JSON 字符串）创建
+        dynamic clay6 = Clay.Parse("{\"id\":1,\"name\":\"furion\"}"u8.ToArray());
 
-        // 从 Stream 中创建
+        // 从 Stream 流（JSON 字符串）创建
         using var memoryStream = new MemoryStream("{\"id\":1,\"name\":\"furion\"}"u8.ToArray());
-        dynamic clay6 = Clay.Parse(memoryStream);
+        dynamic clay7 = Clay.Parse(memoryStream);
 
         // 从 Utf8JsonReader 中创建
         var utf8JsonReader = new Utf8JsonReader("{\"id\":1,\"name\":\"furion\"}"u8.ToArray(), true, default);
-        var clay7 = Clay.Parse(ref utf8JsonReader);
+        dynamic clay8 = Clay.Parse(ref utf8JsonReader);
 
-        // 从 Clay 中创建
-        dynamic dyn = new Clay();
-        dyn.Id = 1;
-        dyn.name = "Shapeless";
-        var clay8 = Clay.Parse(dyn);
+        // 从 JsonElement 中创建
+        using var jsonDocument = JsonDocument.Parse("{\"id\":1,\"name\":\"Furion\"}");
+        dynamic clay9 = Clay.Parse(jsonDocument.RootElement);
 
-        // 从任意对象（支持序列化的类型）中创建
-        var clay9 = Clay.Parse(true);
+        // 从流变对象自身创建
+        dynamic clay10 = Clay.Parse(new Clay
+        {
+            ["id"] = 1,
+            ["name"] = "Shapeless"
+        });
+
+        // 从任意字面量创建
+        dynamic clay11 = Clay.Parse(true);
+
+        // 自定义字面量键名
+        dynamic clay12 = Clay.Parse(true, new ClayOptions { ScalarValueKey = "value" });
 
         // 通过自定义 JsonConverter 创建，如 DataTable 转换为流变对象
         var dataTable = new DataTable();
@@ -285,15 +299,16 @@ public class GetStartController
         dataTable.Rows.Add(1, "Furion");
         dataTable.Rows.Add(2, "百小僧");
 
-        var clay10 = Clay.Parse(dataTable,
+        dynamic clay13 = Clay.Parse(dataTable,
             new ClayOptions().Configure(options =>
                 options.JsonSerializerOptions.Converters.Add(new DataTableJsonConverter())));
 
         // 打印 JSON
         Console.WriteLine(
-            $"{Clay.Parse(new { clay1, clay2, clay3, clay4, clay5, clay6, clay7, clay8, clay9, clay10 }):U}");
+            $"{Clay.Parse(new { clay1, clay2, clay3, clay4, clay5, clay6, clay7, clay8, clay9, clay10, clay11, clay12, clay13 }):U}");
 
-        return Clay.Parse(new { clay1, clay2, clay3, clay4, clay5, clay6, clay7, clay8, clay9, clay10 });
+        return Clay.Parse(new
+            { clay1, clay2, clay3, clay4, clay5, clay6, clay7, clay8, clay9, clay10, clay11, clay12, clay13 });
     }
 
     /// <summary>
@@ -361,7 +376,7 @@ public class GetStartController
 
         Debug.Assert(listObject.Count == 2);
 
-        // ===================== 集合/数组 =====================
+        // ===================== 集合或数组 =====================
 
         dynamic array = Clay.Parse("""[1,2,true,false,"Furion",{"id":1,"name":"shapeless"},null]""");
 
@@ -432,7 +447,7 @@ public class GetStartController
         var list5 = query1.ToList();
         var list6 = query2.ToList();
 
-        // ===================== 集合/数组 =====================
+        // ===================== 集合或数组 =====================
 
         dynamic array = Clay.Parse("""[1,2,true,false,"Furion",{"id":1,"name":"shapeless"},null]""");
 
@@ -517,7 +532,7 @@ public class GetStartController
 
         clay.Delete("author");
 
-        // ===================== 集合/数组 =====================
+        // ===================== 集合或数组 =====================
 
         dynamic array = Clay.Parse("[1,2,10.3,true,false]");
 

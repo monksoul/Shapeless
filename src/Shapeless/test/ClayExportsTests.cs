@@ -32,6 +32,18 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.NotNull(clay2.JsonCanvas);
         Assert.NotNull(clay2.JsonCanvas.Options);
         Assert.True(clay2.JsonCanvas.Options?.PropertyNameCaseInsensitive);
+
+        var clay3 = new Clay { ["id"] = 1, ["name"] = "Shapeless" };
+        Assert.Equal("{\"id\":1,\"name\":\"Shapeless\"}", clay3.ToJsonString());
+
+        var clay4 = new Clay { [0] = 1, [1] = "Shapeless" };
+        Assert.Equal("{\"0\":1,\"1\":\"Shapeless\"}", clay4.ToJsonString());
+
+        var clay5 = new Clay(ClayType.Array) { [0] = 1, [1] = "Shapeless" };
+        Assert.Equal("[1,\"Shapeless\"]", clay5.ToJsonString());
+
+        var clay6 = new Clay.Array { [0] = 1, [1] = "Shapeless" };
+        Assert.Equal("[1,\"Shapeless\"]", clay6.ToJsonString());
     }
 
     [Fact]
@@ -232,6 +244,16 @@ public class ClayExportsTests(ITestOutputHelper output)
 
         var clay14 = Clay.Parse(clay13);
         Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay14.ToJsonString());
+
+        var clay15 = Clay.Parse(new[]
+        {
+            new KeyValuePair<string, object?>("id", 1), new KeyValuePair<string, object?>("name", "furion")
+        }.ToDictionary());
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay15.ToJsonString());
+        
+        using var jsonDocument = JsonDocument.Parse("{\"id\":1,\"name\":\"Furion\"}");
+        dynamic clay16 = Clay.Parse(jsonDocument.RootElement);
+        Assert.Equal("{\"id\":1,\"name\":\"Furion\"}", clay16.ToJsonString());
     }
 
     [Fact]
