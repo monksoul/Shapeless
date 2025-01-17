@@ -133,7 +133,7 @@ public class GetStartController
         clay.Remove(4); // 或使用 clay.Delete(4)
 
         // 删除指定索引范围项
-        // clay.Remove(1, 4); // 或使用 clay.Delete(4);
+        // clay.Remove(1, 4); // 或使用 clay.Delete(1, 4);
         // clay.Remove(1..^4); // clay.Delete(1..^4);
 
         // 删除末项

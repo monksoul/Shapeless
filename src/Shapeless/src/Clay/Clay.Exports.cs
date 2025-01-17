@@ -541,7 +541,7 @@ public partial class Clay
     ///     <see cref="Clay" />
     /// </returns>
     public Clay Reverse(ClayOptions? options = null) =>
-        Parse(IsObject ? AsEnumerableObject().Reverse() : Values.Reverse(), options, true);
+        Parse(IsObject ? AsEnumerableObject().Reverse().ToDictionary() : Values.Reverse(), options);
 
     /// <summary>
     ///     截取 <see cref="Clay" /> 并返回新的 <see cref="Clay" />
@@ -1116,7 +1116,7 @@ public partial class Clay
 
         // 初始化升序排序字典
         var sorted =
-            new SortedDictionary<string, JsonNode?>(JsonCanvas.AsObject().ToDictionary(u => u.Key, u => u.Value));
+            new SortedDictionary<string, JsonNode?>(JsonCanvas.AsObject().ToDictionary());
 
         return Parse(sorted, options);
     }
