@@ -27,12 +27,7 @@ public partial class Clay
     /// <summary>
     ///     获取标识符集合
     /// </summary>
-    public IEnumerable<object> Indexes => AsEnumerable().Select(u => u.Key);
-
-    /// <summary>
-    ///     获取标识符集合
-    /// </summary>
-    public IEnumerable<object> Keys => Indexes;
+    public IEnumerable<object> Keys => AsEnumerable().Select(u => u.Key);
 
     /// <summary>
     ///     获取值集合
@@ -74,7 +69,7 @@ public partial class Clay
         // 获取循环访问 JsonObject 的枚举数
         using var enumerator = JsonCanvas.AsObject().GetEnumerator();
 
-        // 遍历 JsonObject 每个键值对
+        // 遍历 JsonObject 键值对
         while (enumerator.MoveNext())
         {
             // 获取当前的键值对
@@ -101,13 +96,38 @@ public partial class Clay
         // 定义索引变量用于记录数组中元素的位置
         var index = 0;
 
-        // 遍历 JsonArray 每个元素
+        // 遍历 JsonArray 项
         while (enumerator.MoveNext())
         {
             // 获取当前的元素
             var current = enumerator.Current;
 
             yield return new KeyValuePair<int, dynamic?>(index++, DeserializeNode(current, Options));
+        }
+    }
+
+    /// <summary>
+    ///     遍历 <see cref="Clay" />
+    /// </summary>
+    public void ForEach(Action<dynamic> action)
+    {
+        // 空检查
+        ArgumentNullException.ThrowIfNull(action);
+
+        ForEach((_, item) => action(item));
+    }
+
+    /// <summary>
+    ///     遍历 <see cref="Clay" />
+    /// </summary>
+    public void ForEach(Action<object, dynamic> action)
+    {
+        ArgumentNullException.ThrowIfNull(action);
+
+        // 逐条遍历
+        foreach (var (identifier, item) in AsEnumerable())
+        {
+            action(identifier, item);
         }
     }
 }

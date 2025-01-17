@@ -88,25 +88,9 @@ public partial class Clay
             case JsonSerializerOptions jsonSerializerOptions:
                 result = ToJsonString(jsonSerializerOptions);
                 return true;
-            // 处理 clay(string) 情况
-            case string key:
-                result = GetValue(key);
-                return true;
-            // 处理 clay(char) 情况
-            case char key:
-                result = GetValue(key);
-                return true;
-            // 处理 clay(int) 情况
-            case int index:
-                result = GetValue(index);
-                return true;
-            // 处理 clay(Index) 情况
-            case Index index:
-                result = GetValue(index);
-                return true;
-            // 处理 clay(Range) 情况
-            case Range range:
-                result = GetValue(range);
+            // 处理 clay(identifier) 情况
+            case string or char or int or Index or Range:
+                result = GetValue(args[0]!);
                 return true;
             default:
                 return base.TryInvoke(binder, args, out result);

@@ -312,96 +312,124 @@ public class GetStartController
     }
 
     /// <summary>
-    ///     更多使用例子
-    /// </summary>
-    /// <returns></returns>
-    [HttpGet]
-    public Clay MoreUsage()
-    {
-        dynamic clay = Clay.Parse("""{"id":1,"name":"shapeless"}""");
-
-        // 添加属性
-        clay.author = "百小僧";
-        clay["company"] = "百签科技";
-        clay.homepage = new[] { "https://furion.net/", "https://baiqian.com" };
-        clay.number = 10;
-
-        // 添加方法
-        clay.sayHello = (Func<string>)(() => $"Hello, {clay.name}!");
-        clay.Increment = new Action(() => { clay.number++; });
-
-        // 调用方法
-        Console.WriteLine(clay.number); // number: 10
-        clay.Increment();
-        Console.WriteLine(clay.number); // number: 11
-
-        // 打印 JSON
-        Console.WriteLine($"{clay.sayHello()}\r\n{clay:U}");
-
-        return clay;
-    }
-
-    /// <summary>
-    ///     遍历操作
+    ///     遍历流变对象
     /// </summary>
     [HttpGet]
     public void Foreach()
     {
-        // TODO: ForEach 方法例子
-
         // ===================== 单一对象 =====================
 
         dynamic clay = Clay.Parse("""{"id":1,"name":"shapeless"}""");
 
-        // 遍历项（Key 为 Object）
+        // 遍历键值（object 类型键）
         foreach (KeyValuePair<object, dynamic?> item in clay) // 或使用 clay.AsEnumerable()
+        {
             Console.WriteLine($"Key: {item.Key} Value: {item.Value}");
+        }
 
-        // 遍历项（Key 为 String）
+        // 遍历键值（string 类型键）
         foreach (KeyValuePair<string, dynamic?> item in clay.AsEnumerableObject())
+        {
             Console.WriteLine($"Key: {item.Key} Value: {item.Value}");
+        }
 
         // 遍历键
-        foreach (var key in clay.Keys) // 或使用 clay.Indexes
+        foreach (var key in clay.Keys)
+        {
             Console.WriteLine($"Key: {key}");
+        }
 
         // 遍历值
-        foreach (var value in clay.Values) Console.WriteLine($"Value: {value}");
+        foreach (var value in clay.Values)
+        {
+            Console.WriteLine($"Value: {value}");
+        }
 
-        // 游标方式
+        // 通过枚举器方式遍历
         using IEnumerator<KeyValuePair<object, dynamic?>> objectEnumerator = clay.GetEnumerator();
 
         var listObject = new List<KeyValuePair<object, dynamic?>>();
-        while (objectEnumerator.MoveNext()) listObject.Add(objectEnumerator.Current);
+        while (objectEnumerator.MoveNext())
+        {
+            listObject.Add(objectEnumerator.Current);
+        }
 
         Debug.Assert(listObject.Count == 2);
+
+        // 使用 ForEach 方法遍历值
+        clay.ForEach(new Action<dynamic?>(value =>
+        {
+            Console.WriteLine($"Value: {value}");
+        }));
+
+        // 使用 ForEach 方法遍历键值
+        clay.ForEach(new Action<object, dynamic?>((key, value) =>
+        {
+            Console.WriteLine($"Key: {key} Value: {value}");
+        }));
+        
+        // 享受友好的代码智能完成编程体验
+        foreach (var (key, value) in (Clay)clay)
+        {
+            Console.WriteLine($"Key: {key} Value: {value}");
+        }
 
         // ===================== 集合或数组 =====================
 
         dynamic array = Clay.Parse("""[1,2,true,false,"Furion",{"id":1,"name":"shapeless"},null]""");
 
-        // 遍历项（Key 为 Object）
+        // 遍历项（object 类型索引）
         foreach (KeyValuePair<object, dynamic?> item in array) // 或使用 clay.AsEnumerable()
+        {
             Console.WriteLine($"Index: {item.Key} Value: {item.Value}");
+        }
 
-        // 遍历项（Key 为 Int）
+        // 遍历项（int 类型索引）
         foreach (KeyValuePair<int, dynamic?> item in array.AsEnumerableArray())
+        {
             Console.WriteLine($"Index: {item.Key} Value: {item.Value}");
+        }
 
         // 遍历索引
-        foreach (var index in array.Keys) // 或使用 clay.Indexes
+        foreach (var index in array.Keys)
+        {
             Console.WriteLine($"Index: {index}");
+        }
 
         // 遍历值
-        foreach (var value in array.Values) Console.WriteLine($"Value: {value}");
+        foreach (var value in array.Values)
+        {
+            Console.WriteLine($"Value: {value}");
+        }
 
-        // 游标方式
+        // 通过枚举器方式遍历
         using IEnumerator<KeyValuePair<object, dynamic?>> arrayEnumerator = array.GetEnumerator();
 
         var listArray = new List<KeyValuePair<object, dynamic?>>();
-        while (arrayEnumerator.MoveNext()) listArray.Add(objectEnumerator.Current);
+        while (arrayEnumerator.MoveNext())
+        {
+            listArray.Add(objectEnumerator.Current);
+        }
 
         Debug.Assert(listArray.Count == 7);
+
+        // 使用 ForEach 方法遍历值
+        array.ForEach(new Action<dynamic?>(value =>
+        {
+            Console.WriteLine($"Value: {value}");
+        }));
+
+        // 使用 ForEach 方法遍历索引与值
+        array.ForEach(new Action<object, dynamic?>((index, value) =>
+        {
+            Console.WriteLine($"Index: {index} Value: {value}");
+        }));
+
+        // 享受友好的代码智能完成编程体验
+        foreach (var (index, value) in (Clay)array)
+        {
+            Console.WriteLine($"Index: {index} Value: {value}");
+        }
     }
 
     /// <summary>
@@ -697,5 +725,35 @@ public class GetStartController
         // 输出 XML 字符串
         Console.WriteLine(clay.ToXmlString());
         Console.WriteLine(clay.ToXmlString(new XmlWriterSettings { Indent = true })); // 支持传入 XML 写入参数
+    }
+
+    /// <summary>
+    ///     更多使用例子
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet]
+    public Clay MoreUsage()
+    {
+        dynamic clay = Clay.Parse("""{"id":1,"name":"shapeless"}""");
+
+        // 添加属性
+        clay.author = "百小僧";
+        clay["company"] = "百签科技";
+        clay.homepage = new[] { "https://furion.net/", "https://baiqian.com" };
+        clay.number = 10;
+
+        // 添加方法
+        clay.sayHello = (Func<string>)(() => $"Hello, {clay.name}!");
+        clay.Increment = new Action(() => { clay.number++; });
+
+        // 调用方法
+        Console.WriteLine(clay.number); // number: 10
+        clay.Increment();
+        Console.WriteLine(clay.number); // number: 11
+
+        // 打印 JSON
+        Console.WriteLine($"{clay.sayHello()}\r\n{clay:U}");
+
+        return clay;
     }
 }

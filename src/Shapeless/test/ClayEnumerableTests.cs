@@ -41,16 +41,6 @@ public class ClayEnumerableTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Indexes_ReturnOK()
-    {
-        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
-        Assert.Equal(["id", "name"], clay.Indexes);
-
-        var clay2 = Clay.Parse("[1,2,3]");
-        Assert.Equal([0, 1, 2], clay2.Indexes);
-    }
-
-    [Fact]
     public void Keys_ReturnOK()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
@@ -168,5 +158,42 @@ public class ClayEnumerableTests(ITestOutputHelper output)
         {
             output.WriteLine(item.Key.ToString());
         }
+    }
+    
+    [Fact]
+    public void ForEach_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        Assert.Throws<ArgumentNullException>(() => clay.ForEach((Action<dynamic>)null!));
+        Assert.Throws<ArgumentNullException>(() => clay.ForEach((Action<object, dynamic>)null!));
+    }
+
+    [Fact]
+    public void ForEach_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        clay.ForEach(item =>
+        {
+            output.WriteLine($"Value:{item}");
+        });
+
+        clay.ForEach((key, item) =>
+        {
+            output.WriteLine($"Key: {key}, Value:{item}");
+        });
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay.ToJsonString());
+
+        var array = Clay.Parse("[1,2,3]");
+        array.ForEach(item =>
+        {
+            output.WriteLine($"Value:{item}");
+        });
+
+        array.ForEach((index, item) =>
+        {
+            output.WriteLine($"Index: {index}, Value:{item}");
+        });
+
+        Assert.Equal("[1,2,3]", array.ToJsonString());
     }
 }

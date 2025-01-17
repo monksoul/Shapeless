@@ -46,45 +46,13 @@ public partial class Clay
     }
 
     /// <summary>
-    ///     字符串索引
+    ///     索引
     /// </summary>
-    /// <param name="key">键</param>
-    public object? this[string key]
+    /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或索引运算符（Index）或范围运算符（Range）</param>
+    public object? this[object identifier]
     {
-        get => GetValue(key);
-        set => SetValue(key, value);
-    }
-
-    /// <summary>
-    ///     字符索引
-    /// </summary>
-    /// <param name="key">键</param>
-    public object? this[char key]
-    {
-        get => GetValue(key);
-        set => SetValue(key, value);
-    }
-
-    /// <summary>
-    ///     整数索引
-    /// </summary>
-    /// <param name="index">索引</param>
-    public object? this[int index]
-    {
-        get => GetValue(index);
-        set => SetValue(index, value);
-    }
-
-    /// <summary>
-    ///     <see cref="Index" /> 索引
-    /// </summary>
-    /// <param name="index">
-    ///     <see cref="Index" />
-    /// </param>
-    public object? this[Index index]
-    {
-        get => GetValue(index);
-        set => SetValue(index, value);
+        get => GetValue(identifier);
+        set => SetValue(identifier, value);
     }
 
     /// <summary>
@@ -93,7 +61,7 @@ public partial class Clay
     /// <param name="range">
     ///     <see cref="Range" />
     /// </param>
-    public Clay? this[Range range] => GetValue(range) as Clay;
+    public Clay? this[Range range] => this[range as object] as Clay;
 
     /// <summary>
     ///     是否是单一对象
@@ -579,31 +547,6 @@ public partial class Clay
     }
 
     /// <summary>
-    ///     遍历 <see cref="Clay" />
-    /// </summary>
-    public void ForEach(Action<dynamic> action)
-    {
-        // 空检查
-        ArgumentNullException.ThrowIfNull(action);
-
-        ForEach((_, item) => action(item));
-    }
-
-    /// <summary>
-    ///     遍历 <see cref="Clay" />
-    /// </summary>
-    public void ForEach(Action<object, dynamic> action)
-    {
-        ArgumentNullException.ThrowIfNull(action);
-
-        // 逐条遍历
-        foreach (var (index, item) in AsEnumerable())
-        {
-            action(index, item);
-        }
-    }
-
-    /// <summary>
     ///     组合多个 <see cref="Clay" /> 并返回新 <see cref="Clay" />
     /// </summary>
     /// <param name="clays">
@@ -641,7 +584,7 @@ public partial class Clay
         // 深度克隆当前 Clay 实例
         var combineClay = DeepClone();
 
-        // 遍历所有 Clay 并设置新值或替换旧值
+        // 遍历所有 Clay 并设置值
         foreach (var clay in clays)
         {
             clay.ForEach((key, value) => combineClay[$"{key}"] = value);

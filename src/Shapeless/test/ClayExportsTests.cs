@@ -250,7 +250,7 @@ public class ClayExportsTests(ITestOutputHelper output)
             new KeyValuePair<string, object?>("id", 1), new KeyValuePair<string, object?>("name", "furion")
         }.ToDictionary());
         Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay15.ToJsonString());
-        
+
         using var jsonDocument = JsonDocument.Parse("{\"id\":1,\"name\":\"Furion\"}");
         dynamic clay16 = Clay.Parse(jsonDocument.RootElement);
         Assert.Equal("{\"id\":1,\"name\":\"Furion\"}", clay16.ToJsonString());
@@ -1309,43 +1309,6 @@ public class ClayExportsTests(ITestOutputHelper output)
         var clay = Clay.Parse("[1,2,3,4]");
         Assert.Equal("[2,3]", clay.Slice(1, 3)?.ToJsonString());
         Assert.Equal("[2,3]", clay.Slice(1..^1)?.ToJsonString());
-    }
-
-    [Fact]
-    public void ForEach_Invalid_Parameters()
-    {
-        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
-        Assert.Throws<ArgumentNullException>(() => clay.ForEach((Action<dynamic>)null!));
-        Assert.Throws<ArgumentNullException>(() => clay.ForEach((Action<object, dynamic>)null!));
-    }
-
-    [Fact]
-    public void ForEach_ReturnOK()
-    {
-        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
-        clay.ForEach(item =>
-        {
-            output.WriteLine($"Value:{item}");
-        });
-
-        clay.ForEach((key, item) =>
-        {
-            output.WriteLine($"Key: {key}, Value:{item}");
-        });
-        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay.ToJsonString());
-
-        var array = Clay.Parse("[1,2,3]");
-        array.ForEach(item =>
-        {
-            output.WriteLine($"Value:{item}");
-        });
-
-        array.ForEach((index, item) =>
-        {
-            output.WriteLine($"Index: {index}, Value:{item}");
-        });
-
-        Assert.Equal("[1,2,3]", array.ToJsonString());
     }
 
     [Fact]
