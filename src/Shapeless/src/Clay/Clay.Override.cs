@@ -60,41 +60,50 @@ public partial class Clay
     /// <inheritdoc />
     public override bool TryInvoke(InvokeBinder binder, object?[]? args, out object? result)
     {
-        // 处理没有提供参数情况
-        if (args.IsNullOrEmpty())
+        // 处理 Clay 实例作为方法调用情况
+        switch (args)
         {
-            result = ToJsonString();
-            return true;
+            // 处理没有提供参数情况
+            case { Length: 0 }:
+                result = ToJsonString();
+                return true;
+            // 处理单个参数情况
+            case { Length: 1 }:
+                switch (args)
+                {
+                    // 处理 clay(JsonSerializerOptions) 情况
+                    case [JsonSerializerOptions jsonSerializerOptions]:
+                        result = ToJsonString(jsonSerializerOptions);
+                        return true;
+                    // 处理 clay(identifier) 情况
+                    case [string or char or int or Index or Range]:
+                        result = GetValue(args[0]!);
+                        return true;
+                    // 处理 clay(Type) 情况
+                    case [Type resultType]:
+                        result = As(resultType);
+                        return true;
+                    // 处理 clay(ClayOptions) 情况
+                    case [ClayOptions clayOptions]:
+                        result = Rebuilt(clayOptions);
+                        return true;
+                }
+
+                break;
+            // 处理两个参数情况
+            case { Length: 2 }:
+                switch (args)
+                {
+                    // 处理 clay(Type, JsonSerializerOptions) 情况
+                    case [Type resultType, JsonSerializerOptions jsonSerializerOptions]:
+                        result = As(resultType, jsonSerializerOptions);
+                        return true;
+                }
+
+                break;
         }
 
-        // 处理非单个参数情况
-        if (args.Length != 1)
-        {
-            return base.TryInvoke(binder, args, out result);
-        }
-
-        // 处理单个参数情况
-        switch (args[0])
-        {
-            // 处理 clay(ClayOptions) 情况
-            case ClayOptions clayOptions:
-                result = Rebuilt(clayOptions);
-                return true;
-            // 处理 clay(Type) 情况
-            case Type resultType:
-                result = As(resultType);
-                return true;
-            // 处理 clay(JsonSerializerOptions) 情况
-            case JsonSerializerOptions jsonSerializerOptions:
-                result = ToJsonString(jsonSerializerOptions);
-                return true;
-            // 处理 clay(identifier) 情况
-            case string or char or int or Index or Range:
-                result = GetValue(args[0]!);
-                return true;
-            default:
-                return base.TryInvoke(binder, args, out result);
-        }
+        return base.TryInvoke(binder, args, out result);
     }
 
     /// <inheritdoc />

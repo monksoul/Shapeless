@@ -295,15 +295,22 @@ public class ClayOverrideTests
         dynamic clay = Clay.Parse("{\"id\":1,\"name\":\"furion\",\"author\":\"百小僧\",\"a\":\"A\"}");
 
         Assert.Equal("{\"id\":1,\"name\":\"furion\",\"author\":\"百小僧\",\"a\":\"A\"}", clay());
+
         Assert.Equal("{\"id\":1,\"name\":\"furion\",\"author\":\"\\u767E\\u5C0F\\u50E7\",\"a\":\"A\"}",
             clay(new JsonSerializerOptions()));
+
         Assert.Equal(1, clay("id"));
         Assert.Equal("A", clay('a'));
 
         dynamic clay2 = Clay.Parse("[1,2,3]");
+
         Assert.Equal(2, clay2(1));
+
         Assert.Equal(new[] { 1, 2, 3 }, clay2(typeof(int[])));
+        Assert.Equal(new[] { 1, 2, 3 }, clay2(typeof(int[]), new JsonSerializerOptions()));
+
         Assert.Equal(2, clay2[^2]);
+
         Assert.Equal("[1,2]", clay2(..^1).ToJsonString());
 
         Assert.Throws<KeyNotFoundException>(() => clay.Id);

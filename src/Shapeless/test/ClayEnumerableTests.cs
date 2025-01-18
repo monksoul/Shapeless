@@ -159,7 +159,7 @@ public class ClayEnumerableTests(ITestOutputHelper output)
             output.WriteLine(item.Key.ToString());
         }
     }
-    
+
     [Fact]
     public void ForEach_Invalid_Parameters()
     {

@@ -669,6 +669,16 @@ public class GetStartController
 
         Console.WriteLine($"{clayModel5.Id} {clayModel5.Name} {clayModel5.Date} {clayModel5.IsTrue}");
 
+        // 使用流变对象实例作为方法调用
+        var clayModel6 = clay(typeof(ClayModel)) as ClayModel;
+
+        // 支持传入 JSON 序列化选项
+        var clayModel7 =
+            clay(typeof(ClayModel), new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) as ClayModel;
+
+        Console.WriteLine($"{clayModel6?.Id} {clayModel6?.Name} {clayModel6?.Date} {clayModel6?.IsTrue}");
+        Console.WriteLine($"{clayModel7?.Id} {clayModel7?.Name} {clayModel7?.Date} {clayModel7?.IsTrue}");
+
         // 转换为 XElement 类型对象
         // 隐式转换
         XElement xElement = clay;
