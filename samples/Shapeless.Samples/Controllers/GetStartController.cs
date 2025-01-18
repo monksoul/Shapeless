@@ -35,7 +35,7 @@ public class GetStartController
         clay["Author"]["Gender"] = "男";
         clay.Author["E-Mail"] = "monksoul@outlook.com";
 
-        // 通过索引或 Add/Push 方法添加数组项
+        // 使用索引或 Add/Push 方法添加数组项
         clay.Author.HomePage[2] = "https://baiqian.ltd"; // 使用索引方式
 
         var homePage = clay.Author.HomePage; // 简化 clay.Author.HomePage[2] 操作
@@ -292,7 +292,7 @@ public class GetStartController
         // 自定义字面量键名
         dynamic clay12 = Clay.Parse(true, new ClayOptions { ScalarValueKey = "value" });
 
-        // 通过自定义 JsonConverter 创建，如 DataTable 转换为流变对象
+        // 使用自定义 JsonConverter 创建，如 DataTable 转换为流变对象
         var dataTable = new DataTable();
         dataTable.Columns.Add("id", typeof(int));
         dataTable.Columns.Add("name", typeof(string));
@@ -357,10 +357,7 @@ public class GetStartController
         Debug.Assert(listObject.Count == 2);
 
         // 使用 ForEach 方法遍历值
-        clay.ForEach(new Action<dynamic?>(value =>
-        {
-            Console.WriteLine($"Value: {value}");
-        }));
+        clay.ForEach(new Action<dynamic?>(value => { Console.WriteLine($"Value: {value}"); }));
 
         // 使用 ForEach 方法遍历键值
         clay.ForEach(new Action<object, dynamic?>((key, value) =>
@@ -414,10 +411,7 @@ public class GetStartController
         Debug.Assert(listArray.Count == 7);
 
         // 使用 ForEach 方法遍历值
-        array.ForEach(new Action<dynamic?>(value =>
-        {
-            Console.WriteLine($"Value: {value}");
-        }));
+        array.ForEach(new Action<dynamic?>(value => { Console.WriteLine($"Value: {value}"); }));
 
         // 使用 ForEach 方法遍历索引与值
         array.ForEach(new Action<object, dynamic?>((index, value) =>
@@ -557,6 +551,137 @@ public class GetStartController
     }
 
     /// <summary>
+    ///     流变对象的类型转换
+    /// </summary>
+    [HttpGet]
+    public void TypeConvert()
+    {
+        dynamic clay = Clay.Parse("""{"id":1,"name":"shapeless","date":"2025-01-14T00:00:00","isTrue":true}""");
+
+        // ===================== 单一对象属性及集合或数组元素的类型转换 =====================
+
+        // AutoConvertToDateTime
+
+        // 使用属性名作为方法名，并指定目标类型为泛型参数进行调用
+        var id = clay.id; // id 为 int 类型
+        var name = clay.name; // name 为 string 类型
+
+        var date = clay.date<DateTime>();
+        var isTrue = clay.isTrue<bool>();
+
+        // 支持传入 JSON 序列化选项
+        var date2 = clay.date<DateTime>(new JsonSerializerOptions());
+
+        Console.WriteLine(date);
+        Console.WriteLine(isTrue);
+        Console.WriteLine(date2);
+
+        // 使用属性名作为方法名，并指定目标类型为方法参数进行调用
+        var date3 = clay.date(typeof(DateTime)) as DateTime?;
+        var isTrue2 = clay.isTrue(typeof(bool)) as bool?;
+
+        // 支持传入 JSON 序列化选项
+        var date4 = clay.date(typeof(DateTime), new JsonSerializerOptions()) as DateTime?;
+
+        Console.WriteLine(date3);
+        Console.WriteLine(isTrue2);
+        Console.WriteLine(date4);
+
+        // 使用流变对象 Get<T>(identifier) 方法
+        var date5 = clay.Get<DateTime>("date");
+        var isTrue3 = clay.Get<bool>("isTrue");
+
+        // 支持传入 JSON 序列化选项
+        var date6 = clay.Get<DateTime>("date", new JsonSerializerOptions());
+
+        Console.WriteLine(date5);
+        Console.WriteLine(isTrue3);
+        Console.WriteLine(date6);
+
+        // 使用流变对象 Get(type, identifier) 方法
+        var date7 = clay.Get("date", typeof(DateTime)) as DateTime?;
+        var isTrue4 = clay.Get("isTrue", typeof(bool)) as bool?;
+
+        // 支持传入 JSON 序列化选项
+        var date8 = clay.Get("date", typeof(DateTime), new JsonSerializerOptions()) as DateTime?;
+
+        Console.WriteLine(date7);
+        Console.WriteLine(isTrue4);
+        Console.WriteLine(date8);
+
+        // 使用属性名作为方法名，并传递 Func<string?, object?> 委托为方法参数进行调用
+        var date9 = clay.date(new Func<string?, object?>(u => Convert.ToDateTime(u)));
+        Console.WriteLine(date9);
+
+        dynamic array = Clay.Parse("[1,\"2025-01-14T00:00:00\",true]");
+
+        var date10 = array.Get<DateTime>(1); // 索引为 1
+        var isTrue5 = array.Get<bool>(2); // 索引为 2
+
+        Console.WriteLine(date10);
+        Console.WriteLine(isTrue5);
+
+        // 配置 ClayOptions 以自动解析时间格式字符串为 `DateTime` 类型
+        dynamic clay2 = Clay.Parse("""{"id":1,"name":"shapeless","date":"2025-01-14T00:00:00","isTrue":true}""",
+            new ClayOptions
+            {
+                AutoConvertToDateTime = true
+            });
+
+        // 直接访问 date 属性，它已被自动转换为 DateTime 类型
+        var date11 = clay2.date;
+        Console.WriteLine(date11);
+
+        // ===================== 流变对象的类型转换 =====================
+
+        // 使用声明方式（隐式转换）自动转换
+        ClayModel clayModel = clay;
+        Console.WriteLine($"{clayModel.Id} {clayModel.Name} {clayModel.Date} {clayModel.IsTrue}");
+
+        // 使用强制转换（显示转换）
+        var clayModel2 = (ClayModel)clay;
+        Console.WriteLine($"{clayModel2.Id} {clayModel2.Name} {clayModel2.Date} {clayModel2.IsTrue}");
+
+        // 使用流变对象 As<T>() 方法
+        var clayModel3 = clay.As<ClayModel>();
+
+        // 支持传入 JSON 序列化选项
+        var clayModel31 =
+            clay.As<ClayModel>(new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        Console.WriteLine($"{clayModel3.Id} {clayModel3.Name} {clayModel3.Date} {clayModel3.IsTrue}");
+        Console.WriteLine($"{clayModel31.Id} {clayModel31.Name} {clayModel31.Date} {clayModel31.IsTrue}");
+
+        // 使用流变对象 As(Type) 方法
+        var clayModel4 = clay.As(typeof(ClayModel)) as ClayModel;
+
+        // 支持传入 JSON 序列化选项
+        var clayModel41 =
+            clay.As(typeof(ClayModel),
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) as ClayModel;
+
+        Console.WriteLine($"{clayModel4?.Id} {clayModel4?.Name} {clayModel4?.Date} {clayModel4?.IsTrue}");
+        Console.WriteLine($"{clayModel41?.Id} {clayModel41?.Name} {clayModel4?.Date} {clayModel41?.IsTrue}");
+
+        // 使用 JsonSerializer 反序列化方法
+        var clayModel5 = JsonSerializer.Deserialize<ClayModel>(clay.ToString(),
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        Console.WriteLine($"{clayModel5.Id} {clayModel5.Name} {clayModel5.Date} {clayModel5.IsTrue}");
+
+        // 转换为 XElement 类型对象
+        // 隐式转换
+        XElement xElement = clay;
+        // 显式转换
+        var xElement2 = (XElement)clay;
+        // As<T>() 方法
+        var xElement3 = clay.As<XElement>();
+        Console.WriteLine(xElement);
+        Console.WriteLine(xElement2);
+        Console.WriteLine(xElement3);
+    }
+
+    /// <summary>
     ///     事件监听
     /// </summary>
     [HttpGet]
@@ -630,97 +755,6 @@ public class GetStartController
         array.Insert(0, "One");
 
         array.Delete(3);
-    }
-
-    /// <summary>
-    ///     类型转换
-    /// </summary>
-    [HttpGet]
-    public void TypeConvert()
-    {
-        dynamic clay =
-            Clay.Parse("""{"id":1,"name":"shapeless","date":"2025-01-14T00:00:00","isTrue":true}"""); // ISO 8601 时间格式
-
-        // ===================== 属性类型转换 =====================
-
-        // 通过 属性<T> 方式
-        var date = clay.date<DateTime>();
-        var isTrue = clay.isTrue<bool>();
-        var date11 = clay.date<DateTime>(new JsonSerializerOptions()); // 支持传递序列化参数
-
-        Console.WriteLine(date);
-        Console.WriteLine(isTrue);
-        Console.WriteLine(date11);
-
-        // 通过 属性(Type) 方式
-        var date2 = clay.date(typeof(DateTime)) as DateTime?;
-        var isTrue2 = clay.isTrue(typeof(bool)) as bool?;
-        var date21 =
-            clay.date(typeof(DateTime),
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) as DateTime?; // 支持传递序列化参数
-
-        Console.WriteLine(date2);
-        Console.WriteLine(isTrue2);
-        Console.WriteLine(date21);
-
-        // 通过 Get<T> 方式
-        var date3 = clay.Get<DateTime>("date");
-        var isTrue3 = clay.Get<bool>("isTrue");
-        var date31 =
-            clay.Get<DateTime>("date", new JsonSerializerOptions { PropertyNameCaseInsensitive = true }); // 支持传递序列化参数
-
-        Console.WriteLine(date3);
-        Console.WriteLine(isTrue3);
-        Console.WriteLine(date31);
-
-        // 通过 Get(Type) 方式
-        var date4 = clay.Get("date", typeof(DateTime)) as DateTime?;
-        var isTrue4 = clay.Get("isTrue", typeof(bool)) as bool?;
-        var date41 =
-            clay.Get("date", typeof(DateTime),
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) as DateTime?; // 支持传递序列化参数
-
-        Console.WriteLine(date4);
-        Console.WriteLine(isTrue4);
-        Console.WriteLine(date41);
-
-        // 通过 属性(Func<string?, object?>) 方式
-        var date5 = clay.date(new Func<string?, object?>(u => Convert.ToDateTime(u)));
-        Console.WriteLine(date5);
-
-        // ===================== 流变对象转换 =====================
-
-        // 声明方式自动转换
-        ClayModel clayModel = clay;
-        Console.WriteLine($"{clayModel.Id} {clayModel.Name} {clayModel.Date} {clayModel.IsTrue}");
-
-        // 强制转换
-        var clayModel2 = (ClayModel)clay;
-        Console.WriteLine($"{clayModel2.Id} {clayModel2.Name} {clayModel2.Date} {clayModel2.IsTrue}");
-
-        // 通过 As<T> 方式
-        var clayModel3 = clay.As<ClayModel>();
-        var clayModel31 =
-            clay.As<ClayModel>(new JsonSerializerOptions { PropertyNameCaseInsensitive = true }); // 支持传递序列化参数
-        Console.WriteLine($"{clayModel3.Id} {clayModel3.Name} {clayModel3.Date} {clayModel3.IsTrue}");
-        Console.WriteLine($"{clayModel31.Id} {clayModel31.Name} {clayModel31.Date} {clayModel31.IsTrue}");
-
-        // 通过 As(Type) 方式
-        var clayModel4 = clay.As(typeof(ClayModel)) as ClayModel;
-        var clayModel41 =
-            clay.As(typeof(ClayModel),
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) as ClayModel; // 支持传递序列化参数
-        Console.WriteLine($"{clayModel4?.Id} {clayModel4?.Name} {clayModel4?.Date} {clayModel4?.IsTrue}");
-        Console.WriteLine($"{clayModel41?.Id} {clayModel41?.Name} {clayModel4?.Date} {clayModel41?.IsTrue}");
-
-        // 通过反序列化方式
-        var clayModel5 = JsonSerializer.Deserialize<ClayModel>(clay.ToString(),
-            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-        Console.WriteLine($"{clayModel5.Id} {clayModel5.Name} {clayModel5.Date} {clayModel5.IsTrue}");
-
-        // 转换为 XElement 对象
-        var xElement = clay.As<XElement>();
-        Console.WriteLine(xElement);
     }
 
     /// <summary>
