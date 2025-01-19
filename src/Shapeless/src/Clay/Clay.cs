@@ -279,7 +279,8 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
         // 检查是否是 Range 实例
         if (index is Range)
         {
-            throw new NotSupportedException("Setting values using a System.Range is not supported in the Clay.");
+            throw new NotSupportedException(
+                $"Setting values using a System.Range `{index}` is not supported in the Clay.");
         }
 
         // 将 JsonCanvas 转换为 JsonArray 实例
@@ -810,11 +811,11 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
             // 检查是否是 Index 实例
             case Index:
                 throw new NotSupportedException(
-                    "Accessing or setting properties using System.Index is not supported in the Clay.");
+                    $"Accessing or setting properties using System.Index `{key}` is not supported in the Clay.");
             // 检查是否是 Range 实例
             case Range:
                 throw new NotSupportedException(
-                    "Accessing or setting properties using System.Range is not supported in the Clay.");
+                    $"Accessing or setting properties using System.Range `{key}` is not supported in the Clay.");
         }
     }
 }

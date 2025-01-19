@@ -447,6 +447,7 @@
             <summary>
                 <see cref="T:System.Range" /> 索引
             </summary>
+            <remarks>截取 <see cref="T:Shapeless.Clay" /> 并返回新的 <see cref="T:Shapeless.Clay" />。</remarks>
             <param name="range">
                 <see cref="T:System.Range" />
             </param>
@@ -1069,12 +1070,15 @@
             <summary>
                 动态调用委托
             </summary>
-            <remarks>在第一个参数是 ClayContext 类型时自动创建并传递 ClayContext 实例。</remarks>
+            <remarks>在第一个参数是 <see cref="T:Shapeless.ClayContext" /> 类型时自动创建并传递 <see cref="T:Shapeless.ClayContext" /> 实例。</remarks>
             <param name="delegate">
                 <see cref="T:System.Delegate" />
             </param>
             <param name="args">委托实参数组</param>
-            <param name="result">返回结果</param>
+            <param name="result">委托调用的结果</param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
         </member>
         <member name="T:Shapeless.ClayEventHandler">
             <summary>

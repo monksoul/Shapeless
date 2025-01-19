@@ -653,16 +653,16 @@ public class ClayExportsTests(ITestOutputHelper output)
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
         var exception = Assert.Throws<NotSupportedException>(() => clay.Contains(^1));
-        Assert.Equal("Accessing or setting properties using System.Index is not supported in the Clay.",
+        Assert.Equal("Accessing or setting properties using System.Index `^1` is not supported in the Clay.",
             exception.Message);
 
         var exception2 = Assert.Throws<NotSupportedException>(() => clay.Contains(1..^1));
-        Assert.Equal("Accessing or setting properties using System.Range is not supported in the Clay.",
+        Assert.Equal("Accessing or setting properties using System.Range `1..^1` is not supported in the Clay.",
             exception2.Message);
 
         var array = Clay.Parse("[1,2,3]");
         var exception3 = Assert.Throws<NotSupportedException>(() => array.Contains(1..^2));
-        Assert.Equal("Checking containment using a System.Range is not supported in the Clay.",
+        Assert.Equal("Checking containment using a System.Range `1..^2` is not supported in the Clay.",
             exception3.Message);
     }
 

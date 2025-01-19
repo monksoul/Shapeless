@@ -193,12 +193,15 @@ public partial class Clay
     /// <summary>
     ///     动态调用委托
     /// </summary>
-    /// <remarks>在第一个参数是 ClayContext 类型时自动创建并传递 ClayContext 实例。</remarks>
+    /// <remarks>在第一个参数是 <see cref="ClayContext" /> 类型时自动创建并传递 <see cref="ClayContext" /> 实例。</remarks>
     /// <param name="delegate">
     ///     <see cref="Delegate" />
     /// </param>
     /// <param name="args">委托实参数组</param>
-    /// <param name="result">返回结果</param>
+    /// <param name="result">委托调用的结果</param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
     internal bool DynamicInvokeDelegate(Delegate? @delegate, object?[]? args, out object? result)
     {
         // 空检查

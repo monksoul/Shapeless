@@ -49,11 +49,11 @@ public class ClayTests(ITestOutputHelper output)
         Assert.Equal("The property `Name` was not found in the Clay.", exception.Message);
 
         var exception2 = Assert.Throws<NotSupportedException>(() => clay.GetNodeFromObject(^1));
-        Assert.Equal("Accessing or setting properties using System.Index is not supported in the Clay.",
+        Assert.Equal("Accessing or setting properties using System.Index `^1` is not supported in the Clay.",
             exception2.Message);
 
         var exception3 = Assert.Throws<NotSupportedException>(() => clay.GetNodeFromObject(1..^1));
-        Assert.Equal("Accessing or setting properties using System.Range is not supported in the Clay.",
+        Assert.Equal("Accessing or setting properties using System.Range `1..^1` is not supported in the Clay.",
             exception3.Message);
     }
 
@@ -266,11 +266,11 @@ public class ClayTests(ITestOutputHelper output)
     {
         var clay = new Clay();
         var exception = Assert.Throws<NotSupportedException>(() => clay.SetNodeInObject(^1, "furion"));
-        Assert.Equal("Accessing or setting properties using System.Index is not supported in the Clay.",
+        Assert.Equal("Accessing or setting properties using System.Index `^1` is not supported in the Clay.",
             exception.Message);
 
         var exception2 = Assert.Throws<NotSupportedException>(() => clay.SetNodeInObject(1..^1, "furion"));
-        Assert.Equal("Accessing or setting properties using System.Range is not supported in the Clay.",
+        Assert.Equal("Accessing or setting properties using System.Range `1..^1` is not supported in the Clay.",
             exception2.Message);
     }
 
@@ -348,7 +348,7 @@ public class ClayTests(ITestOutputHelper output)
             exception5.Message);
 
         var exception6 = Assert.Throws<NotSupportedException>(() => clay.SetNodeInArray(1..^2, null));
-        Assert.Equal("Setting values using a System.Range is not supported in the Clay.",
+        Assert.Equal("Setting values using a System.Range `1..^2` is not supported in the Clay.",
             exception6.Message);
     }
 
@@ -563,7 +563,7 @@ public class ClayTests(ITestOutputHelper output)
         Assert.Equal("The property `Name` was not found in the Clay.", exception.Message);
 
         var exception2 = Assert.Throws<NotSupportedException>(() => clay.RemoveNodeFromObject(^1));
-        Assert.Equal("Accessing or setting properties using System.Index is not supported in the Clay.",
+        Assert.Equal("Accessing or setting properties using System.Index `^1` is not supported in the Clay.",
             exception2.Message);
     }
 
@@ -901,11 +901,11 @@ public class ClayTests(ITestOutputHelper output)
         Clay.ThrowIfUnsupportedKeyType(0);
 
         var exception = Assert.Throws<NotSupportedException>(() => Clay.ThrowIfUnsupportedKeyType(^1));
-        Assert.Equal("Accessing or setting properties using System.Index is not supported in the Clay.",
+        Assert.Equal("Accessing or setting properties using System.Index `^1` is not supported in the Clay.",
             exception.Message);
 
         var exception2 = Assert.Throws<NotSupportedException>(() => Clay.ThrowIfUnsupportedKeyType(1..^1));
-        Assert.Equal("Accessing or setting properties using System.Range is not supported in the Clay.",
+        Assert.Equal("Accessing or setting properties using System.Range `1..^1` is not supported in the Clay.",
             exception2.Message);
     }
 }

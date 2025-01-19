@@ -58,6 +58,7 @@ public partial class Clay
     /// <summary>
     ///     <see cref="Range" /> 索引
     /// </summary>
+    /// <remarks>截取 <see cref="Clay" /> 并返回新的 <see cref="Clay" />。</remarks>
     /// <param name="range">
     ///     <see cref="Range" />
     /// </param>
@@ -242,7 +243,8 @@ public partial class Clay
         // 检查是否是 Range 实例
         if (identifier is Range)
         {
-            throw new NotSupportedException("Checking containment using a System.Range is not supported in the Clay.");
+            throw new NotSupportedException(
+                $"Checking containment using a System.Range `{identifier}` is not supported in the Clay.");
         }
 
         // 将 JsonCanvas 转换为 JsonArray 实例
