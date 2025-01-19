@@ -99,48 +99,44 @@
             </returns>
             <exception cref="T:System.ArgumentOutOfRangeException"></exception>
         </member>
-        <member name="M:Shapeless.Clay.SetNodeInObject(System.Object,System.Object,System.Object@)">
+        <member name="M:Shapeless.Clay.SetNodeInObject(System.Object,System.Object)">
             <summary>
                 根据键设置 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 节点
             </summary>
             <param name="key">键</param>
             <param name="value">属性值</param>
-            <param name="finalKey">最终设置键</param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
             <exception cref="T:System.NotSupportedException"></exception>
         </member>
-        <member name="M:Shapeless.Clay.SetNodeInArray(System.Object,System.Object,System.Object@,System.Boolean)">
+        <member name="M:Shapeless.Clay.SetNodeInArray(System.Object,System.Object,System.Boolean)">
             <summary>
                 根据索引设置 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 节点
             </summary>
             <param name="index">索引</param>
             <param name="value">元素值</param>
-            <param name="finalIndex">最终设置索引</param>
             <param name="insert">是否作为在指定位置插入</param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
             <exception cref="T:System.NotSupportedException"></exception>
         </member>
-        <member name="M:Shapeless.Clay.RemoveNodeFromObject(System.Object,System.Object@)">
+        <member name="M:Shapeless.Clay.RemoveNodeFromObject(System.Object)">
             <summary>
                 根据键删除 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 节点
             </summary>
             <param name="key">键</param>
-            <param name="finalKey">最终移除键</param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
             <exception cref="T:System.NotSupportedException"></exception>
         </member>
-        <member name="M:Shapeless.Clay.RemoveNodeFromArray(System.Object,System.Object@)">
+        <member name="M:Shapeless.Clay.RemoveNodeFromArray(System.Object)">
             <summary>
                 根据索引删除 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 节点
             </summary>
             <param name="index">索引</param>
-            <param name="finalIndex">最终移除索引</param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>

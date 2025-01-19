@@ -43,4 +43,54 @@ public class ClayEventsTests
         var clay = new Clay();
         clay.TryInvoke(null, "name");
     }
+
+    [Fact]
+    public void SetWithIndex_WithEvents_ReturnOK()
+    {
+        var clay = new Clay.Array();
+        var events = new string[4];
+
+        clay.Changing += (s, e) =>
+        {
+            events[0] = nameof(clay.Changing);
+        };
+        clay.Changed += (s, e) =>
+        {
+            events[1] = nameof(clay.Changed);
+        };
+        clay.Removing += (s, e) =>
+        {
+            events[2] = nameof(clay.Removing);
+        };
+        clay.Removed += (s, e) =>
+        {
+            events[3] = nameof(clay.Removed);
+        };
+
+        clay.Set(^0, "OK");
+        clay.Remove(^1);
+
+        Assert.Equal(["Changing", "Changed", "Removing", "Removed"], events);
+    }
+
+    [Fact]
+    public void RemoveWithRange_WithEvents_ReturnOK()
+    {
+        var clay = new Clay.Array { [0] = 1, [1] = 2, [2] = 3, [3] = 4 };
+        var events = new List<string>();
+
+        clay.Removing += (s, e) =>
+        {
+            events.Add(nameof(clay.Removing));
+        };
+        clay.Removed += (s, e) =>
+        {
+            events.Add(nameof(clay.Removed));
+        };
+
+        clay.Remove(1..^1);
+
+        Assert.Equal("[1,4]", clay.ToJsonString());
+        Assert.Equal(["Removing", "Removed", "Removing", "Removed"], events);
+    }
 }

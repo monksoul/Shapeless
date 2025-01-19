@@ -93,21 +93,10 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
         // 空检查
         ArgumentNullException.ThrowIfNull(identifier);
 
-        // 触发数据变更之前事件
-        OnChanging(identifier);
-
         // 根据标识符设置值并获取结果
-        var result = IsObject
-            ? SetNodeInObject(identifier, value, out var finalIndex)
-            : SetNodeInArray(identifier, value, out finalIndex, insert);
-
-        // 触发数据变更之后事件
-        if (result)
-        {
-            OnChanged(finalIndex);
-        }
-
-        return result;
+        return IsObject
+            ? SetNodeInObject(identifier, value)
+            : SetNodeInArray(identifier, value, insert);
     }
 
     /// <summary>
@@ -125,27 +114,10 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
         // 空检查
         ArgumentNullException.ThrowIfNull(identifier);
 
-        // 检查是否是集合/数组且标识符是 Range 实例
-        if (IsArray && identifier is Range range)
-        {
-            return RemoveNodeFromArrayByRange(range);
-        }
-
-        // 触发移除数据之前事件
-        OnRemoving(identifier);
-
         // 根据标识符移除值并获取结果
-        var result = IsObject
-            ? RemoveNodeFromObject(identifier, out var finalIndex)
-            : RemoveNodeFromArray(identifier, out finalIndex);
-
-        // 触发移除数据之后事件
-        if (result)
-        {
-            OnRemoved(finalIndex);
-        }
-
-        return result;
+        return IsObject
+            ? RemoveNodeFromObject(identifier)
+            : RemoveNodeFromArray(identifier);
     }
 
     /// <summary>
@@ -250,12 +222,11 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     /// </summary>
     /// <param name="key">键</param>
     /// <param name="value">属性值</param>
-    /// <param name="finalKey">最终设置键</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
     /// <exception cref="NotSupportedException"></exception>
-    internal bool SetNodeInObject(object key, object? value, out object finalKey)
+    internal bool SetNodeInObject(object key, object? value)
     {
         // 检查键是否是不受支持的类型
         ThrowIfUnsupportedKeyType(key);
@@ -280,10 +251,16 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
         {
             // 移除可能存在的同名委托属性
             ObjectMethods.Remove(identifier);
+
+            // 触发数据变更之前事件
+            OnChanging(identifier);
+
             jsonObject[identifier] = SerializeToNode(value, Options);
+
+            // 触发数据变更之后事件
+            OnChanged(identifier);
         }
 
-        finalKey = identifier;
         return true;
     }
 
@@ -292,13 +269,12 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     /// </summary>
     /// <param name="index">索引</param>
     /// <param name="value">元素值</param>
-    /// <param name="finalIndex">最终设置索引</param>
     /// <param name="insert">是否作为在指定位置插入</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
     /// <exception cref="NotSupportedException"></exception>
-    internal bool SetNodeInArray(object index, object? value, out object finalIndex, bool insert = false)
+    internal bool SetNodeInArray(object index, object? value, bool insert = false)
     {
         // 检查是否是 Range 实例
         if (index is Range)
@@ -320,6 +296,9 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
         // 获取 JsonArray 长度
         var count = jsonArray.Count;
 
+        // 触发数据变更之前事件
+        OnChanging(intIndex);
+
         // 检查索引小于数组长度
         if (intIndex < count)
         {
@@ -336,11 +315,17 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
             {
                 jsonArray.Insert(intIndex, jsonNodeValue);
             }
+
+            // 触发数据变更之后事件
+            OnChanged(intIndex);
         }
         // 检查索引是否等于长度，如果是则追加
         else if (intIndex == count)
         {
             jsonArray.Add(SerializeToNode(value, Options));
+
+            // 触发数据变更之后事件
+            OnChanged(intIndex);
         }
         // 检查是否允许访问越界的数组，如果是则采用补位方式
         else if (Options.AllowIndexOutOfRange)
@@ -348,7 +333,6 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
             // 检查是否需要进行补位操作
             if (!Options.AutoExpandArrayWithNulls)
             {
-                finalIndex = null!;
                 return false;
             }
 
@@ -360,13 +344,15 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
             }
 
             jsonArray.Add(SerializeToNode(value, Options));
+
+            // 触发数据变更之后事件
+            OnChanged(intIndex);
         }
         else
         {
             ThrowIfOutOfRange(intIndex, count);
         }
 
-        finalIndex = intIndex;
         return true;
     }
 
@@ -374,12 +360,11 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     ///     根据键删除 <see cref="JsonNode" /> 节点
     /// </summary>
     /// <param name="key">键</param>
-    /// <param name="finalKey">最终移除键</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
     /// <exception cref="NotSupportedException"></exception>
-    internal bool RemoveNodeFromObject(object key, out object finalKey)
+    internal bool RemoveNodeFromObject(object key)
     {
         // 检查键是否是不受支持的类型
         ThrowIfUnsupportedKeyType(key);
@@ -393,10 +378,21 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
         // 将 JsonCanvas 转换为 JsonObject 实例
         var jsonObject = JsonCanvas.AsObject();
 
-        // 移除键
-        if (ObjectMethods.Remove(identifier) || jsonObject.Remove(identifier))
+        // 移除可能存在的同名委托属性
+        if (ObjectMethods.Remove(identifier))
         {
-            finalKey = identifier;
+            return true;
+        }
+
+        // 触发移除数据之前事件
+        OnRemoving(identifier);
+
+        // 移除键
+        if (jsonObject.Remove(identifier))
+        {
+            // 触发移除数据之后事件
+            OnRemoved(identifier);
+
             return true;
         }
 
@@ -406,7 +402,6 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
             throw new KeyNotFoundException($"The property `{identifier}` was not found in the Clay.");
         }
 
-        finalKey = null!;
         return false;
     }
 
@@ -414,12 +409,17 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     ///     根据索引删除 <see cref="JsonNode" /> 节点
     /// </summary>
     /// <param name="index">索引</param>
-    /// <param name="finalIndex">最终移除索引</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    internal bool RemoveNodeFromArray(object index, out object finalIndex)
+    internal bool RemoveNodeFromArray(object index)
     {
+        // 检查是否是 Range 实例
+        if (index is Range range)
+        {
+            return RemoveNodeFromArrayByRange(range);
+        }
+
         // 将 JsonCanvas 转换为 JsonArray 实例
         var jsonArray = JsonCanvas.AsArray();
 
@@ -434,11 +434,17 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
         // 获取 JsonArray 长度
         var count = jsonArray.Count;
 
+        // 触发移除数据之前事件
+        OnRemoving(intIndex);
+
         // 检查索引小于数组长度
         if (intIndex < count)
         {
             jsonArray.RemoveAt(intIndex);
-            finalIndex = intIndex;
+
+            // 触发移除数据之后事件
+            OnRemoved(intIndex);
+
             return true;
         }
 
@@ -448,7 +454,6 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
             ThrowIfOutOfRange(intIndex, count);
         }
 
-        finalIndex = null!;
         return false;
     }
 
@@ -469,7 +474,7 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
         // 移除指定范围内的元素
         for (var i = 0; i < length; i++)
         {
-            RemoveValue(offset);
+            RemoveNodeFromArray(offset);
         }
 
         return true;
