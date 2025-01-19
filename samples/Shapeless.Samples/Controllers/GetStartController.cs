@@ -692,7 +692,7 @@ public class GetStartController
     }
 
     /// <summary>
-    ///     事件监听
+    ///     数据变更事件监听
     /// </summary>
     [HttpGet]
     public void Events()
@@ -730,7 +730,7 @@ public class GetStartController
         clay.name = "Shapeless";
         clay.author = "百小僧";
 
-        clay.Delete("author");
+        clay.Remove("author");
 
         // ===================== 集合或数组 =====================
 
@@ -764,11 +764,11 @@ public class GetStartController
         array.Add("Furion");
         array.Insert(0, "One");
 
-        array.Delete(3);
+        array.Remove(3);
     }
 
     /// <summary>
-    ///     格式化输出
+    ///     输出多种格式
     /// </summary>
     [HttpGet]
     public void FormatOutput()
@@ -779,13 +779,17 @@ public class GetStartController
         Console.WriteLine(clay);
         Console.WriteLine(clay.ToString());
 
+        // 支持格式化符输出（U：取消中文 Unicode 编码）
+        Console.WriteLine($"{clay:U}");
+        Console.WriteLine(clay.ToString("U"));
+
         // 支持格式化符输出（Z：压缩输出）
         Console.WriteLine($"{clay:Z}");
         Console.WriteLine(clay.ToString("Z"));
 
-        // 支持格式化符输出（U：取消中文 Unicode 编码）
-        Console.WriteLine($"{clay:U}");
-        Console.WriteLine(clay.ToString("U"));
+        // 支持组合使用
+        Console.WriteLine($"{clay:UZ}");
+        Console.WriteLine(clay.ToString("UZ"));
 
         // 支持格式化符输出（C：小驼峰键命名）
         Console.WriteLine($"{clay:C}");
@@ -796,16 +800,36 @@ public class GetStartController
         Console.WriteLine(clay.ToString("P"));
 
         // 组合使用（Z：压缩； U：取消中文 Unicode 编码； P：帕斯卡（大驼峰）键命名）
+        Console.WriteLine($"{clay:ZUC}");
+        Console.WriteLine(clay.ToString("ZUC"));
+
         Console.WriteLine($"{clay:ZUP}");
         Console.WriteLine(clay.ToString("ZUP"));
 
         // 输出标准 JSON 字符串
         Console.WriteLine(clay.ToJsonString());
-        Console.WriteLine(clay.ToJsonString(new JsonSerializerOptions())); // 支持传入序列化参数
+        // 支持传入 JSON 序列化选项
+        Console.WriteLine(clay.ToJsonString(new JsonSerializerOptions
+        {
+            WriteIndented = true, // 格式化 JSON
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, // 取消中文 Unicode 编码
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase // 小驼峰键命名策略
+        }));
+
+        // 使用流变对象实例作为方法调用
+        Console.WriteLine(clay());
+        // 支持传入 JSON 序列化选项
+        Console.WriteLine(clay(new JsonSerializerOptions
+        {
+            WriteIndented = true, // 格式化 JSON
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, // 取消中文 Unicode 编码
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase // 小驼峰键命名策略
+        }));
 
         // 输出 XML 字符串
         Console.WriteLine(clay.ToXmlString());
-        Console.WriteLine(clay.ToXmlString(new XmlWriterSettings { Indent = true })); // 支持传入 XML 写入参数
+        // 支持传入 Xml 写入选项
+        Console.WriteLine(clay.ToXmlString(new XmlWriterSettings { Indent = true }));
     }
 
     /// <summary>
