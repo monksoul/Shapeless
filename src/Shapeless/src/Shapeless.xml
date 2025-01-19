@@ -44,7 +44,7 @@
             </summary>
             <remarks>用于作为 <see cref="T:Shapeless.Clay" /> 的核心数据容器。</remarks>
         </member>
-        <member name="P:Shapeless.Clay.ObjectMethods">
+        <member name="P:Shapeless.Clay.DelegateMap">
             <summary>
                 单一对象自定义委托字典
             </summary>
@@ -795,7 +795,7 @@
         </member>
         <member name="M:Shapeless.Clay.Clear">
             <summary>
-                删除所有标识符
+                清空数据
             </summary>
         </member>
         <member name="M:Shapeless.Clay.WriteTo(System.Text.Json.Utf8JsonWriter,System.Text.Json.JsonSerializerOptions)">
@@ -1065,6 +1065,17 @@
         <member name="M:Shapeless.Clay.TryConvert(System.Dynamic.ConvertBinder,System.Object@)">
             <inheritdoc />
         </member>
+        <member name="M:Shapeless.Clay.DynamicInvokeDelegate(System.Delegate,System.Object[],System.Object@)">
+            <summary>
+                动态调用委托
+            </summary>
+            <remarks>在第一个参数是 ClayContext 类型时自动创建并传递 ClayContext 实例。</remarks>
+            <param name="delegate">
+                <see cref="T:System.Delegate" />
+            </param>
+            <param name="args">委托实参数组</param>
+            <param name="result">返回结果</param>
+        </member>
         <member name="T:Shapeless.ClayEventHandler">
             <summary>
                 流变对象事件委托
@@ -1230,6 +1241,23 @@
             <returns>
                 <see cref="T:System.Object" />
             </returns>
+        </member>
+        <member name="T:Shapeless.ClayContext">
+            <summary>
+                流变对象上下文
+            </summary>
+            <remarks>用于动态调用自定义委托时提供上下文 <see cref="T:Shapeless.Clay" /> 实例。无需外部手动初始化。</remarks>
+        </member>
+        <member name="M:Shapeless.ClayContext.#ctor(Shapeless.Clay)">
+            <summary>
+                <inheritdoc cref="T:Shapeless.ClayContext" />
+            </summary>
+            <param name="current">上下文 <see cref="T:Shapeless.Clay" /> 实例</param>
+        </member>
+        <member name="P:Shapeless.ClayContext.Current">
+            <summary>
+                上下文 <see cref="T:Shapeless.Clay" /> 实例
+            </summary>
         </member>
         <member name="T:Shapeless.ClayEventArgs">
             <summary>

@@ -46,7 +46,7 @@ clay.number = 10;
 
 // Add Method
 clay.sayHello = (Func<string>)(() => $"Hello, {clay.name}!");
-clay.Increment = new Action(() => { clay.number++; });
+clay.Increment = new Action(() => clay.number++);
 
 // Call Method
 Console.WriteLine(clay.number); // number: 10

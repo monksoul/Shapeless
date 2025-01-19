@@ -18,8 +18,8 @@ public class ClayTests(ITestOutputHelper output)
         Assert.True(clay.IsObject);
         Assert.False(clay.IsArray);
         Assert.Equal(ClayType.Object, clay.Type);
-        Assert.NotNull(clay.ObjectMethods);
-        Assert.Empty(clay.ObjectMethods);
+        Assert.NotNull(clay.DelegateMap);
+        Assert.Empty(clay.DelegateMap);
 
         var clay2 = new Clay(JsonNode.Parse("[]"));
         Assert.NotNull(clay2.Options);
@@ -305,17 +305,17 @@ public class ClayTests(ITestOutputHelper output)
         clay4.SetNodeInObject("Name", "Furion");
         clay4.SetNodeInObject("Method", (Func<string>)(() => "Furion"));
         Assert.Single(clay4.JsonCanvas.AsObject());
-        Assert.Single(clay4.ObjectMethods);
+        Assert.Single(clay4.DelegateMap);
         Assert.Equal("{\"Name\":\"Furion\"}", clay4.ToJsonString());
 
         clay4.SetNodeInObject("Method", "Method");
         Assert.Equal(2, clay4.JsonCanvas.AsObject().Count);
-        Assert.Empty(clay4.ObjectMethods);
+        Assert.Empty(clay4.DelegateMap);
         Assert.Equal("{\"Name\":\"Furion\",\"Method\":\"Method\"}", clay4.ToJsonString());
 
         clay4.SetNodeInObject("Method", (Func<string>)(() => "Furion"));
         Assert.Single(clay4.JsonCanvas.AsObject());
-        Assert.Single(clay4.ObjectMethods);
+        Assert.Single(clay4.DelegateMap);
         Assert.Equal("{\"Name\":\"Furion\"}", clay4.ToJsonString());
     }
 
@@ -505,7 +505,7 @@ public class ClayTests(ITestOutputHelper output)
         // 测试赋值是否丢失方法
         dynamic clay2 = new Clay();
         clay2.Child = clay;
-        Assert.Empty(((Clay)clay2.Child).ObjectMethods);
+        Assert.Empty(((Clay)clay2.Child).DelegateMap);
     }
 
     [Fact]
@@ -585,9 +585,9 @@ public class ClayTests(ITestOutputHelper output)
 
         dynamic clay4 = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
         clay4.FullName = (Func<string>)(() => clay4.Name);
-        Assert.Single(((Clay)clay4).ObjectMethods);
+        Assert.Single(((Clay)clay4).DelegateMap);
         Assert.True(((Clay)clay4).RemoveNodeFromObject("FullName"));
-        Assert.Empty(((Clay)clay4).ObjectMethods);
+        Assert.Empty(((Clay)clay4).DelegateMap);
     }
 
     [Fact]

@@ -356,6 +356,37 @@ public class ClayOverrideTests
     }
 
     [Fact]
+    public void TryInvokeMember_WithDelegate_ReturnOK()
+    {
+        dynamic clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+
+        clay.sayHello = (Func<string>)(() => $"Hello, {clay.name}!");
+        clay.addProp = new Action<string, object?>((key, value) =>
+        {
+            clay[key] = value;
+        });
+        clay.Increment = new Action(() => clay.id++);
+        clay.wrapper = new Func<string, string>(u => $"__{u}__");
+        clay.callThis = new Func<ClayContext, string>(u => $"Hello, {u.Current.name}!");
+
+        var name = clay.sayHello();
+        Assert.Equal("Hello, furion!", name);
+
+        clay.addProp("age", 30);
+        Assert.Equal("{\"id\":1,\"name\":\"furion\",\"age\":30}", clay.ToJsonString());
+
+        Assert.Equal(1, clay.id);
+        clay.Increment();
+        Assert.Equal(2, clay.id);
+
+        var wrapper = clay.wrapper("str");
+        Assert.Equal("__str__", wrapper);
+
+        var name2 = clay.callThis();
+        Assert.Equal("Hello, furion!", name2);
+    }
+
+    [Fact]
     public void TryConvert_ReturnOK()
     {
         dynamic clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
@@ -374,6 +405,27 @@ public class ClayOverrideTests
         {
             ClayModel _ = clay;
         });
+    }
+
+    [Fact]
+    public void DynamicInvokeDelegate_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        Assert.Throws<ArgumentNullException>(() => clay.DynamicInvokeDelegate(null, null, out _));
+    }
+
+    [Fact]
+    public void DynamicInvokeDelegate_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+
+        Assert.True(clay.DynamicInvokeDelegate(new Action(() => { }), null, out _));
+        Assert.True(clay.DynamicInvokeDelegate(new Action<string>(str => { }), ["str"], out _));
+        Assert.True(clay.DynamicInvokeDelegate(new Func<string>(() => "Furion"), null, out var result1));
+        Assert.Equal("Furion", result1);
+        Assert.True(
+            clay.DynamicInvokeDelegate(new Func<ClayContext, string>(ctx => ctx.Current.name), [], out var result2));
+        Assert.Equal("furion", result2);
     }
 }
 

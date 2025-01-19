@@ -38,7 +38,7 @@ clay.number = 10;
 
 // 添加方法
 clay.sayHello = (Func<string>)(() => $"Hello, {clay.name}!");
-clay.Increment = new Action(() => { clay.number++; });
+clay.Increment = new Action(() => clay.number++);
 
 // 调用方法
 Console.WriteLine(clay.number); // number: 10

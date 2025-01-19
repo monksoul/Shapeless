@@ -57,7 +57,7 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     /// <summary>
     ///     单一对象自定义委托字典
     /// </summary>
-    internal IDictionary<string, Delegate?> ObjectMethods { get; } = new Dictionary<string, Delegate?>();
+    internal IDictionary<string, Delegate?> DelegateMap { get; } = new Dictionary<string, Delegate?>();
 
     /// <summary>
     ///     根据标识符获取值
@@ -245,12 +245,12 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
         {
             // 移除可能存在的同名属性
             jsonObject.Remove(identifier);
-            ObjectMethods[identifier] = @delegate;
+            DelegateMap[identifier] = @delegate;
         }
         else
         {
             // 移除可能存在的同名委托属性
-            ObjectMethods.Remove(identifier);
+            DelegateMap.Remove(identifier);
 
             // 触发数据变更之前事件
             OnChanging(identifier);
@@ -379,7 +379,7 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
         var jsonObject = JsonCanvas.AsObject();
 
         // 移除可能存在的同名委托属性
-        if (ObjectMethods.Remove(identifier))
+        if (DelegateMap.Remove(identifier))
         {
             return true;
         }
@@ -502,7 +502,7 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
         // 处理嵌套带空传播字符 ? 的标识符
         var identifier = ProcessNestedNullPropagationIdentifier(key.ToString()!);
 
-        return ObjectMethods.TryGetValue(identifier, out @delegate);
+        return DelegateMap.TryGetValue(identifier, out @delegate);
     }
 
     /// <summary>

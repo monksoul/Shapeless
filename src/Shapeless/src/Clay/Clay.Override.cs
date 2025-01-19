@@ -113,10 +113,9 @@ public partial class Clay
         var identifier = binder.Name;
 
         // 检查该成员是否是一个委托
-        if (ObjectMethods.TryGetValue(identifier, out var @delegate))
+        if (DelegateMap.TryGetValue(identifier, out var @delegate))
         {
-            result = @delegate?.DynamicInvoke(args);
-            return true;
+            return DynamicInvokeDelegate(@delegate, args, out result);
         }
 
         // 获取调用方法的泛型参数数组
@@ -187,6 +186,33 @@ public partial class Clay
         {
             Validator.ValidateObject(result, new ValidationContext(result), true);
         }
+
+        return true;
+    }
+
+    /// <summary>
+    ///     动态调用委托
+    /// </summary>
+    /// <remarks>在第一个参数是 ClayContext 类型时自动创建并传递 ClayContext 实例。</remarks>
+    /// <param name="delegate">
+    ///     <see cref="Delegate" />
+    /// </param>
+    /// <param name="args">委托实参数组</param>
+    /// <param name="result">返回结果</param>
+    internal bool DynamicInvokeDelegate(Delegate? @delegate, object?[]? args, out object? result)
+    {
+        // 空检查
+        ArgumentNullException.ThrowIfNull(@delegate);
+
+        // 获取调用委托参数定义数组
+        var parameters = @delegate.GetType().GetMethod("Invoke")?.GetParameters();
+
+        // 准备实参列表
+        var invokeArgs = parameters is { Length: > 0 } && parameters[0].ParameterType == typeof(ClayContext)
+            ? new object[] { new ClayContext(this) }.Concat(args ?? []).ToArray()
+            : args;
+
+        result = @delegate.DynamicInvoke(invokeArgs);
 
         return true;
     }

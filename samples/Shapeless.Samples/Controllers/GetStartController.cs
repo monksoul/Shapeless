@@ -828,36 +828,55 @@ public class GetStartController
 
         // 输出 XML 字符串
         Console.WriteLine(clay.ToXmlString());
-        // 支持传入 Xml 写入选项
+        // 支持传入 XML 写入选项
         Console.WriteLine(clay.ToXmlString(new XmlWriterSettings { Indent = true }));
     }
 
     /// <summary>
-    ///     更多使用例子
+    ///      动态添加委托方法
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    public Clay MoreUsage()
+    public Clay DynamicAddMethod()
     {
         dynamic clay = Clay.Parse("""{"id":1,"name":"shapeless"}""");
 
-        // 添加属性
-        clay.author = "百小僧";
-        clay["company"] = "百签科技";
-        clay.homepage = new[] { "https://furion.net/", "https://baiqian.com" };
-        clay.number = 10;
-
-        // 添加方法
+        // 添加 Func 委托
         clay.sayHello = (Func<string>)(() => $"Hello, {clay.name}!");
-        clay.Increment = new Action(() => { clay.number++; });
 
-        // 调用方法
-        Console.WriteLine(clay.number); // number: 10
+        // 添加 Action 委托
+        clay.addProp = new Action<string, object?>((key, value) => { clay[key] = value; });
+        clay.Increment = new Action(() => clay.id++);
+
+        // 调用 sayHello 方法
+        Console.WriteLine(clay.sayHello());
+
+        Console.WriteLine($"调用 Increment 方法之前的 id 值：{clay.id}");
+        // 调用 Increment 方法
         clay.Increment();
-        Console.WriteLine(clay.number); // number: 11
+        Console.WriteLine($"调用 Increment 方法之后的 id 值：{clay.id}");
 
-        // 打印 JSON
-        Console.WriteLine($"{clay.sayHello()}\r\n{clay:U}");
+        // 调用 addProp 方法
+        clay.addProp("age", 30);
+        clay["addProp"]("address", "广东省中山市"); // 同样支持索引方式
+
+        Console.WriteLine($"{clay:U}");
+
+        // ClayContext 使用
+        clay.sayHello2 =
+            (Func<ClayContext, string>)(ctx =>
+                $"Hello, {ctx.Current.name}!"); // 或使用 new Func<ClayContext, string>(...) 
+
+        // 调用 sayHello2 方法，无需传入首个 ClayContext 实例
+        Console.WriteLine(clay.sayHello2());
+
+        // 更多参数示例
+        clay.sayHello3 =
+            (Func<ClayContext, string, string>)((ctx, arg) =>
+                $"Hello, {ctx.Current.name} {arg}!"); // 或使用 new Func<ClayContext, string>(...) 
+
+        // 调用 sayHello3 方法，无需传入首个 ClayContext 实例
+        Console.WriteLine(clay.sayHello3("新年快乐"));
 
         return clay;
     }

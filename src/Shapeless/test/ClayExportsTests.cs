@@ -916,11 +916,11 @@ public class ClayExportsTests(ITestOutputHelper output)
     {
         dynamic clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
         clay.FullName = (Func<string>)(() => clay.name);
-        Assert.Single(((Clay)clay).ObjectMethods);
+        Assert.Single(((Clay)clay).DelegateMap);
 
         clay.Clear();
         Assert.Equal("{}", clay.ToJsonString());
-        Assert.Empty(((Clay)clay).ObjectMethods);
+        Assert.Empty(((Clay)clay).DelegateMap);
 
         var clay2 = Clay.Parse("[1,2,3]");
         clay2.Clear();

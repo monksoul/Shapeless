@@ -236,7 +236,7 @@ public partial class Clay
             // 将标识符转换为字符串类型
             var propertyName = identifier.ToString()!;
 
-            return ObjectMethods.ContainsKey(propertyName) || JsonCanvas.AsObject().ContainsKey(propertyName);
+            return DelegateMap.ContainsKey(propertyName) || JsonCanvas.AsObject().ContainsKey(propertyName);
         }
 
         // 检查是否是 Range 实例
@@ -703,7 +703,7 @@ public partial class Clay
     public Clay DeepClone(ClayOptions? options = null) => new Clay(JsonCanvas.DeepClone()).Rebuilt(options);
 
     /// <summary>
-    ///     删除所有标识符
+    ///     清空数据
     /// </summary>
     public void Clear()
     {
@@ -714,7 +714,7 @@ public partial class Clay
         if (IsObject)
         {
             JsonCanvas.AsObject().Clear();
-            ObjectMethods.Clear();
+            DelegateMap.Clear();
         }
         else
         {
