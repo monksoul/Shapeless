@@ -551,6 +551,17 @@
                 <see cref="T:System.Object" />
             </returns>
         </member>
+        <member name="M:Shapeless.Clay.Get(System.Range)">
+            <summary>
+                截取 <see cref="T:Shapeless.Clay" /> 并返回新的 <see cref="T:Shapeless.Clay" />
+            </summary>
+            <param name="range">
+                <see cref="T:System.Range" />
+            </param>
+            <returns>
+                <see cref="T:System.Object" />
+            </returns>
+        </member>
         <member name="M:Shapeless.Clay.Get(System.Object,System.Type,System.Text.Json.JsonSerializerOptions)">
             <summary>
                 根据标识符获取目标类型的值

@@ -750,6 +750,21 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void Get_WithRange_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        var exception = Assert.Throws<NotSupportedException>(() => clay.Get(..^1));
+        Assert.Equal("`Get(Range)` method can only be used for array or collection operations.", exception.Message);
+    }
+
+    [Fact]
+    public void Get_WithRange_ReturnOK()
+    {
+        var clay = Clay.Parse("[1,2,3,4]");
+        Assert.Equal("[2,3]", clay.Get(1..^1)?.ToJsonString());
+    }
+
+    [Fact]
     public void FindNode_Invalid_Parameters()
     {
         var clay = new Clay();

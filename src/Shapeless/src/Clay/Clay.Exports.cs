@@ -279,6 +279,23 @@ public partial class Clay
     public object? Get(object identifier) => GetValue(identifier);
 
     /// <summary>
+    ///     截取 <see cref="Clay" /> 并返回新的 <see cref="Clay" />
+    /// </summary>
+    /// <param name="range">
+    ///     <see cref="Range" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="object" />
+    /// </returns>
+    public Clay? Get(Range range)
+    {
+        // 检查是否是单一对象实例调用
+        ThrowIfMethodCalledOnSingleObject($"{nameof(Get)}(Range)");
+
+        return this[range];
+    }
+
+    /// <summary>
     ///     根据标识符获取目标类型的值
     /// </summary>
     /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或索引运算符（Index）或范围运算符（Range）</param>

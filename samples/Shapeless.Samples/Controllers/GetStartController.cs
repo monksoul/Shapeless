@@ -833,7 +833,7 @@ public class GetStartController
     }
 
     /// <summary>
-    ///      动态添加委托方法
+    ///     动态添加委托方法
     /// </summary>
     /// <returns></returns>
     [HttpGet]
