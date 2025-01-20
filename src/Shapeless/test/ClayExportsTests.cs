@@ -17,6 +17,7 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.NotNull(clay.JsonCanvas);
         Assert.NotNull(clay.JsonCanvas.Options);
         Assert.False(clay.JsonCanvas.Options?.PropertyNameCaseInsensitive);
+        Assert.False(clay.IsReadOnly);
 
         Assert.NotNull(clay.Options);
         Assert.False(clay.Options.AllowMissingProperty);
@@ -1021,17 +1022,19 @@ public class ClayExportsTests(ITestOutputHelper output)
             Assert.Throws<ArgumentOutOfRangeException>(() => clay2.InsertRange(-1, "furion"));
         Assert.Equal("Negative indices are not allowed. Index must be greater than or equal to 0. (Parameter 'index')",
             exception2.Message);
+
+        Assert.Throws<ArgumentNullException>(() => clay2.InsertRange(^2, null!));
     }
 
     [Fact]
     public void InsertRange_ReturnOK()
     {
         var clay = Clay.Parse("[1,2,3]");
-        clay.InsertRange(0, -3, -2, -1, 0);
-        Assert.Equal("[-3,-2,-1,0,1,2,3]", clay.ToJsonString());
+        clay.InsertRange(0, -3, -2, -1, 0, null);
+        Assert.Equal("[-3,-2,-1,0,null,1,2,3]", clay.ToJsonString());
 
         clay.InsertRange(^2, 10, 20, 30);
-        Assert.Equal("[-3,-2,-1,0,1,10,20,30,2,3]", clay.ToJsonString());
+        Assert.Equal("[-3,-2,-1,0,null,1,10,20,30,2,3]", clay.ToJsonString());
     }
 
     [Fact]
@@ -1080,6 +1083,9 @@ public class ClayExportsTests(ITestOutputHelper output)
 
         var exception = Assert.Throws<NotSupportedException>(() => clay.AddRange("furion"));
         Assert.Equal("`AddRange` method can only be used for array or collection operations.", exception.Message);
+
+        var clay2 = Clay.Parse("[1,2,3]");
+        Assert.Throws<ArgumentNullException>(() => clay2.AddRange(null!));
     }
 
     [Fact]
@@ -1087,7 +1093,9 @@ public class ClayExportsTests(ITestOutputHelper output)
     {
         var clay = Clay.Parse("[1,2,3]");
         clay.AddRange(4, 5, 6);
-        Assert.Equal("[1,2,3,4,5,6]", clay.ToJsonString());
+        clay.AddRange(null, null);
+        clay.AddRange([null]);
+        Assert.Equal("[1,2,3,4,5,6,null,null,null]", clay.ToJsonString());
     }
 
     [Fact]
@@ -1203,6 +1211,7 @@ public class ClayExportsTests(ITestOutputHelper output)
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
         clay["name"] = "百小僧";
         clay.AsReadOnly();
+        Assert.True(clay.IsReadOnly);
         Assert.Throws<InvalidOperationException>(() =>
         {
             clay["name"] = "百小僧";
@@ -1215,11 +1224,13 @@ public class ClayExportsTests(ITestOutputHelper output)
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
         clay["name"] = "百小僧";
         clay.AsReadOnly();
+        Assert.True(clay.IsReadOnly);
         Assert.Throws<InvalidOperationException>(() =>
         {
             clay["name"] = "百小僧";
         });
         clay.AsMutable();
+        Assert.False(clay.IsReadOnly);
         clay["name"] = "百小僧";
     }
 

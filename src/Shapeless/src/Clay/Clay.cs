@@ -82,10 +82,7 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或索引运算符（Index）或范围运算符（Range）</param>
     /// <param name="value">值</param>
     /// <param name="insert">是否作为在指定位置插入</param>
-    /// <returns>
-    ///     <see cref="bool" />
-    /// </returns>
-    internal bool SetValue(object identifier, object? value, bool insert = false)
+    internal void SetValue(object identifier, object? value, bool insert = false)
     {
         // 确保当前实例不在只读模式下
         EnsureNotReadOnlyBeforeModify();
@@ -93,10 +90,15 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
         // 空检查
         ArgumentNullException.ThrowIfNull(identifier);
 
-        // 根据标识符设置值并获取结果
-        return IsObject
-            ? SetNodeInObject(identifier, value)
-            : SetNodeInArray(identifier, value, insert);
+        // 检查是否是单一对象
+        if (IsObject)
+        {
+            SetNodeInObject(identifier, value);
+        }
+        else
+        {
+            SetNodeInArray(identifier, value, insert);
+        }
     }
 
     /// <summary>
@@ -222,11 +224,8 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     /// </summary>
     /// <param name="key">键</param>
     /// <param name="value">属性值</param>
-    /// <returns>
-    ///     <see cref="bool" />
-    /// </returns>
     /// <exception cref="NotSupportedException"></exception>
-    internal bool SetNodeInObject(object key, object? value)
+    internal void SetNodeInObject(object key, object? value)
     {
         // 检查键是否是不受支持的类型
         ThrowIfUnsupportedKeyType(key);
@@ -260,8 +259,6 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
             // 触发数据变更之后事件
             OnChanged(identifier);
         }
-
-        return true;
     }
 
     /// <summary>
@@ -270,11 +267,8 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     /// <param name="index">索引</param>
     /// <param name="value">元素值</param>
     /// <param name="insert">是否作为在指定位置插入</param>
-    /// <returns>
-    ///     <see cref="bool" />
-    /// </returns>
     /// <exception cref="NotSupportedException"></exception>
-    internal bool SetNodeInArray(object index, object? value, bool insert = false)
+    internal void SetNodeInArray(object index, object? value, bool insert = false)
     {
         // 检查是否是 Range 实例
         if (index is Range)
@@ -334,7 +328,7 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
             // 检查是否需要进行补位操作
             if (!Options.AutoExpandArrayWithNulls)
             {
-                return false;
+                return;
             }
 
             // 补位操作
@@ -353,8 +347,6 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
         {
             ThrowIfOutOfRange(intIndex, count);
         }
-
-        return true;
     }
 
     /// <summary>
@@ -567,14 +559,9 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
         // 初始化 ClayOptions 实例
         var clayOptions = options ?? ClayOptions.Default;
 
-        // 如果新旧选项对于属性名称大小写不敏感的设置相同，则无需重建 JsonCanvas；否则重建。
-        if (clayOptions.PropertyNameCaseInsensitive != Options.PropertyNameCaseInsensitive)
-        {
-            // 创建 JsonNode 选项
-            var (jsonNodeOptions, jsonDocumentOptions) = CreateJsonNodeOptions(clayOptions);
-
-            JsonCanvas = JsonNode.Parse(JsonCanvas.ToJsonString(), jsonNodeOptions, jsonDocumentOptions)!;
-        }
+        // 创建 JsonNode 选项
+        var (jsonNodeOptions, jsonDocumentOptions) = CreateJsonNodeOptions(clayOptions);
+        JsonCanvas = JsonNode.Parse(JsonCanvas.ToJsonString(), jsonNodeOptions, jsonDocumentOptions)!;
 
         Options = clayOptions;
 

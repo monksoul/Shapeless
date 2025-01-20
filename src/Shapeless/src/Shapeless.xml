@@ -65,9 +65,6 @@
             <param name="identifier">标识符，可以是键（字符串）或索引（整数）或索引运算符（Index）或范围运算符（Range）</param>
             <param name="value">值</param>
             <param name="insert">是否作为在指定位置插入</param>
-            <returns>
-                <see cref="T:System.Boolean" />
-            </returns>
         </member>
         <member name="M:Shapeless.Clay.RemoveValue(System.Object)">
             <summary>
@@ -105,9 +102,6 @@
             </summary>
             <param name="key">键</param>
             <param name="value">属性值</param>
-            <returns>
-                <see cref="T:System.Boolean" />
-            </returns>
             <exception cref="T:System.NotSupportedException"></exception>
         </member>
         <member name="M:Shapeless.Clay.SetNodeInArray(System.Object,System.Object,System.Boolean)">
@@ -117,9 +111,6 @@
             <param name="index">索引</param>
             <param name="value">元素值</param>
             <param name="insert">是否作为在指定位置插入</param>
-            <returns>
-                <see cref="T:System.Boolean" />
-            </returns>
             <exception cref="T:System.NotSupportedException"></exception>
         </member>
         <member name="M:Shapeless.Clay.RemoveNodeFromObject(System.Object)">
@@ -468,6 +459,11 @@
                 获取流变对象的基本类型
             </summary>
         </member>
+        <member name="P:Shapeless.Clay.IsReadOnly">
+            <summary>
+                判断是否为只读模式
+            </summary>
+        </member>
         <member name="M:Shapeless.Clay.ToString(System.String,System.IFormatProvider)">
             <inheritdoc />
         </member>
@@ -559,8 +555,9 @@
                 <see cref="T:System.Range" />
             </param>
             <returns>
-                <see cref="T:System.Object" />
+                <see cref="T:Shapeless.Clay" />
             </returns>
+            <exception cref="T:System.NotSupportedException"></exception>
         </member>
         <member name="M:Shapeless.Clay.Get(System.Object,System.Type,System.Text.Json.JsonSerializerOptions)">
             <summary>
@@ -612,9 +609,6 @@
             <remarks>当 <see cref="P:Shapeless.Clay.IsArray" /> 为 <c>true</c> 时有效。</remarks>
             <param name="index">索引</param>
             <param name="value">值</param>
-            <returns>
-                <see cref="T:System.Boolean" />
-            </returns>
             <exception cref="T:System.NotSupportedException"></exception>
         </member>
         <member name="M:Shapeless.Clay.Insert(System.Index,System.Object)">
@@ -624,9 +618,6 @@
             <remarks>当 <see cref="P:Shapeless.Clay.IsArray" /> 为 <c>true</c> 时有效。</remarks>
             <param name="index">索引</param>
             <param name="value">值</param>
-            <returns>
-                <see cref="T:System.Boolean" />
-            </returns>
             <exception cref="T:System.NotSupportedException"></exception>
         </member>
         <member name="M:Shapeless.Clay.InsertRange(System.Int32,System.Object[])">
@@ -653,9 +644,6 @@
             </summary>
             <remarks>当 <see cref="P:Shapeless.Clay.IsArray" /> 为 <c>true</c> 时有效。</remarks>
             <param name="value">值</param>
-            <returns>
-                <see cref="T:System.Boolean" />
-            </returns>
             <exception cref="T:System.NotSupportedException"></exception>
         </member>
         <member name="M:Shapeless.Clay.AddRange(System.Object[])">
@@ -672,9 +660,6 @@
             </summary>
             <remarks>当 <see cref="P:Shapeless.Clay.IsArray" /> 为 <c>true</c> 时有效。</remarks>
             <param name="value">值</param>
-            <returns>
-                <see cref="T:System.Boolean" />
-            </returns>
             <exception cref="T:System.NotSupportedException"></exception>
         </member>
         <member name="M:Shapeless.Clay.Pop">
@@ -705,7 +690,7 @@
             <returns>
                 <see cref="T:Shapeless.Clay" />
             </returns>
-            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+            <exception cref="T:System.NotSupportedException"></exception>
         </member>
         <member name="M:Shapeless.Clay.Slice(System.Index,System.Index)">
             <summary>
@@ -716,7 +701,7 @@
             <returns>
                 <see cref="T:Shapeless.Clay" />
             </returns>
-            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+            <exception cref="T:System.NotSupportedException"></exception>
         </member>
         <member name="M:Shapeless.Clay.Combine(Shapeless.Clay[])">
             <summary>
@@ -749,6 +734,7 @@
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
+            <exception cref="T:System.NotSupportedException"></exception>
         </member>
         <member name="M:Shapeless.Clay.Delete(System.Object)">
             <summary>
@@ -769,6 +755,7 @@
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
+            <exception cref="T:System.NotSupportedException"></exception>
         </member>
         <member name="M:Shapeless.Clay.As(System.Type,System.Text.Json.JsonSerializerOptions)">
             <summary>
@@ -810,6 +797,7 @@
             <summary>
                 清空数据
             </summary>
+            <exception cref="T:System.InvalidOperationException"></exception>
         </member>
         <member name="M:Shapeless.Clay.WriteTo(System.Text.Json.Utf8JsonWriter,System.Text.Json.JsonSerializerOptions)">
             <summary>
@@ -898,6 +886,7 @@
             <returns>
                 <see cref="T:Shapeless.Clay" />
             </returns>
+            <exception cref="T:System.NotSupportedException"></exception>
         </member>
         <member name="M:Shapeless.Clay.KRSort(Shapeless.ClayOptions)">
             <summary>
@@ -909,6 +898,7 @@
             <returns>
                 <see cref="T:Shapeless.Clay" />
             </returns>
+            <exception cref="T:System.NotSupportedException"></exception>
         </member>
         <member name="T:Shapeless.Clay.Object">
             <summary>

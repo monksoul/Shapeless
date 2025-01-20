@@ -313,9 +313,14 @@ public class ClayOverrideTests
 
         Assert.Equal("[1,2]", clay2(..^1).ToJsonString());
 
+        // 更改选项
         Assert.Throws<KeyNotFoundException>(() => clay.Id);
         clay(new ClayOptions { PropertyNameCaseInsensitive = true });
         Assert.Equal(1, clay.Id);
+
+        // 更改选项（委托方式）
+        clay(new Action<ClayOptions>(options => options.PropertyNameCaseInsensitive = false));
+        Assert.Throws<KeyNotFoundException>(() => clay.Id);
 
         Assert.Throws<RuntimeBinderException>(() => clay(1, 2));
         Assert.Throws<RuntimeBinderException>(() => clay(Array.Empty<object>()));

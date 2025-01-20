@@ -87,6 +87,10 @@ public partial class Clay
                     case [ClayOptions clayOptions]:
                         result = Rebuilt(clayOptions);
                         return true;
+                    // 处理 clay(Action<ClayOptions>) 情况
+                    case [Action<ClayOptions> configure]:
+                        result = Rebuilt(Options.Configure(configure));
+                        return true;
                 }
 
                 break;

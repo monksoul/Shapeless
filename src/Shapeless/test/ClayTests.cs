@@ -409,7 +409,7 @@ public class ClayTests(ITestOutputHelper output)
             j++;
         };
 
-        Assert.True(clay.SetNodeInArray(3, "Furion"));
+        clay.SetNodeInArray(3, "Furion");
         Assert.Equal(4, i);
         Assert.Equal(4, j);
         Assert.Equal("[null,null,null,\"Furion\"]", clay.ToJsonString());

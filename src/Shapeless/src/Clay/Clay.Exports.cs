@@ -62,7 +62,7 @@ public partial class Clay
     /// <param name="range">
     ///     <see cref="Range" />
     /// </param>
-    public Clay? this[Range range] => this[range as object] as Clay;
+    public Clay this[Range range] => (Clay)this[range as object]!;
 
     /// <summary>
     ///     判断是否为单一对象
@@ -78,6 +78,11 @@ public partial class Clay
     ///     获取流变对象的基本类型
     /// </summary>
     public ClayType Type { get; }
+
+    /// <summary>
+    ///     判断是否为只读模式
+    /// </summary>
+    public bool IsReadOnly => Options.ReadOnly;
 
     /// <inheritdoc />
     public string ToString(string? format, IFormatProvider? formatProvider)
@@ -285,9 +290,10 @@ public partial class Clay
     ///     <see cref="Range" />
     /// </param>
     /// <returns>
-    ///     <see cref="object" />
+    ///     <see cref="Clay" />
     /// </returns>
-    public Clay? Get(Range range)
+    /// <exception cref="NotSupportedException"></exception>
+    public Clay Get(Range range)
     {
         // 检查是否是单一对象实例调用
         ThrowIfMethodCalledOnSingleObject($"{nameof(Get)}(Range)");
@@ -372,16 +378,13 @@ public partial class Clay
     /// <remarks>当 <see cref="IsArray" /> 为 <c>true</c> 时有效。</remarks>
     /// <param name="index">索引</param>
     /// <param name="value">值</param>
-    /// <returns>
-    ///     <see cref="bool" />
-    /// </returns>
     /// <exception cref="NotSupportedException"></exception>
-    public bool Insert(int index, object? value)
+    public void Insert(int index, object? value)
     {
         // 检查是否是单一对象实例调用
         ThrowIfMethodCalledOnSingleObject(nameof(Insert));
 
-        return SetValue(index, value, true);
+        SetValue(index, value, true);
     }
 
     /// <summary>
@@ -390,16 +393,13 @@ public partial class Clay
     /// <remarks>当 <see cref="IsArray" /> 为 <c>true</c> 时有效。</remarks>
     /// <param name="index">索引</param>
     /// <param name="value">值</param>
-    /// <returns>
-    ///     <see cref="bool" />
-    /// </returns>
     /// <exception cref="NotSupportedException"></exception>
-    public bool Insert(Index index, object? value)
+    public void Insert(Index index, object? value)
     {
         // 检查是否是单一对象实例调用
         ThrowIfMethodCalledOnSingleObject(nameof(Insert));
 
-        return Insert(index.IsFromEnd ? JsonCanvas.AsArray().Count - index.Value : index.Value, value);
+        Insert(index.IsFromEnd ? JsonCanvas.AsArray().Count - index.Value : index.Value, value);
     }
 
     /// <summary>
@@ -411,6 +411,9 @@ public partial class Clay
     /// <exception cref="NotSupportedException"></exception>
     public void InsertRange(int index, params object?[] values)
     {
+        // 空检查
+        ArgumentNullException.ThrowIfNull(values);
+
         // 检查是否是单一对象实例调用
         ThrowIfMethodCalledOnSingleObject(nameof(InsertRange));
 
@@ -433,6 +436,9 @@ public partial class Clay
     /// <exception cref="NotSupportedException"></exception>
     public void InsertRange(Index index, params object?[] values)
     {
+        // 空检查
+        ArgumentNullException.ThrowIfNull(values);
+
         // 检查是否是单一对象实例调用
         ThrowIfMethodCalledOnSingleObject(nameof(InsertRange));
 
@@ -444,16 +450,13 @@ public partial class Clay
     /// </summary>
     /// <remarks>当 <see cref="IsArray" /> 为 <c>true</c> 时有效。</remarks>
     /// <param name="value">值</param>
-    /// <returns>
-    ///     <see cref="bool" />
-    /// </returns>
     /// <exception cref="NotSupportedException"></exception>
-    public bool Add(object? value)
+    public void Add(object? value)
     {
         // 检查是否是单一对象实例调用
         ThrowIfMethodCalledOnSingleObject(nameof(Add));
 
-        return SetValue(JsonCanvas.AsArray().Count, value);
+        SetValue(JsonCanvas.AsArray().Count, value);
     }
 
     /// <summary>
@@ -485,16 +488,13 @@ public partial class Clay
     /// </summary>
     /// <remarks>当 <see cref="IsArray" /> 为 <c>true</c> 时有效。</remarks>
     /// <param name="value">值</param>
-    /// <returns>
-    ///     <see cref="bool" />
-    /// </returns>
     /// <exception cref="NotSupportedException"></exception>
-    public bool Push(object? value)
+    public void Push(object? value)
     {
         // 检查是否是单一对象实例调用
         ThrowIfMethodCalledOnSingleObject(nameof(Push));
 
-        return SetValue(JsonCanvas.AsArray().Count, value);
+        SetValue(JsonCanvas.AsArray().Count, value);
     }
 
     /// <summary>
@@ -534,8 +534,8 @@ public partial class Clay
     /// <returns>
     ///     <see cref="Clay" />
     /// </returns>
-    /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public Clay? Slice(Range range)
+    /// <exception cref="NotSupportedException"></exception>
+    public Clay Slice(Range range)
     {
         // 检查是否是单一对象实例调用
         ThrowIfMethodCalledOnSingleObject(nameof(Slice));
@@ -551,8 +551,8 @@ public partial class Clay
     /// <returns>
     ///     <see cref="Clay" />
     /// </returns>
-    /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public Clay? Slice(Index start, Index end)
+    /// <exception cref="NotSupportedException"></exception>
+    public Clay Slice(Index start, Index end)
     {
         // 检查是否是单一对象实例调用
         ThrowIfMethodCalledOnSingleObject(nameof(Slice));
@@ -624,6 +624,7 @@ public partial class Clay
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
+    /// <exception cref="NotSupportedException"></exception>
     public bool Remove(Index start, Index end)
     {
         // 检查是否是单一对象实例调用
@@ -650,6 +651,7 @@ public partial class Clay
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
+    /// <exception cref="NotSupportedException"></exception>
     public bool Delete(Index start, Index end)
     {
         // 检查是否是单一对象实例调用
@@ -719,6 +721,7 @@ public partial class Clay
     /// <summary>
     ///     清空数据
     /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
     public void Clear()
     {
         // 确保当前实例不在只读模式下
@@ -851,6 +854,7 @@ public partial class Clay
     /// <returns>
     ///     <see cref="Clay" />
     /// </returns>
+    /// <exception cref="NotSupportedException"></exception>
     public Clay KSort(ClayOptions? options = null)
     {
         // 检查是否是集合或数组实例调用
@@ -872,6 +876,7 @@ public partial class Clay
     /// <returns>
     ///     <see cref="Clay" />
     /// </returns>
+    /// <exception cref="NotSupportedException"></exception>
     // ReSharper disable once InconsistentNaming
     public Clay KRSort(ClayOptions? options = null)
     {
