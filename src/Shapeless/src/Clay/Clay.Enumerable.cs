@@ -10,27 +10,28 @@ namespace Shapeless;
 public partial class Clay
 {
     /// <summary>
-    ///     元素数量
+    ///     获取键或元素的数量
     /// </summary>
     public int Count => IsObject ? JsonCanvas.AsObject().Count : JsonCanvas.AsArray().Count;
 
     /// <summary>
-    ///     元素数量
+    ///     获取键或元素的数量
     /// </summary>
+    /// <remarks>同 <see cref="Count" />。在某些上下文中，<see cref="Length" /> 可能更常用于数组，<see cref="Count" /> 更常用于集合。</remarks>
     public int Length => Count;
 
     /// <summary>
-    ///     是否为空元素
+    ///     判断是否未定义键、为空集合或为空数组
     /// </summary>
     public bool IsEmpty => Count == 0;
 
     /// <summary>
-    ///     获取标识符集合
+    ///     获取键或索引的列表
     /// </summary>
     public IEnumerable<object> Keys => AsEnumerable().Select(u => u.Key);
 
     /// <summary>
-    ///     获取值集合
+    ///     获取值或元素的列表
     /// </summary>
     public IEnumerable<dynamic?> Values => AsEnumerable().Select(u => u.Value);
 
@@ -38,7 +39,7 @@ public partial class Clay
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     /// <summary>
-    ///     返回循环访问元素的枚举数
+    ///     获取循环访问元素的枚举数
     /// </summary>
     /// <returns>
     ///     <see cref="IEnumerator{T}" />
@@ -46,7 +47,7 @@ public partial class Clay
     public IEnumerator<KeyValuePair<object, dynamic?>> GetEnumerator() => AsEnumerable().GetEnumerator();
 
     /// <summary>
-    ///     返回类型化为 <see cref="IEnumerable{T}" /> 的输入
+    ///     获取单一对象或集合或数组的迭代器
     /// </summary>
     /// <returns>
     ///     <see cref="IEnumerable{T}" />
@@ -56,14 +57,14 @@ public partial class Clay
         : AsEnumerableArray().Select(u => new KeyValuePair<object, dynamic?>(u.Key, u.Value));
 
     /// <summary>
-    ///     枚举 <see cref="JsonCanvas" /> 作为对象时的键值对
+    ///     获取单一对象的迭代器
     /// </summary>
     /// <returns>
     ///     <see cref="IEnumerable{T}" />
     /// </returns>
     public IEnumerable<KeyValuePair<string, dynamic?>> AsEnumerableObject()
     {
-        // 检查是否是集合（数组）实例调用
+        // 检查是否是集合或数组实例调用
         ThrowIfMethodCalledOnArrayCollection(nameof(AsEnumerableObject));
 
         // 获取循环访问 JsonObject 的枚举数
@@ -80,7 +81,7 @@ public partial class Clay
     }
 
     /// <summary>
-    ///     枚举 <see cref="JsonCanvas" /> 作为数组时的元素
+    ///     获取集合或数组的迭代器
     /// </summary>
     /// <returns>
     ///     <see cref="IEnumerable{T}" />

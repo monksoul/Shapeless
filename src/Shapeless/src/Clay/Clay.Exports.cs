@@ -65,17 +65,17 @@ public partial class Clay
     public Clay? this[Range range] => this[range as object] as Clay;
 
     /// <summary>
-    ///     是否是单一对象
+    ///     判断是否为单一对象
     /// </summary>
     public bool IsObject { get; }
 
     /// <summary>
-    ///     是否是集合（数组）
+    ///     判断是否为集合或数组
     /// </summary>
     public bool IsArray { get; }
 
     /// <summary>
-    ///     <see cref="ClayType" />
+    ///     获取流变对象的基本类型
     /// </summary>
     public ClayType Type { get; }
 
@@ -145,7 +145,7 @@ public partial class Clay
     public static Clay EmptyObject(ClayOptions? options = null) => new(options);
 
     /// <summary>
-    ///     创建空的集合/数组
+    ///     创建空的集合或数组
     /// </summary>
     /// <param name="options">
     ///     <see cref="ClayOptions" />
@@ -577,7 +577,7 @@ public partial class Clay
             throw new InvalidOperationException("All Clay objects must be of the same type.");
         }
 
-        // 检查是否是集合（数组）
+        // 检查是否是集合或数组
         if (IsArray)
         {
             return Parse(Values.Concat(clays.SelectMany(u => u.Values)));
@@ -670,7 +670,7 @@ public partial class Clay
             return AsEnumerableObject();
         }
 
-        // 检查是否是 IEnumerable<KeyValuePair<int, object?>> 类型且是集合/数组
+        // 检查是否是 IEnumerable<KeyValuePair<int, object?>> 类型且是集合或数组
         if (resultType == typeof(IEnumerable<KeyValuePair<int, object?>>) && IsArray)
         {
             return AsEnumerableArray();
@@ -1056,7 +1056,7 @@ public partial class Clay
     /// </returns>
     public Clay KSort(ClayOptions? options = null)
     {
-        // 检查是否是集合（数组）实例调用
+        // 检查是否是集合或数组实例调用
         ThrowIfMethodCalledOnArrayCollection(nameof(KSort));
 
         // 初始化升序排序字典
@@ -1078,7 +1078,7 @@ public partial class Clay
     // ReSharper disable once InconsistentNaming
     public Clay KRSort(ClayOptions? options = null)
     {
-        // 检查是否是集合（数组）实例调用
+        // 检查是否是集合或数组实例调用
         ThrowIfMethodCalledOnArrayCollection(nameof(KRSort));
 
         // 初始化降序排序字典
@@ -1115,7 +1115,7 @@ public partial class Clay
     }
 
     /// <summary>
-    ///     集合/数组
+    ///     集合或数组
     /// </summary>
     public sealed class Array : Clay
     {

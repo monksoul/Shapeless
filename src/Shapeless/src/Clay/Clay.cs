@@ -785,13 +785,13 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     }
 
     /// <summary>
-    ///     如果当前实例是集合（数组）且尝试调用不支持的操作，则抛出异常
+    ///     如果当前实例是集合或数组且尝试调用不支持的操作，则抛出异常
     /// </summary>
     /// <param name="method">方法名</param>
     /// <exception cref="NotSupportedException"></exception>
     internal void ThrowIfMethodCalledOnArrayCollection(string method)
     {
-        // 检查是否是集合（数组）
+        // 检查是否是集合或数组
         if (IsArray)
         {
             throw new NotSupportedException(

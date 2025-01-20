@@ -7,7 +7,7 @@ namespace Shapeless;
 /// <summary>
 ///     流变对象的基本类型
 /// </summary>
-/// <remarks>用于区分是单一对象还是集合（数组）形式。</remarks>
+/// <remarks>用于区分是单一对象还是集合或数组形式。</remarks>
 public enum ClayType
 {
     /// <summary>
@@ -17,7 +17,7 @@ public enum ClayType
     Object = 0,
 
     /// <summary>
-    ///     集合（数组）形式
+    ///     集合或数组形式
     /// </summary>
     Array
 }

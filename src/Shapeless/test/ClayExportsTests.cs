@@ -1444,6 +1444,14 @@ public class ClayExportsTests(ITestOutputHelper output)
         dynamic clay = Clay.Parse("{\"id\":1,\"name\":\"furion\",\"Count\":30}");
         Assert.Equal(3, clay.Count);
         Assert.Equal(30, clay["Count"]);
+
+        dynamic clay2 = new Clay();
+        clay2.Count = 10;
+        clay2.IsObject = "True";
+        Assert.Equal(2, clay2.Count);
+        Assert.Equal(10, clay2["Count"]);
+        Assert.Equal(true, clay2.IsObject);
+        Assert.Equal("True", clay2["IsObject"]);
     }
 
     [Fact]

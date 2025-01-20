@@ -283,7 +283,7 @@
         </member>
         <member name="M:Shapeless.Clay.ThrowIfMethodCalledOnArrayCollection(System.String)">
             <summary>
-                如果当前实例是集合（数组）且尝试调用不支持的操作，则抛出异常
+                如果当前实例是集合或数组且尝试调用不支持的操作，则抛出异常
             </summary>
             <param name="method">方法名</param>
             <exception cref="T:System.NotSupportedException"></exception>
@@ -297,27 +297,28 @@
         </member>
         <member name="P:Shapeless.Clay.Count">
             <summary>
-                元素数量
+                获取键或元素的数量
             </summary>
         </member>
         <member name="P:Shapeless.Clay.Length">
             <summary>
-                元素数量
+                获取键或元素的数量
             </summary>
+            <remarks>同 <see cref="P:Shapeless.Clay.Count" />。在某些上下文中，<see cref="P:Shapeless.Clay.Length" /> 可能更常用于数组，<see cref="P:Shapeless.Clay.Count" /> 更常用于集合。</remarks>
         </member>
         <member name="P:Shapeless.Clay.IsEmpty">
             <summary>
-                是否为空元素
+                判断是否未定义键、为空集合或为空数组
             </summary>
         </member>
         <member name="P:Shapeless.Clay.Keys">
             <summary>
-                获取标识符集合
+                获取键或索引的列表
             </summary>
         </member>
         <member name="P:Shapeless.Clay.Values">
             <summary>
-                获取值集合
+                获取值或元素的列表
             </summary>
         </member>
         <member name="M:Shapeless.Clay.System#Collections#IEnumerable#GetEnumerator">
@@ -325,7 +326,7 @@
         </member>
         <member name="M:Shapeless.Clay.GetEnumerator">
             <summary>
-                返回循环访问元素的枚举数
+                获取循环访问元素的枚举数
             </summary>
             <returns>
                 <see cref="T:System.Collections.Generic.IEnumerator`1" />
@@ -333,7 +334,7 @@
         </member>
         <member name="M:Shapeless.Clay.AsEnumerable">
             <summary>
-                返回类型化为 <see cref="T:System.Collections.Generic.IEnumerable`1" /> 的输入
+                获取单一对象或集合或数组的迭代器
             </summary>
             <returns>
                 <see cref="T:System.Collections.Generic.IEnumerable`1" />
@@ -341,7 +342,7 @@
         </member>
         <member name="M:Shapeless.Clay.AsEnumerableObject">
             <summary>
-                枚举 <see cref="P:Shapeless.Clay.JsonCanvas" /> 作为对象时的键值对
+                获取单一对象的迭代器
             </summary>
             <returns>
                 <see cref="T:System.Collections.Generic.IEnumerable`1" />
@@ -349,7 +350,7 @@
         </member>
         <member name="M:Shapeless.Clay.AsEnumerableArray">
             <summary>
-                枚举 <see cref="P:Shapeless.Clay.JsonCanvas" /> 作为数组时的元素
+                获取集合或数组的迭代器
             </summary>
             <returns>
                 <see cref="T:System.Collections.Generic.IEnumerable`1" />
@@ -454,17 +455,17 @@
         </member>
         <member name="P:Shapeless.Clay.IsObject">
             <summary>
-                是否是单一对象
+                判断是否为单一对象
             </summary>
         </member>
         <member name="P:Shapeless.Clay.IsArray">
             <summary>
-                是否是集合（数组）
+                判断是否为集合或数组
             </summary>
         </member>
         <member name="P:Shapeless.Clay.Type">
             <summary>
-                <see cref="T:Shapeless.ClayType" />
+                获取流变对象的基本类型
             </summary>
         </member>
         <member name="M:Shapeless.Clay.ToString(System.String,System.IFormatProvider)">
@@ -483,7 +484,7 @@
         </member>
         <member name="M:Shapeless.Clay.EmptyArray(Shapeless.ClayOptions)">
             <summary>
-                创建空的集合/数组
+                创建空的集合或数组
             </summary>
             <param name="options">
                 <see cref="T:Shapeless.ClayOptions" />
@@ -1028,7 +1029,7 @@
         </member>
         <member name="T:Shapeless.Clay.Array">
             <summary>
-                集合/数组
+                集合或数组
             </summary>
         </member>
         <member name="M:Shapeless.Clay.Array.#ctor(Shapeless.ClayOptions)">
@@ -1089,7 +1090,7 @@
             <summary>
                 流变对象的基本类型
             </summary>
-            <remarks>用于区分是单一对象还是集合（数组）形式。</remarks>
+            <remarks>用于区分是单一对象还是集合或数组形式。</remarks>
         </member>
         <member name="F:Shapeless.ClayType.Object">
             <summary>
@@ -1099,7 +1100,7 @@
         </member>
         <member name="F:Shapeless.ClayType.Array">
             <summary>
-                集合（数组）形式
+                集合或数组形式
             </summary>
         </member>
         <member name="T:Shapeless.ClayJsonConverter">
