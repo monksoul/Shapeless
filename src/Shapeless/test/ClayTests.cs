@@ -760,31 +760,31 @@ public class ClayTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void TryConvertJsonArrayToDictionaryObject_ReturnOK()
+    public void TryConvertDictionaryJsonToJsonObject_ReturnOK()
     {
         var jsonNodeOptions = new JsonNodeOptions();
         var jsonDocumentOptions = new JsonDocumentOptions();
 
-        Assert.False(Clay.TryConvertJsonArrayToDictionaryObject(null, jsonNodeOptions, jsonDocumentOptions,
+        Assert.False(Clay.TryConvertDictionaryJsonToJsonObject(null, jsonNodeOptions, jsonDocumentOptions,
             out var jsonObject1));
         Assert.Null(jsonObject1);
 
-        Assert.False(Clay.TryConvertJsonArrayToDictionaryObject(JsonNode.Parse("{}"), jsonNodeOptions,
+        Assert.False(Clay.TryConvertDictionaryJsonToJsonObject(JsonNode.Parse("{}"), jsonNodeOptions,
             jsonDocumentOptions,
             out var jsonObject2));
         Assert.Null(jsonObject2);
 
-        Assert.False(Clay.TryConvertJsonArrayToDictionaryObject(JsonNode.Parse("[]"), jsonNodeOptions,
+        Assert.False(Clay.TryConvertDictionaryJsonToJsonObject(JsonNode.Parse("[]"), jsonNodeOptions,
             jsonDocumentOptions,
             out var jsonObject3));
         Assert.Null(jsonObject3);
 
-        Assert.False(Clay.TryConvertJsonArrayToDictionaryObject(JsonNode.Parse("[1,2]"), jsonNodeOptions,
+        Assert.False(Clay.TryConvertDictionaryJsonToJsonObject(JsonNode.Parse("[1,2]"), jsonNodeOptions,
             jsonDocumentOptions,
             out var jsonObject4));
         Assert.Null(jsonObject4);
 
-        Assert.False(Clay.TryConvertJsonArrayToDictionaryObject(JsonNode.Parse("""
+        Assert.False(Clay.TryConvertDictionaryJsonToJsonObject(JsonNode.Parse("""
                                                                                [
                                                                                  {
                                                                                    "key": "id",
@@ -800,7 +800,7 @@ public class ClayTests(ITestOutputHelper output)
             out var jsonObject5));
         Assert.Null(jsonObject5);
 
-        Assert.False(Clay.TryConvertJsonArrayToDictionaryObject(JsonNode.Parse("""
+        Assert.False(Clay.TryConvertDictionaryJsonToJsonObject(JsonNode.Parse("""
                                                                                [
                                                                                  {
                                                                                    "key": "id",
@@ -816,7 +816,7 @@ public class ClayTests(ITestOutputHelper output)
             out var jsonObject6));
         Assert.Null(jsonObject6);
 
-        Assert.False(Clay.TryConvertJsonArrayToDictionaryObject(JsonNode.Parse("""
+        Assert.False(Clay.TryConvertDictionaryJsonToJsonObject(JsonNode.Parse("""
                                                                                [
                                                                                  {
                                                                                    "key": "id",
@@ -833,7 +833,7 @@ public class ClayTests(ITestOutputHelper output)
             out var jsonObject7));
         Assert.Null(jsonObject7);
 
-        Assert.True(Clay.TryConvertJsonArrayToDictionaryObject(JsonNode.Parse("""
+        Assert.True(Clay.TryConvertDictionaryJsonToJsonObject(JsonNode.Parse("""
                                                                               [
                                                                                 {
                                                                                   "key": "id",
@@ -851,7 +851,7 @@ public class ClayTests(ITestOutputHelper output)
         Assert.True(jsonObject8.ContainsKey("id"));
         Assert.True(jsonObject8.ContainsKey("name"));
 
-        Assert.True(Clay.TryConvertJsonArrayToDictionaryObject(JsonNode.Parse("""
+        Assert.True(Clay.TryConvertDictionaryJsonToJsonObject(JsonNode.Parse("""
                                                                               [
                                                                                 {
                                                                                   "Key": "id",

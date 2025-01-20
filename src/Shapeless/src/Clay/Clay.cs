@@ -642,7 +642,7 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     }
 
     /// <summary>
-    ///     尝试将 <see cref="JsonNode" /> 中的键值对字典转换为 <see cref="JsonObject" />
+    ///     尝试将字典格式的 JSON 字符串转换为 <see cref="JsonObject" />
     /// </summary>
     /// <param name="jsonNode">
     ///     <see cref="JsonNode" />
@@ -659,7 +659,7 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    internal static bool TryConvertJsonArrayToDictionaryObject(JsonNode? jsonNode, JsonNodeOptions jsonNodeOptions,
+    internal static bool TryConvertDictionaryJsonToJsonObject(JsonNode? jsonNode, JsonNodeOptions jsonNodeOptions,
         JsonDocumentOptions jsonDocumentOptions, [NotNullWhen(true)] out JsonObject? jsonObject)
     {
         // 如果不是数组或者为空，则无法转换

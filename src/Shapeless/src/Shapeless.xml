@@ -231,9 +231,9 @@
                 <see cref="T:System.Tuple`2" />
             </returns>
         </member>
-        <member name="M:Shapeless.Clay.TryConvertJsonArrayToDictionaryObject(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNodeOptions,System.Text.Json.JsonDocumentOptions,System.Text.Json.Nodes.JsonObject@)">
+        <member name="M:Shapeless.Clay.TryConvertDictionaryJsonToJsonObject(System.Text.Json.Nodes.JsonNode,System.Text.Json.Nodes.JsonNodeOptions,System.Text.Json.JsonDocumentOptions,System.Text.Json.Nodes.JsonObject@)">
             <summary>
-                尝试将 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 中的键值对字典转换为 <see cref="T:System.Text.Json.Nodes.JsonObject" />
+                尝试将字典格式的 JSON 字符串转换为 <see cref="T:System.Text.Json.Nodes.JsonObject" />
             </summary>
             <param name="jsonNode">
                 <see cref="T:System.Text.Json.Nodes.JsonNode" />
@@ -503,7 +503,7 @@
             <param name="options">
                 <see cref="T:Shapeless.ClayOptions" />
             </param>
-            <param name="useObjectForDictionaryJson">是否自动将 JSON 字典格式字符串解析为单一对象。默认值为：<c>false</c>。</param>
+            <param name="useObjectForDictionaryJson">是否自动将字典格式的 JSON 字符串解析为单一对象。默认值为：<c>false</c>。</param>
             <returns>
                 <see cref="T:Shapeless.Clay" />
             </returns>
@@ -518,7 +518,7 @@
             <param name="options">
                 <see cref="T:Shapeless.ClayOptions" />
             </param>
-            <param name="useObjectForDictionaryJson">是否自动将 JSON 字典格式字符串解析为单一对象。默认值为：<c>false</c>。</param>
+            <param name="useObjectForDictionaryJson">是否自动将字典格式的 JSON 字符串解析为单一对象。默认值为：<c>false</c>。</param>
             <returns>
                 <see cref="T:Shapeless.Clay" />
             </returns>

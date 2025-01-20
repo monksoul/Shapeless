@@ -79,11 +79,6 @@ public partial class Clay
     /// </summary>
     public ClayType Type { get; }
 
-    // /// <summary>
-    // ///     反序列化时没有匹配的属性字典集合
-    // /// </summary>
-    // [JsonExtensionData]
-    // public Dictionary<object, object?> Extensions { get; set; } = new();
     /// <inheritdoc />
     public string ToString(string? format, IFormatProvider? formatProvider)
     {
@@ -164,7 +159,7 @@ public partial class Clay
     /// <param name="options">
     ///     <see cref="ClayOptions" />
     /// </param>
-    /// <param name="useObjectForDictionaryJson">是否自动将 JSON 字典格式字符串解析为单一对象。默认值为：<c>false</c>。</param>
+    /// <param name="useObjectForDictionaryJson">是否自动将字典格式的 JSON 字符串解析为单一对象。默认值为：<c>false</c>。</param>
     /// <returns>
     ///     <see cref="Clay" />
     /// </returns>
@@ -188,9 +183,9 @@ public partial class Clay
             _ => SerializeToNode(obj, clayOptions)
         };
 
-        // 处理是否将 JSON 字典格式字符串解析为单一对象
+        // 处理是否将字典格式的 JSON 字符串解析为单一对象
         if (useObjectForDictionaryJson &&
-            TryConvertJsonArrayToDictionaryObject(jsonNode, jsonNodeOptions, jsonDocumentOptions,
+            TryConvertDictionaryJsonToJsonObject(jsonNode, jsonNodeOptions, jsonDocumentOptions,
                 out var jsonObject))
         {
             jsonNode = jsonObject;
@@ -208,7 +203,7 @@ public partial class Clay
     /// <param name="options">
     ///     <see cref="ClayOptions" />
     /// </param>
-    /// <param name="useObjectForDictionaryJson">是否自动将 JSON 字典格式字符串解析为单一对象。默认值为：<c>false</c>。</param>
+    /// <param name="useObjectForDictionaryJson">是否自动将字典格式的 JSON 字符串解析为单一对象。默认值为：<c>false</c>。</param>
     /// <returns>
     ///     <see cref="Clay" />
     /// </returns>
