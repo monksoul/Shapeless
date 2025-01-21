@@ -4,7 +4,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
     options.JsonSerializerOptions.Converters.Add(new ClayJsonConverter());
-}).AddClayOptions(options => { options.KeyValueJsonToObject = true; });
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

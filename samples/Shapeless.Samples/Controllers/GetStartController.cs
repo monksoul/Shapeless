@@ -214,7 +214,7 @@ public class GetStartController
         // 输出字符串
         Console.WriteLine(wrapper);
 
-        // 从 JSON 字典格式字符串创建
+        // 从键值对格式的 JSON 字符串创建
         dynamic dicObject = Clay.Parse("""
                                        [
                                          {
@@ -226,7 +226,7 @@ public class GetStartController
                                            "value": "Furion"
                                          }
                                        ]
-                                       """, useObjectForDictionaryJson: true);
+                                       """, new ClayOptions { KeyValueJsonToObject = true });
 
         // 访问值
         var id0 = dicObject.id; // 1
@@ -323,36 +323,23 @@ public class GetStartController
 
         // 遍历键值（object 类型键）
         foreach (KeyValuePair<object, dynamic?> item in clay) // 或使用 clay.AsEnumerable()
-        {
             Console.WriteLine($"Key: {item.Key} Value: {item.Value}");
-        }
 
         // 遍历键值（string 类型键）
         foreach (KeyValuePair<string, dynamic?> item in clay.AsEnumerableObject())
-        {
             Console.WriteLine($"Key: {item.Key} Value: {item.Value}");
-        }
 
         // 遍历键
-        foreach (var key in clay.Keys)
-        {
-            Console.WriteLine($"Key: {key}");
-        }
+        foreach (var key in clay.Keys) Console.WriteLine($"Key: {key}");
 
         // 遍历值
-        foreach (var value in clay.Values)
-        {
-            Console.WriteLine($"Value: {value}");
-        }
+        foreach (var value in clay.Values) Console.WriteLine($"Value: {value}");
 
         // 使用枚举器方式遍历
         using IEnumerator<KeyValuePair<object, dynamic?>> objectEnumerator = clay.GetEnumerator();
 
         var listObject = new List<KeyValuePair<object, dynamic?>>();
-        while (objectEnumerator.MoveNext())
-        {
-            listObject.Add(objectEnumerator.Current);
-        }
+        while (objectEnumerator.MoveNext()) listObject.Add(objectEnumerator.Current);
 
         Debug.Assert(listObject.Count == 2);
 
@@ -366,10 +353,7 @@ public class GetStartController
         }));
 
         // 享受友好的代码智能完成编程体验
-        foreach (var (key, value) in (Clay)clay)
-        {
-            Console.WriteLine($"Key: {key} Value: {value}");
-        }
+        foreach (var (key, value) in (Clay)clay) Console.WriteLine($"Key: {key} Value: {value}");
 
         // ===================== 集合或数组 =====================
 
@@ -377,36 +361,23 @@ public class GetStartController
 
         // 遍历项（object 类型索引）
         foreach (KeyValuePair<object, dynamic?> item in array) // 或使用 clay.AsEnumerable()
-        {
             Console.WriteLine($"Index: {item.Key} Value: {item.Value}");
-        }
 
         // 遍历项（int 类型索引）
         foreach (KeyValuePair<int, dynamic?> item in array.AsEnumerableArray())
-        {
             Console.WriteLine($"Index: {item.Key} Value: {item.Value}");
-        }
 
         // 遍历索引
-        foreach (var index in array.Keys)
-        {
-            Console.WriteLine($"Index: {index}");
-        }
+        foreach (var index in array.Keys) Console.WriteLine($"Index: {index}");
 
         // 遍历值
-        foreach (var value in array.Values)
-        {
-            Console.WriteLine($"Value: {value}");
-        }
+        foreach (var value in array.Values) Console.WriteLine($"Value: {value}");
 
         // 使用枚举器方式遍历
         using IEnumerator<KeyValuePair<object, dynamic?>> arrayEnumerator = array.GetEnumerator();
 
         var listArray = new List<KeyValuePair<object, dynamic?>>();
-        while (arrayEnumerator.MoveNext())
-        {
-            listArray.Add(objectEnumerator.Current);
-        }
+        while (arrayEnumerator.MoveNext()) listArray.Add(objectEnumerator.Current);
 
         Debug.Assert(listArray.Count == 7);
 
@@ -420,10 +391,7 @@ public class GetStartController
         }));
 
         // 享受友好的代码智能完成编程体验
-        foreach (var (index, value) in (Clay)array)
-        {
-            Console.WriteLine($"Index: {index} Value: {value}");
-        }
+        foreach (var (index, value) in (Clay)array) Console.WriteLine($"Index: {index} Value: {value}");
     }
 
     /// <summary>
@@ -625,7 +593,7 @@ public class GetStartController
         dynamic clay2 = Clay.Parse("""{"id":1,"name":"shapeless","date":"2025-01-14T00:00:00","isTrue":true}""",
             new ClayOptions
             {
-                AutoConvertToDateTime = true
+                DateJsonToDateTime = true
             });
 
         // 直接访问 date 属性，它已被自动转换为 DateTime 类型
@@ -878,6 +846,17 @@ public class GetStartController
         // 调用 sayHello3 方法，无需传入首个 ClayContext 实例
         Console.WriteLine(clay.sayHello3("新年快乐"));
 
+        return clay;
+    }
+
+    /// <summary>
+    ///     接收流变对象作为参数
+    /// </summary>
+    /// <param name="clay"></param>
+    /// <returns></returns>
+    [HttpPost]
+    public Clay PostClay(Clay clay)
+    {
         return clay;
     }
 }

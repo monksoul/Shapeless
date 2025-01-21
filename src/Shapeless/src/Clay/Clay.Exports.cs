@@ -164,11 +164,10 @@ public partial class Clay
     /// <param name="options">
     ///     <see cref="ClayOptions" />
     /// </param>
-    /// <param name="useObjectForDictionaryJson">是否自动将字典格式的 JSON 字符串解析为单一对象。默认值为：<c>false</c>。</param>
     /// <returns>
     ///     <see cref="Clay" />
     /// </returns>
-    public static Clay Parse(object? obj, ClayOptions? options = null, bool useObjectForDictionaryJson = false)
+    public static Clay Parse(object? obj, ClayOptions? options = null)
     {
         // 空检查
         ArgumentNullException.ThrowIfNull(obj);
@@ -188,10 +187,9 @@ public partial class Clay
             _ => SerializeToNode(obj, clayOptions)
         };
 
-        // 处理是否将字典格式的 JSON 字符串解析为单一对象
-        if (useObjectForDictionaryJson &&
-            TryConvertDictionaryJsonToJsonObject(jsonNode, jsonNodeOptions, jsonDocumentOptions,
-                out var jsonObject))
+        // 处理是否将键值对格式的 JSON 字符串解析为单一对象
+        if (clayOptions.KeyValueJsonToObject &&
+            TryConvertKeyValueJsonToObject(jsonNode, jsonNodeOptions, jsonDocumentOptions, out var jsonObject))
         {
             jsonNode = jsonObject;
         }
@@ -208,13 +206,11 @@ public partial class Clay
     /// <param name="options">
     ///     <see cref="ClayOptions" />
     /// </param>
-    /// <param name="useObjectForDictionaryJson">是否自动将字典格式的 JSON 字符串解析为单一对象。默认值为：<c>false</c>。</param>
     /// <returns>
     ///     <see cref="Clay" />
     /// </returns>
-    public static Clay Parse(ref Utf8JsonReader utf8JsonReader, ClayOptions? options = null,
-        bool useObjectForDictionaryJson = false) =>
-        Parse(utf8JsonReader.GetRawText(), options, useObjectForDictionaryJson);
+    public static Clay Parse(ref Utf8JsonReader utf8JsonReader, ClayOptions? options = null) =>
+        Parse(utf8JsonReader.GetRawText(), options);
 
     /// <summary>
     ///     检查标识符是否定义
@@ -455,6 +451,20 @@ public partial class Clay
     {
         // 检查是否是单一对象实例调用
         ThrowIfMethodCalledOnSingleObject(nameof(Add));
+
+        SetValue(JsonCanvas.AsArray().Count, value);
+    }
+
+    /// <summary>
+    ///     在末尾处追加项
+    /// </summary>
+    /// <remarks>当 <see cref="IsArray" /> 为 <c>true</c> 时有效。</remarks>
+    /// <param name="value">值</param>
+    /// <exception cref="NotSupportedException"></exception>
+    public void Append(object? value)
+    {
+        // 检查是否是单一对象实例调用
+        ThrowIfMethodCalledOnSingleObject(nameof(Append));
 
         SetValue(JsonCanvas.AsArray().Count, value);
     }
@@ -716,7 +726,7 @@ public partial class Clay
     /// <returns>
     ///     <see cref="Clay" />
     /// </returns>
-    public Clay DeepClone(ClayOptions? options = null) => new Clay(JsonCanvas.DeepClone()).Rebuilt(options);
+    public Clay DeepClone(ClayOptions? options = null) => Parse(JsonCanvas.ToJsonString(), options);
 
     /// <summary>
     ///     清空数据

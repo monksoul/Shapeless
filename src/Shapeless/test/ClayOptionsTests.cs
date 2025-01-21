@@ -35,9 +35,10 @@ public class ClayOptionsTests
         Assert.False(clayOptions.AutoCreateNestedArrays);
         Assert.False(clayOptions.AutoExpandArrayWithNulls);
         Assert.False(clayOptions.ValidateAfterConversion);
-        Assert.False(clayOptions.AutoConvertToDateTime);
+        Assert.False(clayOptions.DateJsonToDateTime);
         Assert.False(clayOptions.PropertyNameCaseInsensitive);
         Assert.False(clayOptions.ReadOnly);
+        Assert.False(clayOptions.KeyValueJsonToObject);
 
         Assert.NotNull(clayOptions.JsonSerializerOptions);
         Assert.True(clayOptions.JsonSerializerOptions.PropertyNameCaseInsensitive);

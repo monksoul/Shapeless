@@ -214,23 +214,23 @@ public class ClayExportsTests(ITestOutputHelper output)
         var clay8 = Clay.Parse(dictionary);
         Assert.Equal("{\r\n  \"name\": \"Furion\",\r\n  \"id\": 1\r\n}", clay8.ToString());
 
-        const string dictionaryJson = """
-                                      [
-                                        {
-                                          "key": "id",
-                                          "value": 1
-                                        },
-                                        {
-                                          "key": "name",
-                                          "value": "Furion"
-                                        }
-                                      ]
-                                      """;
-        var clay9 = Clay.Parse(dictionaryJson);
+        const string keyValueJson = """
+                                    [
+                                      {
+                                        "key": "id",
+                                        "value": 1
+                                      },
+                                      {
+                                        "key": "name",
+                                        "value": "Furion"
+                                      }
+                                    ]
+                                    """;
+        var clay9 = Clay.Parse(keyValueJson);
         Assert.Equal("[{\"key\":\"id\",\"value\":1},{\"key\":\"name\",\"value\":\"Furion\"}]",
             clay9.ToJsonString());
 
-        var clay10 = Clay.Parse(dictionaryJson, useObjectForDictionaryJson: true);
+        var clay10 = Clay.Parse(keyValueJson, new ClayOptions { KeyValueJsonToObject = true });
         Assert.Equal("{\"id\":1,\"name\":\"Furion\"}", clay10.ToJsonString());
 
         var clay11 = Clay.Parse(new { Id = 1, Name = "Furion" });
@@ -1071,6 +1071,28 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.Equal("[1,2,3,0,4]", clay.ToJsonString());
 
         clay.Add("Furion");
+        Assert.Equal("[1,2,3,0,4,\"Furion\"]", clay.ToJsonString());
+    }
+
+    [Fact]
+    public void Append_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        var exception = Assert.Throws<NotSupportedException>(() => clay.Append("furion"));
+        Assert.Equal("`Append` method can only be used for array or collection operations.", exception.Message);
+    }
+
+    [Fact]
+    public void Append_ReturnOK()
+    {
+        var clay = Clay.Parse("[1,2,3]");
+        clay.Append(0);
+        Assert.Equal("[1,2,3,0]", clay.ToJsonString());
+
+        clay.Append(4);
+        Assert.Equal("[1,2,3,0,4]", clay.ToJsonString());
+
+        clay.Append("Furion");
         Assert.Equal("[1,2,3,0,4,\"Furion\"]", clay.ToJsonString());
     }
 

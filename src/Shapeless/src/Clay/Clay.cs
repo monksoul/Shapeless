@@ -535,7 +535,7 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     internal static object? DeserializeNode(JsonNode? jsonNode, ClayOptions? options = null) =>
         jsonNode?.GetValueKind() switch
         {
-            JsonValueKind.String when options?.AutoConvertToDateTime == true &&
+            JsonValueKind.String when options?.DateJsonToDateTime == true &&
                                       DateTime.TryParse(jsonNode.GetValue<string>(), out var dateTime) => dateTime,
             JsonValueKind.String => jsonNode.GetValue<string>(),
             JsonValueKind.Number => jsonNode.GetNumericValue(),
@@ -561,7 +561,17 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
 
         // 创建 JsonNode 选项
         var (jsonNodeOptions, jsonDocumentOptions) = CreateJsonNodeOptions(clayOptions);
-        JsonCanvas = JsonNode.Parse(JsonCanvas.ToJsonString(), jsonNodeOptions, jsonDocumentOptions)!;
+
+        // 处理是否将键值对格式的 JSON 字符串解析为单一对象
+        if (clayOptions.KeyValueJsonToObject &&
+            TryConvertKeyValueJsonToObject(JsonCanvas, jsonNodeOptions, jsonDocumentOptions, out var jsonObject))
+        {
+            JsonCanvas = jsonObject;
+        }
+        else
+        {
+            JsonCanvas = JsonNode.Parse(JsonCanvas.ToJsonString(), jsonNodeOptions, jsonDocumentOptions)!;
+        }
 
         Options = clayOptions;
 
@@ -629,7 +639,7 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     }
 
     /// <summary>
-    ///     尝试将字典格式的 JSON 字符串转换为 <see cref="JsonObject" />
+    ///     尝试将键值对格式的 JSON 字符串转换为 <see cref="JsonObject" />
     /// </summary>
     /// <param name="jsonNode">
     ///     <see cref="JsonNode" />
@@ -646,7 +656,7 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    internal static bool TryConvertDictionaryJsonToJsonObject(JsonNode? jsonNode, JsonNodeOptions jsonNodeOptions,
+    internal static bool TryConvertKeyValueJsonToObject(JsonNode? jsonNode, JsonNodeOptions jsonNodeOptions,
         JsonDocumentOptions jsonDocumentOptions, [NotNullWhen(true)] out JsonObject? jsonObject)
     {
         // 如果不是数组或者为空，则无法转换

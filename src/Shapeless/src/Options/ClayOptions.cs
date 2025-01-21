@@ -65,10 +65,15 @@ public sealed class ClayOptions
     public bool ValidateAfterConversion { get; set; }
 
     /// <summary>
-    ///     控制是否尝试将字符串转换为时间格式
+    ///     控制是否将日期格式的 JSON 转换为 <see cref="DateTime" />
     /// </summary>
     /// <remarks>默认值为：<c>false</c>。</remarks>
-    public bool AutoConvertToDateTime { get; set; }
+    public bool DateJsonToDateTime { get; set; }
+
+    /// <summary>
+    ///     控制是否将键值对格式的 JSON 转换为单一对象
+    /// </summary>
+    public bool KeyValueJsonToObject { get; set; }
 
     /// <summary>
     ///     是否属性名称不区分大小写

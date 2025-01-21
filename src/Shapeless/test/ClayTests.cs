@@ -170,6 +170,24 @@ public class ClayTests(ITestOutputHelper output)
         _ = ((Clay)clay).Rebuilt(clayOptions);
         Assert.Equal("Furion", clay.name);
         Assert.Equal(clayOptions, clay.Options);
+
+        const string keyValueJson = """
+                                    [
+                                      {
+                                        "key": "id",
+                                        "value": 1
+                                      },
+                                      {
+                                        "key": "name",
+                                        "value": "Furion"
+                                      }
+                                    ]
+                                    """;
+        var clay2 = Clay.Parse(keyValueJson);
+        Assert.Equal("[{\"key\":\"id\",\"value\":1},{\"key\":\"name\",\"value\":\"Furion\"}]",
+            clay2.ToJsonString());
+        clay2.Rebuilt(clayOptions.Configure(u => u.KeyValueJsonToObject = true));
+        Assert.Equal("{\"id\":1,\"name\":\"Furion\"}", clay2.ToJsonString());
     }
 
     [Fact]
@@ -257,7 +275,7 @@ public class ClayTests(ITestOutputHelper output)
         Assert.True(obj3 is string);
 
         var obj4 = Clay.DeserializeNode(JsonNode.Parse("\"2024/12/29 3:34:30\""),
-            new ClayOptions { AutoConvertToDateTime = true });
+            new ClayOptions { DateJsonToDateTime = true });
         Assert.True(obj4 is DateTime);
     }
 
@@ -760,109 +778,109 @@ public class ClayTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void TryConvertDictionaryJsonToJsonObject_ReturnOK()
+    public void TryConvertKeyValueJsonToObject_ReturnOK()
     {
         var jsonNodeOptions = new JsonNodeOptions();
         var jsonDocumentOptions = new JsonDocumentOptions();
 
-        Assert.False(Clay.TryConvertDictionaryJsonToJsonObject(null, jsonNodeOptions, jsonDocumentOptions,
+        Assert.False(Clay.TryConvertKeyValueJsonToObject(null, jsonNodeOptions, jsonDocumentOptions,
             out var jsonObject1));
         Assert.Null(jsonObject1);
 
-        Assert.False(Clay.TryConvertDictionaryJsonToJsonObject(JsonNode.Parse("{}"), jsonNodeOptions,
+        Assert.False(Clay.TryConvertKeyValueJsonToObject(JsonNode.Parse("{}"), jsonNodeOptions,
             jsonDocumentOptions,
             out var jsonObject2));
         Assert.Null(jsonObject2);
 
-        Assert.False(Clay.TryConvertDictionaryJsonToJsonObject(JsonNode.Parse("[]"), jsonNodeOptions,
+        Assert.False(Clay.TryConvertKeyValueJsonToObject(JsonNode.Parse("[]"), jsonNodeOptions,
             jsonDocumentOptions,
             out var jsonObject3));
         Assert.Null(jsonObject3);
 
-        Assert.False(Clay.TryConvertDictionaryJsonToJsonObject(JsonNode.Parse("[1,2]"), jsonNodeOptions,
+        Assert.False(Clay.TryConvertKeyValueJsonToObject(JsonNode.Parse("[1,2]"), jsonNodeOptions,
             jsonDocumentOptions,
             out var jsonObject4));
         Assert.Null(jsonObject4);
 
-        Assert.False(Clay.TryConvertDictionaryJsonToJsonObject(JsonNode.Parse("""
-                                                                              [
-                                                                                {
-                                                                                  "key": "id",
-                                                                                  "value": 1
-                                                                                },
-                                                                                {
-                                                                                  "key1": "name",
-                                                                                  "value": "Furion"
-                                                                                }
-                                                                              ]
-                                                                              """), jsonNodeOptions,
+        Assert.False(Clay.TryConvertKeyValueJsonToObject(JsonNode.Parse("""
+                                                                        [
+                                                                          {
+                                                                            "key": "id",
+                                                                            "value": 1
+                                                                          },
+                                                                          {
+                                                                            "key1": "name",
+                                                                            "value": "Furion"
+                                                                          }
+                                                                        ]
+                                                                        """), jsonNodeOptions,
             jsonDocumentOptions,
             out var jsonObject5));
         Assert.Null(jsonObject5);
 
-        Assert.False(Clay.TryConvertDictionaryJsonToJsonObject(JsonNode.Parse("""
-                                                                              [
-                                                                                {
-                                                                                  "key": "id",
-                                                                                  "value": 1
-                                                                                },
-                                                                                {
-                                                                                  "key": "name",
-                                                                                  "value1": "Furion"
-                                                                                }
-                                                                              ]
-                                                                              """), jsonNodeOptions,
+        Assert.False(Clay.TryConvertKeyValueJsonToObject(JsonNode.Parse("""
+                                                                        [
+                                                                          {
+                                                                            "key": "id",
+                                                                            "value": 1
+                                                                          },
+                                                                          {
+                                                                            "key": "name",
+                                                                            "value1": "Furion"
+                                                                          }
+                                                                        ]
+                                                                        """), jsonNodeOptions,
             jsonDocumentOptions,
             out var jsonObject6));
         Assert.Null(jsonObject6);
 
-        Assert.False(Clay.TryConvertDictionaryJsonToJsonObject(JsonNode.Parse("""
-                                                                              [
-                                                                                {
-                                                                                  "key": "id",
-                                                                                  "value": 1,
-                                                                                  "age": 30
-                                                                                },
-                                                                                {
-                                                                                  "key": "name",
-                                                                                  "value": "Furion"
-                                                                                }
-                                                                              ]
-                                                                              """), jsonNodeOptions,
+        Assert.False(Clay.TryConvertKeyValueJsonToObject(JsonNode.Parse("""
+                                                                        [
+                                                                          {
+                                                                            "key": "id",
+                                                                            "value": 1,
+                                                                            "age": 30
+                                                                          },
+                                                                          {
+                                                                            "key": "name",
+                                                                            "value": "Furion"
+                                                                          }
+                                                                        ]
+                                                                        """), jsonNodeOptions,
             jsonDocumentOptions,
             out var jsonObject7));
         Assert.Null(jsonObject7);
 
-        Assert.True(Clay.TryConvertDictionaryJsonToJsonObject(JsonNode.Parse("""
-                                                                             [
-                                                                               {
-                                                                                 "key": "id",
-                                                                                 "value": 1
-                                                                               },
-                                                                               {
-                                                                                 "key": "name",
-                                                                                 "value": "Furion"
-                                                                               }
-                                                                             ]
-                                                                             """), jsonNodeOptions,
+        Assert.True(Clay.TryConvertKeyValueJsonToObject(JsonNode.Parse("""
+                                                                       [
+                                                                         {
+                                                                           "key": "id",
+                                                                           "value": 1
+                                                                         },
+                                                                         {
+                                                                           "key": "name",
+                                                                           "value": "Furion"
+                                                                         }
+                                                                       ]
+                                                                       """), jsonNodeOptions,
             jsonDocumentOptions,
             out var jsonObject8));
         Assert.NotNull(jsonObject8);
         Assert.True(jsonObject8.ContainsKey("id"));
         Assert.True(jsonObject8.ContainsKey("name"));
 
-        Assert.True(Clay.TryConvertDictionaryJsonToJsonObject(JsonNode.Parse("""
-                                                                             [
-                                                                               {
-                                                                                 "Key": "id",
-                                                                                 "Value": 1
-                                                                               },
-                                                                               {
-                                                                                 "key": "name",
-                                                                                 "value": "Furion"
-                                                                               }
-                                                                             ]
-                                                                             """), jsonNodeOptions,
+        Assert.True(Clay.TryConvertKeyValueJsonToObject(JsonNode.Parse("""
+                                                                       [
+                                                                         {
+                                                                           "Key": "id",
+                                                                           "Value": 1
+                                                                         },
+                                                                         {
+                                                                           "key": "name",
+                                                                           "value": "Furion"
+                                                                         }
+                                                                       ]
+                                                                       """), jsonNodeOptions,
             jsonDocumentOptions,
             out var jsonObject9));
         Assert.NotNull(jsonObject9);
