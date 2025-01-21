@@ -859,4 +859,17 @@ public class GetStartController
     {
         return clay;
     }
+
+    /// <summary>
+    ///     流变对象作为属性时应用全局配置
+    /// </summary>
+    /// <param name="options"></param>
+    /// <param name="model"></param>
+    /// <returns></returns>
+    [HttpPost]
+    public ClayModel2 PostClay2([FromServices] IOptions<ClayOptions> options, ClayModel2 model)
+    {
+        model.Clay?.Rebuilt(options.Value);
+        return model;
+    }
 }

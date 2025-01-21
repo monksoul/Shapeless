@@ -1,4 +1,6 @@
 ﻿<Solution>
+    <Project Path="..\samples\Shapeless.AspNetCore.Mvc.Samples\Shapeless.AspNetCore.Mvc.Samples.csproj"
+             Type="Classic C#"/>
     <Project Path="..\samples\Shapeless.AspNetCore.Samples\Shapeless.AspNetCore.Samples.csproj" Type="Classic C#"/>
     <Project Path="..\samples\Shapeless.Samples\Shapeless.Samples.csproj" Type="Classic C#"/>
     <Project Path="Shapeless.AspNetCore\src\Shapeless.AspNetCore.csproj" Type="Classic C#"/>

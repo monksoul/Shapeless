@@ -13,3 +13,9 @@ public class ClayModel
     public DateTime? Date { get; set; }
     public bool IsTrue { get; set; }
 }
+
+public class ClayModel2
+{
+    public int Id { get; set; }
+    public Clay? Clay { get; set; }
+}

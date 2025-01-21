@@ -1381,4 +1381,37 @@ public class ClayExportsTests(ITestOutputHelper output)
         var kRSortClay2 = clay2.KRSort();
         Assert.Equal("{\"name\":\"furion\",\"id\":1}", kRSortClay2.ToJsonString());
     }
+
+    [Fact]
+    public void Rebuilt_ReturnOK()
+    {
+        dynamic clay = new Clay();
+        clay.Name = "Furion";
+        Assert.Equal("Furion", clay.Name);
+        Assert.Throws<KeyNotFoundException>(() => clay.name);
+        _ = ((Clay)clay).Rebuilt();
+
+        var clayOptions = new ClayOptions { PropertyNameCaseInsensitive = true };
+        _ = ((Clay)clay).Rebuilt(clayOptions);
+        Assert.Equal("Furion", clay.name);
+        Assert.Equal(clayOptions, clay.Options);
+
+        const string keyValueJson = """
+                                    [
+                                      {
+                                        "key": "id",
+                                        "value": 1
+                                      },
+                                      {
+                                        "key": "name",
+                                        "value": "Furion"
+                                      }
+                                    ]
+                                    """;
+        var clay2 = Clay.Parse(keyValueJson);
+        Assert.Equal("[{\"key\":\"id\",\"value\":1},{\"key\":\"name\",\"value\":\"Furion\"}]",
+            clay2.ToJsonString());
+        clay2.Rebuilt(clayOptions.Configure(u => u.KeyValueJsonToObject = true));
+        Assert.Equal("{\"id\":1,\"name\":\"Furion\"}", clay2.ToJsonString());
+    }
 }

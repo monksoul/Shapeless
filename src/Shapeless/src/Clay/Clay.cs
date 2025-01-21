@@ -546,39 +546,6 @@ public partial class Clay : DynamicObject, IEnumerable<KeyValuePair<object, obje
         };
 
     /// <summary>
-    ///     重建 <see cref="Clay" /> 实例
-    /// </summary>
-    /// <param name="options">
-    ///     <see cref="ClayOptions" />
-    /// </param>
-    /// <returns>
-    ///     <see cref="Clay" />
-    /// </returns>
-    internal Clay Rebuilt(ClayOptions? options = null)
-    {
-        // 初始化 ClayOptions 实例
-        var clayOptions = options ?? ClayOptions.Default;
-
-        // 创建 JsonNode 选项
-        var (jsonNodeOptions, jsonDocumentOptions) = CreateJsonNodeOptions(clayOptions);
-
-        // 处理是否将键值对格式的 JSON 字符串解析为单一对象
-        if (clayOptions.KeyValueJsonToObject &&
-            TryConvertKeyValueJsonToObject(JsonCanvas, jsonNodeOptions, jsonDocumentOptions, out var jsonObject))
-        {
-            JsonCanvas = jsonObject;
-        }
-        else
-        {
-            JsonCanvas = JsonNode.Parse(JsonCanvas.ToJsonString(), jsonNodeOptions, jsonDocumentOptions)!;
-        }
-
-        Options = clayOptions;
-
-        return this;
-    }
-
-    /// <summary>
     ///     处理嵌套带空传播字符 <c>?</c> 的标识符
     /// </summary>
     /// <param name="identifier">标识符</param>
