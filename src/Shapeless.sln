@@ -9,6 +9,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shapeless.Tests", "Shapeles
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shapeless.Samples", "..\samples\Shapeless.Samples\Shapeless.Samples.csproj", "{AC98CC7E-40D1-4E99-B39C-A96B49F27343}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shapeless.AspNetCore", "Shapeless.AspNetCore\src\Shapeless.AspNetCore.csproj", "{500178AC-432C-44D5-8095-53748600F916}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shapeless.AspNetCore.Tests", "Shapeless.AspNetCore\test\Shapeless.AspNetCore.Tests.csproj", "{ADBABE9F-8035-4151-B9A6-4FFCE16C5AC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shapeless.AspNetCore.Samples", "..\samples\Shapeless.AspNetCore.Samples\Shapeless.AspNetCore.Samples.csproj", "{2E3C7A99-4A2D-40F0-94C9-16B0F43E285C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +33,18 @@ Global
 		{AC98CC7E-40D1-4E99-B39C-A96B49F27343}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC98CC7E-40D1-4E99-B39C-A96B49F27343}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC98CC7E-40D1-4E99-B39C-A96B49F27343}.Release|Any CPU.Build.0 = Release|Any CPU
+		{500178AC-432C-44D5-8095-53748600F916}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{500178AC-432C-44D5-8095-53748600F916}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{500178AC-432C-44D5-8095-53748600F916}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{500178AC-432C-44D5-8095-53748600F916}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADBABE9F-8035-4151-B9A6-4FFCE16C5AC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADBABE9F-8035-4151-B9A6-4FFCE16C5AC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADBABE9F-8035-4151-B9A6-4FFCE16C5AC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADBABE9F-8035-4151-B9A6-4FFCE16C5AC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E3C7A99-4A2D-40F0-94C9-16B0F43E285C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E3C7A99-4A2D-40F0-94C9-16B0F43E285C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E3C7A99-4A2D-40F0-94C9-16B0F43E285C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E3C7A99-4A2D-40F0-94C9-16B0F43E285C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

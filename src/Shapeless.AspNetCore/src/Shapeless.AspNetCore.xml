@@ -6,40 +6,36 @@
     <members>
         <member name="T:Shapeless.ClayBinder">
             <summary>
-                <see cref="T:Shapeless.Clay"/>
-                模型绑定
+                <see cref="T:Shapeless.Clay" /> 模型绑定
             </summary>
             <param name="options">
-                <see cref="T:Microsoft.Extensions.Options.IOptions`1"/>
+                <see cref="T:Microsoft.Extensions.Options.IOptions`1" />
             </param>
         </member>
         <member name="M:Shapeless.ClayBinder.#ctor(Microsoft.Extensions.Options.IOptions{Shapeless.ClayOptions})">
             <summary>
-                <see cref="T:Shapeless.Clay"/>
-                模型绑定
+                <see cref="T:Shapeless.Clay" /> 模型绑定
             </summary>
             <param name="options">
-                <see cref="T:Microsoft.Extensions.Options.IOptions`1"/>
+                <see cref="T:Microsoft.Extensions.Options.IOptions`1" />
             </param>
         </member>
         <member name="M:Shapeless.ClayBinder.BindModelAsync(Microsoft.AspNetCore.Mvc.ModelBinding.ModelBindingContext)">
-            <inheritdoc/>
+            <inheritdoc />
         </member>
         <member name="M:Shapeless.ClayBinder.TryReadAndConvertBodyToClayAsync(System.IO.Stream,Shapeless.ClayOptions,System.Threading.CancellationToken)">
             <summary>
-                尝试从请求体中读取数据，并将其转换为
-                <see cref="T:Shapeless.Clay"/>
-                实例
+                尝试从请求体中读取数据，并将其转换为 <see cref="T:Shapeless.Clay" /> 实例
             </summary>
             <param name="stream">请求内容流</param>
             <param name="options">
-                <see cref="T:Shapeless.ClayOptions"/>
+                <see cref="T:Shapeless.ClayOptions" />
             </param>
             <param name="cancellationToken">
-                <see cref="T:System.Threading.CancellationToken"/>
+                <see cref="T:System.Threading.CancellationToken" />
             </param>
             <returns>
-                <see cref="T:System.Tuple`2"/>
+                <see cref="T:System.Tuple`2" />
             </returns>
         </member>
         <member name="M:Shapeless.ClayBinder.BindAsync(Microsoft.AspNetCore.Http.HttpContext,System.Reflection.ParameterInfo)">
@@ -48,48 +44,41 @@
             </summary>
             <remarks>
                 <para>由运行时调用。</para>
-                <para>
-                    参考文献：https://learn.microsoft.com/zh-cn/aspnet/core/fundamentals/minimal-apis/parameter-binding?view=aspnetcore-9.0#custom-binding。
-                </para>
+                <para>参考文献：https://learn.microsoft.com/zh-cn/aspnet/core/fundamentals/minimal-apis/parameter-binding?view=aspnetcore-9.0#custom-binding。</para>
             </remarks>
             <param name="httpContext">
-                <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>
+                <see cref="T:Microsoft.AspNetCore.Http.HttpContext" />
             </param>
             <param name="parameter">
-                <see cref="T:System.Reflection.ParameterInfo"/>
+                <see cref="T:System.Reflection.ParameterInfo" />
             </param>
             <returns>
-                <see cref="T:Shapeless.Clay"/>
+                <see cref="T:Shapeless.Clay" />
             </returns>
         </member>
         <member name="T:Shapeless.ClayBinderProvider">
             <summary>
-                <see cref="T:Shapeless.Clay"/>
-                模型绑定提供器
+                <see cref="T:Shapeless.Clay" /> 模型绑定提供器
             </summary>
         </member>
         <member name="M:Shapeless.ClayBinderProvider.GetBinder(Microsoft.AspNetCore.Mvc.ModelBinding.ModelBinderProviderContext)">
-            <inheritdoc/>
+            <inheritdoc />
         </member>
         <member name="T:Microsoft.Extensions.DependencyInjection.ShapelessMvcBuilderExtensions">
             <summary>
-                流变对象模块
-                <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/>
-                拓展类
+                流变对象模块 <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder" /> 拓展类
             </summary>
         </member>
         <member name="M:Microsoft.Extensions.DependencyInjection.ShapelessMvcBuilderExtensions.AddClayOptions(Microsoft.Extensions.DependencyInjection.IMvcBuilder,System.Action{Shapeless.ClayOptions})">
             <summary>
-                添加
-                <see cref="T:Shapeless.Clay"/>
-                配置
+                添加 <see cref="T:Shapeless.Clay" /> 配置
             </summary>
             <param name="builder">
-                <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/>
+                <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder" />
             </param>
             <param name="configure">自定义配置委托</param>
             <returns>
-                <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/>
+                <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder" />
             </returns>
         </member>
     </members>
