@@ -876,6 +876,16 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.Equal(1, model.Id);
         Assert.Equal("furion", model.Name);
 
+        clay.Rebuilt(new ClayOptions { ValidateAfterConversion = true });
+
+        Assert.Throws<ValidationException>(() =>
+        {
+            ClayModel _ = (dynamic)clay;
+        });
+
+        // 重置
+        clay.Rebuilt(new ClayOptions { ValidateAfterConversion = false });
+
         var model2 =
             clay.As(typeof(ClayModel), new JsonSerializerOptions { PropertyNameCaseInsensitive = false }) as ClayModel;
         Assert.NotNull(model2);

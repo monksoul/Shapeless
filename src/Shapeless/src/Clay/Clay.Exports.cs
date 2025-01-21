@@ -700,7 +700,17 @@ public partial class Clay
             return AsEnumerableArray();
         }
 
-        return Helpers.DeserializeNode(JsonCanvas, resultType, jsonSerializerOptions ?? Options.JsonSerializerOptions);
+        // 将 JsonNode 转换为目标类型
+        var result = Helpers.DeserializeNode(JsonCanvas, resultType,
+            jsonSerializerOptions ?? Options.JsonSerializerOptions);
+
+        // 检查是否启用转换后执行模型验证
+        if (result is not null && Options.ValidateAfterConversion)
+        {
+            Validator.ValidateObject(result, new ValidationContext(result), true);
+        }
+
+        return result;
     }
 
     /// <summary>
