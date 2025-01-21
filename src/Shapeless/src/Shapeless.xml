@@ -941,7 +941,7 @@
         </member>
         <member name="F:Shapeless.Clay._bindAsyncMethod">
             <summary>
-                初始化 <c>ClayBinder.BindAsync(HttpContext, ParameterInfo)</c> 静态发方法
+                初始化 <c>ClayBinder.BindAsync(HttpContext, ParameterInfo)</c> 静态方法
             </summary>
         </member>
         <member name="M:Shapeless.Clay.BindAsync(System.Object,System.Reflection.ParameterInfo)">

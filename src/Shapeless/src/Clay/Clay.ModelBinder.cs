@@ -14,7 +14,7 @@ namespace Shapeless;
 public partial class Clay
 {
     /// <summary>
-    ///     初始化 <c>ClayBinder.BindAsync(HttpContext, ParameterInfo)</c> 静态发方法
+    ///     初始化 <c>ClayBinder.BindAsync(HttpContext, ParameterInfo)</c> 静态方法
     /// </summary>
     internal static readonly Lazy<MethodInfo> _bindAsyncMethod = new(() =>
     {
