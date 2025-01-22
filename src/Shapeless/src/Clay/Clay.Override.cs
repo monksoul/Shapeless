@@ -89,7 +89,7 @@ public partial class Clay
                         return true;
                     // 处理 clay(Action<ClayOptions>) 情况
                     case [Action<ClayOptions> configure]:
-                        result = Rebuilt(Options.Configure(configure));
+                        result = Rebuilt(configure);
                         return true;
                 }
 

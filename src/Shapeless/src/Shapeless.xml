@@ -915,6 +915,15 @@
                 <see cref="T:Shapeless.Clay" />
             </returns>
         </member>
+        <member name="M:Shapeless.Clay.Rebuilt(System.Action{Shapeless.ClayOptions})">
+            <summary>
+                重建 <see cref="T:Shapeless.Clay" /> 实例
+            </summary>
+            <param name="configure">自定义配置委托</param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
         <member name="T:Shapeless.Clay.Object">
             <summary>
                 单一对象

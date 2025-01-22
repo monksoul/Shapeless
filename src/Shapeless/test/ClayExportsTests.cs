@@ -1393,6 +1393,13 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void Rebuilt_Invalid_Parameters()
+    {
+        var clay = new Clay();
+        Assert.Throws<ArgumentNullException>(() => clay.Rebuilt((Action<ClayOptions>)null!));
+    }
+
+    [Fact]
     public void Rebuilt_ReturnOK()
     {
         dynamic clay = new Clay();
@@ -1423,5 +1430,11 @@ public class ClayExportsTests(ITestOutputHelper output)
             clay2.ToJsonString());
         clay2.Rebuilt(clayOptions.Configure(u => u.KeyValueJsonToObject = true));
         Assert.Equal("{\"id\":1,\"name\":\"Furion\"}", clay2.ToJsonString());
+
+        var clay3 = Clay.Parse(keyValueJson);
+        Assert.Equal("[{\"key\":\"id\",\"value\":1},{\"key\":\"name\",\"value\":\"Furion\"}]",
+            clay3.ToJsonString());
+        clay3.Rebuilt(u => u.KeyValueJsonToObject = true);
+        Assert.Equal("{\"id\":1,\"name\":\"Furion\"}", clay3.ToJsonString());
     }
 }

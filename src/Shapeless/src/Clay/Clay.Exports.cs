@@ -954,6 +954,21 @@ public partial class Clay
     }
 
     /// <summary>
+    ///     重建 <see cref="Clay" /> 实例
+    /// </summary>
+    /// <param name="configure">自定义配置委托</param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    public Clay Rebuilt(Action<ClayOptions> configure)
+    {
+        // 空检查
+        ArgumentNullException.ThrowIfNull(configure);
+
+        return Rebuilt(Options.Configure(configure));
+    }
+
+    /// <summary>
     ///     单一对象
     /// </summary>
     public sealed class Object : Clay

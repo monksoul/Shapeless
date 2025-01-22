@@ -88,6 +88,30 @@ public class ClayOverrideTests
         clay9.name = "Furion";
         clay9.nested = clay9;
         Assert.Equal("{\"id\":1,\"name\":\"Furion\",\"nested\":{\"id\":1,\"name\":\"Furion\"}}", clay9.ToJsonString());
+
+        dynamic clay10 = new Clay.Array(new ClayOptions { AllowIndexOutOfRange = true });
+        Assert.Null(clay10[0]?[0]?[0]);
+
+        dynamic clay11 = new Clay.Array(new ClayOptions { AllowIndexOutOfRange = true, AutoCreateNestedArrays = true });
+        Assert.Null(clay11[0]?[0]?[0]);
+        Assert.Null(clay11["0?"]["0?"][0]);
+        Assert.Equal("[[[]]]", clay11.ToJsonString());
+        clay11["0?"]["0?"][0] = 20;
+        Assert.Equal("[[[20]]]", clay11.ToJsonString());
+        clay11["0?"]["0?"][3] = 30; // 无效
+        Assert.Equal("[[[20]]]", clay11.ToJsonString());
+
+        dynamic clay12 = new Clay.Array(new ClayOptions
+        {
+            AllowIndexOutOfRange = true, AutoCreateNestedArrays = true, AutoExpandArrayWithNulls = true
+        });
+        Assert.Null(clay12[0]?[0]?[0]);
+        Assert.Null(clay12["0?"]["0?"][0]);
+        Assert.Equal("[[[]]]", clay12.ToJsonString());
+        clay12["0?"]["0?"][0] = 20;
+        Assert.Equal("[[[20]]]", clay12.ToJsonString());
+        clay12["0?"]["0?"][3] = 30; // 无效
+        Assert.Equal("[[[20,null,null,30]]]", clay12.ToJsonString());
     }
 
     [Fact]
