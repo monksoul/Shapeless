@@ -144,11 +144,21 @@ public class ClayTests(ITestOutputHelper output)
         Assert.Null(clay2.GetNodeFromArray(1));
 
         var clay3 = new Clay(ClayType.Array,
+            new ClayOptions { AllowIndexOutOfRange = true });
+        var exception = Assert.Throws<InvalidOperationException>(() => clay3.GetNodeFromArray("2?"));
+        Assert.Equal("The property `2?` was not found in the Clay or is not a valid array index.", exception.Message);
+
+        var clay4 = new Clay(ClayType.Array,
+            new ClayOptions { AllowIndexOutOfRange = true, AutoCreateNestedArrays = true });
+        Assert.Null(clay4.GetNodeFromArray("2?"));
+
+        var clay5 = new Clay(ClayType.Array,
             new ClayOptions
             {
                 AllowIndexOutOfRange = true, AutoCreateNestedArrays = true, AutoExpandArrayWithNulls = true
             });
-        Assert.Equal("[]", clay3.GetNodeFromArray(2)!.ToJsonString());
+        Assert.Null(clay5.GetNodeFromArray(2));
+        Assert.Equal("[]", clay5.ToJsonString());
 
         var array = Clay.Parse("[1,2,3,4]");
         Assert.Equal(3, array.GetNodeFromArray(^2)?.GetValue<int>()); // 索引运算符（Hat 运算符）
@@ -373,6 +383,14 @@ public class ClayTests(ITestOutputHelper output)
         var array2 = Clay.Parse("[1,2,3,4]");
         array2.SetNodeInArray(^2, 5); // 索引运算符（Hat 运算符）
         Assert.Equal("[1,2,5,4]", array2.ToJsonString());
+
+        var array3 = new Clay(ClayType.Array,
+            new ClayOptions
+            {
+                AllowIndexOutOfRange = true, AutoCreateNestedArrays = true, AutoExpandArrayWithNulls = true
+            });
+        array3.SetNodeInArray(2, 3);
+        Assert.Equal("[null,null,3]", array3.ToJsonString());
     }
 
     [Fact]
@@ -510,10 +528,17 @@ public class ClayTests(ITestOutputHelper output)
     [Fact]
     public void ProcessNestedNullPropagationIdentifier_ReturnOK()
     {
-        Assert.Equal("name?", new Clay().ProcessNestedNullPropagationIdentifier("name?"));
-        Assert.Equal("name",
-            new Clay(new ClayOptions { AutoCreateNestedObjects = true })
-                .ProcessNestedNullPropagationIdentifier("name?"));
+        Assert.Equal("name?", Clay.ProcessNestedNullPropagationIdentifier("name?", false, out var isUnchanged1));
+        Assert.True(isUnchanged1);
+
+        Assert.Equal("name", Clay.ProcessNestedNullPropagationIdentifier("name?", true, out var isUnchanged2));
+        Assert.False(isUnchanged2);
+
+        Assert.Equal("0", Clay.ProcessNestedNullPropagationIdentifier(0, false, out var isUnchanged3));
+        Assert.True(isUnchanged3);
+
+        Assert.Equal("0", Clay.ProcessNestedNullPropagationIdentifier("0?", true, out var isUnchanged4));
+        Assert.False(isUnchanged2);
     }
 
     [Fact]

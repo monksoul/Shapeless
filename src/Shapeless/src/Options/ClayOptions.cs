@@ -45,7 +45,7 @@ public sealed class ClayOptions
     /// </summary>
     /// <remarks>
     ///     当 <see cref="Clay.IsArray" /> 和 <see cref="AutoCreateNestedArrays" /> 为 <c>true</c> 时有效。默认值为：<c>false</c>
-    ///     ，当设置为 <c>true</c> 时，如果尝试访问或设置超出数组长度的索引时，将自动补位新的 <see cref="Clay" /> 数组实例。
+    ///     ，当设置为 <c>true</c> 时，如果尝试访问或设置超出数组长度的索引并且索引器带 <c>?</c> 后缀的键时，将自动创建一个新的 <see cref="Clay" /> 数组实例。
     /// </remarks>
     public bool AutoCreateNestedArrays { get; set; }
 

@@ -190,11 +190,13 @@
                 <see cref="T:System.Object" />
             </returns>
         </member>
-        <member name="M:Shapeless.Clay.ProcessNestedNullPropagationIdentifier(System.String)">
+        <member name="M:Shapeless.Clay.ProcessNestedNullPropagationIdentifier(System.Object,System.Boolean,System.Boolean@)">
             <summary>
                 处理嵌套带空传播字符 <c>?</c> 的标识符
             </summary>
             <param name="identifier">标识符</param>
+            <param name="enable">是否启用处理</param>
+            <param name="isUnchanged">标识符是否未被改变</param>
             <returns>
                 <see cref="T:System.String" />
             </returns>
@@ -1253,7 +1255,7 @@
             </summary>
             <remarks>
                 当 <see cref="P:Shapeless.Clay.IsArray" /> 和 <see cref="P:Shapeless.ClayOptions.AutoCreateNestedArrays" /> 为 <c>true</c> 时有效。默认值为：<c>false</c>
-                ，当设置为 <c>true</c> 时，如果尝试访问或设置超出数组长度的索引时，将自动补位新的 <see cref="T:Shapeless.Clay" /> 数组实例。
+                ，当设置为 <c>true</c> 时，如果尝试访问或设置超出数组长度的索引并且索引器带 <c>?</c> 后缀的键时，将自动创建一个新的 <see cref="T:Shapeless.Clay" /> 数组实例。
             </remarks>
         </member>
         <member name="P:Shapeless.ClayOptions.AutoExpandArrayWithNulls">

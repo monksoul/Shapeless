@@ -225,11 +225,9 @@ public class ClayOverrideTests
         Assert.Null(clay6[0][0]);
 
         dynamic clay7 = new Clay(ClayType.Array,
-            new ClayOptions
-            {
-                AllowIndexOutOfRange = true, AutoExpandArrayWithNulls = true, AutoCreateNestedArrays = true
-            });
-        Assert.NotNull(clay7[0][0]);
+            new ClayOptions { AllowIndexOutOfRange = true, AutoCreateNestedArrays = true });
+        Assert.Null(clay7["0?"][0]);
+
         clay7[0] = 0;
         Assert.Throws<RuntimeBinderException>(() => clay7[0][0]);
         clay7[0] = Array.Empty<object>();
@@ -238,7 +236,7 @@ public class ClayOverrideTests
         {
             AllowIndexOutOfRange = true, AutoExpandArrayWithNulls = true, AutoCreateNestedArrays = false
         });
-        Assert.Equal("[]", clay7[0][0].ToJsonString());
+        Assert.Null(clay7[0][0]);
 
         var clay71 = clay7[0];
         // 以下配置有效
@@ -285,8 +283,10 @@ public class ClayOverrideTests
             {
                 AllowIndexOutOfRange = true, AutoExpandArrayWithNulls = true, AutoCreateNestedArrays = true
             });
-        clay6[0][0] = 10;
+        clay6["0?"][0] = 10;
         Assert.Equal("[[10]]", clay6.ToJsonString());
+        clay6["0?"]["2?"][2] = 10;
+        Assert.Equal("[[10,null,[null,null,10]]]", clay6.ToJsonString());
     }
 
     [Fact]
