@@ -91,6 +91,10 @@ public partial class Clay
                     case [Action<ClayOptions> configure]:
                         result = Rebuilt(configure);
                         return true;
+                    // 处理 clay(Clay) 情况
+                    case [Clay clay1]:
+                        result = Combine(clay1);
+                        return true;
                 }
 
                 break;
@@ -102,6 +106,20 @@ public partial class Clay
                     case [Type resultType, JsonSerializerOptions jsonSerializerOptions]:
                         result = As(resultType, jsonSerializerOptions);
                         return true;
+                    // 处理 clay(Clay, Clay) 情况
+                    case [Clay clay1, Clay clay2]:
+                        result = Combine(clay1, clay2);
+                        return true;
+                }
+
+                break;
+            // 处理多个参数情况
+            default:
+                // 处理 clay(Clay, Clay, ...Clay) 情况
+                if (args?.All(u => u is Clay) == true)
+                {
+                    result = Combine(args.OfType<Clay>().ToArray());
+                    return true;
                 }
 
                 break;
