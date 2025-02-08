@@ -326,7 +326,7 @@ public class GetStartController
             Console.WriteLine($"Key: {item.Key} Value: {item.Value}");
 
         // 遍历键值（string 类型键）
-        foreach (KeyValuePair<string, dynamic?> item in clay.AsEnumerableObject())
+        foreach (KeyValuePair<string, dynamic?> item in clay.AsEnumerateObject())
             Console.WriteLine($"Key: {item.Key} Value: {item.Value}");
 
         // 遍历键
@@ -364,7 +364,7 @@ public class GetStartController
             Console.WriteLine($"Index: {item.Key} Value: {item.Value}");
 
         // 遍历项（int 类型索引）
-        foreach (KeyValuePair<int, dynamic?> item in array.AsEnumerableArray())
+        foreach (KeyValuePair<int, dynamic?> item in array.AsEnumerateArray())
             Console.WriteLine($"Index: {item.Key} Value: {item.Value}");
 
         // 遍历索引
@@ -411,7 +411,7 @@ public class GetStartController
             .OrderBy(u => u.Key).ToList();
 
         // Lambda 查询键值（string 类型键）
-        var list3 = ((Clay)clay).AsEnumerableObject().Where(u => u.Key == "id").OrderBy(u => u.Key).ToList();
+        var list3 = ((Clay)clay).AsEnumerateObject().Where(u => u.Key == "id").OrderBy(u => u.Key).ToList();
 
         // Linq 查询键值（object 类型键）
         var query1 = from item in (Clay)clay
@@ -422,7 +422,7 @@ public class GetStartController
         var list4 = query1.ToList();
 
         // Linq 查询键值（string 类型键）
-        var query2 = from item in ((Clay)clay).AsEnumerableObject()
+        var query2 = from item in ((Clay)clay).AsEnumerateObject()
             where item.Key == "id"
             orderby item.Key
             select item;
@@ -436,7 +436,7 @@ public class GetStartController
         var list6 = clayObject.Where(u => (string)u.Key == "id").OrderBy(u => u.Key).ToList();
 
         // Lambda 查询键值（string 类型键）
-        var list7 = clayObject.AsEnumerableObject().Where(u => u.Key == "id").OrderBy(u => u.Key).ToList();
+        var list7 = clayObject.AsEnumerateObject().Where(u => u.Key == "id").OrderBy(u => u.Key).ToList();
 
         // Linq 查询键值（object 类型键）
         var query3 = from item in clayObject
@@ -447,7 +447,7 @@ public class GetStartController
         var list8 = query3.ToList();
 
         // Linq 查询键值（string 类型键）
-        var query4 = from item in clayObject.AsEnumerableObject()
+        var query4 = from item in clayObject.AsEnumerateObject()
             where item.Key == "id"
             orderby item.Key
             select item;
@@ -472,7 +472,7 @@ public class GetStartController
             .OrderBy(u => u.Key).ToList();
 
         // Lambda 查询索引与值（int 类型索引）
-        var list3 = ((Clay)clay).AsEnumerableArray().Where(u => u.Key > 2).OrderBy(u => u.Key).ToList();
+        var list3 = ((Clay)clay).AsEnumerateArray().Where(u => u.Key > 2).OrderBy(u => u.Key).ToList();
 
         // Linq 查询索引与值（object 类型索引）
         var query1 = from item in (Clay)clay
@@ -483,7 +483,7 @@ public class GetStartController
         var list4 = query1.ToList();
 
         // Linq 查询索引与值（int 类型索引）
-        var query2 = from item in ((Clay)clay).AsEnumerableArray()
+        var query2 = from item in ((Clay)clay).AsEnumerateArray()
             where item.Key > 2
             orderby item.Key
             select item;
@@ -497,7 +497,7 @@ public class GetStartController
         var list6 = clayArray.Where(u => (int)u.Key > 2).OrderBy(u => u.Key).ToList();
 
         // Lambda 查询索引与值（int 类型索引）
-        var list7 = clayArray.AsEnumerableArray().Where(u => u.Key > 2).OrderBy(u => u.Key).ToList();
+        var list7 = clayArray.AsEnumerateArray().Where(u => u.Key > 2).OrderBy(u => u.Key).ToList();
 
         // Linq 查询索引与值（object 类型索引）
         var query3 = from item in clayArray
@@ -508,7 +508,7 @@ public class GetStartController
         var list8 = query3.ToList();
 
         // Linq 查询索引与值（int 类型索引）
-        var query4 = from item in clayArray.AsEnumerableArray()
+        var query4 = from item in clayArray.AsEnumerateArray()
             where item.Key > 2
             orderby item.Key
             select item;

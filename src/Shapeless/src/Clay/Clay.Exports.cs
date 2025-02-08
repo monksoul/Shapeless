@@ -533,7 +533,7 @@ public partial class Clay
     ///     <see cref="Clay" />
     /// </returns>
     public Clay Reverse(ClayOptions? options = null) =>
-        Parse(IsObject ? AsEnumerableObject().Reverse().ToDictionary() : Values.Reverse(), options);
+        Parse(IsObject ? AsEnumerateObject().Reverse().ToDictionary() : Values.Reverse(), options);
 
     /// <summary>
     ///     截取 <see cref="Clay" /> 并返回新的 <see cref="Clay" />
@@ -691,13 +691,13 @@ public partial class Clay
         // 检查是否是 IEnumerable<KeyValuePair<string, object?>> 类型且是单一对象
         if (resultType == typeof(IEnumerable<KeyValuePair<string, object?>>) && IsObject)
         {
-            return AsEnumerableObject();
+            return AsEnumerateObject();
         }
 
         // 检查是否是 IEnumerable<KeyValuePair<int, object?>> 类型且是集合或数组
         if (resultType == typeof(IEnumerable<KeyValuePair<int, object?>>) && IsArray)
         {
-            return AsEnumerableArray();
+            return AsEnumerateArray();
         }
 
         // 将 JsonNode 转换为目标类型

@@ -124,37 +124,37 @@ public class ClayEnumerableTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void AsEnumerableObject_Invalid_Parameters()
+    public void AsEnumerateObject_Invalid_Parameters()
     {
         var clay = Clay.Parse("[1,2,3]");
-        var exception = Assert.Throws<NotSupportedException>(() => clay.AsEnumerableObject().ToList());
-        Assert.Equal("`AsEnumerableObject` method can only be used for single object operations.", exception.Message);
+        var exception = Assert.Throws<NotSupportedException>(() => clay.AsEnumerateObject().ToList());
+        Assert.Equal("`AsEnumerateObject` method can only be used for single object operations.", exception.Message);
     }
 
     [Fact]
-    public void AsEnumerableObject_ReturnOK()
+    public void AsEnumerateObject_ReturnOK()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
-        foreach (var item in clay.AsEnumerableObject())
+        foreach (var item in clay.AsEnumerateObject())
         {
             output.WriteLine(item.Key);
         }
     }
 
     [Fact]
-    public void AsEnumerableArray_Invalid_Parameters()
+    public void AsEnumerateArray_Invalid_Parameters()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
-        var exception = Assert.Throws<NotSupportedException>(() => clay.AsEnumerableArray().ToList());
-        Assert.Equal("`AsEnumerableArray` method can only be used for array or collection operations.",
+        var exception = Assert.Throws<NotSupportedException>(() => clay.AsEnumerateArray().ToList());
+        Assert.Equal("`AsEnumerateArray` method can only be used for array or collection operations.",
             exception.Message);
     }
 
     [Fact]
-    public void AsEnumerableArray_ReturnOK()
+    public void AsEnumerateArray_ReturnOK()
     {
         var clay = Clay.Parse("[1,2,3]");
-        foreach (var item in clay.AsEnumerableArray())
+        foreach (var item in clay.AsEnumerateArray())
         {
             output.WriteLine(item.Key.ToString());
         }

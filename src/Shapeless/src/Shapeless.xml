@@ -329,7 +329,7 @@
                 <see cref="T:System.Collections.Generic.IEnumerable`1" />
             </returns>
         </member>
-        <member name="M:Shapeless.Clay.AsEnumerableObject">
+        <member name="M:Shapeless.Clay.AsEnumerateObject">
             <summary>
                 获取单一对象的迭代器
             </summary>
@@ -337,7 +337,7 @@
                 <see cref="T:System.Collections.Generic.IEnumerable`1" />
             </returns>
         </member>
-        <member name="M:Shapeless.Clay.AsEnumerableArray">
+        <member name="M:Shapeless.Clay.AsEnumerateArray">
             <summary>
                 获取集合或数组的迭代器
             </summary>

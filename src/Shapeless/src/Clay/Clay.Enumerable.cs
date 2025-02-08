@@ -53,8 +53,8 @@ public partial class Clay
     ///     <see cref="IEnumerable{T}" />
     /// </returns>
     public IEnumerable<KeyValuePair<object, dynamic?>> AsEnumerable() => IsObject
-        ? AsEnumerableObject().Select(u => new KeyValuePair<object, dynamic?>(u.Key, u.Value))
-        : AsEnumerableArray().Select(u => new KeyValuePair<object, dynamic?>(u.Key, u.Value));
+        ? AsEnumerateObject().Select(u => new KeyValuePair<object, dynamic?>(u.Key, u.Value))
+        : AsEnumerateArray().Select(u => new KeyValuePair<object, dynamic?>(u.Key, u.Value));
 
     /// <summary>
     ///     获取单一对象的迭代器
@@ -62,10 +62,10 @@ public partial class Clay
     /// <returns>
     ///     <see cref="IEnumerable{T}" />
     /// </returns>
-    public IEnumerable<KeyValuePair<string, dynamic?>> AsEnumerableObject()
+    public IEnumerable<KeyValuePair<string, dynamic?>> AsEnumerateObject()
     {
         // 检查是否是集合或数组实例调用
-        ThrowIfMethodCalledOnArrayCollection(nameof(AsEnumerableObject));
+        ThrowIfMethodCalledOnArrayCollection(nameof(AsEnumerateObject));
 
         // 获取循环访问 JsonObject 的枚举数
         using var enumerator = JsonCanvas.AsObject().GetEnumerator();
@@ -86,10 +86,10 @@ public partial class Clay
     /// <returns>
     ///     <see cref="IEnumerable{T}" />
     /// </returns>
-    public IEnumerable<KeyValuePair<int, dynamic?>> AsEnumerableArray()
+    public IEnumerable<KeyValuePair<int, dynamic?>> AsEnumerateArray()
     {
         // 检查是否是单一对象实例调用
-        ThrowIfMethodCalledOnSingleObject(nameof(AsEnumerableArray));
+        ThrowIfMethodCalledOnSingleObject(nameof(AsEnumerateArray));
 
         // 获取循环访问 JsonArray 的枚举数
         using var enumerator = JsonCanvas.AsArray().GetEnumerator();
