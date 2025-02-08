@@ -196,4 +196,51 @@ public class ClayEnumerableTests(ITestOutputHelper output)
 
         Assert.Equal("[1,2,3]", array.ToJsonString());
     }
+
+    [Fact]
+    public void Map_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        Assert.Throws<ArgumentNullException>(() => clay.Map((Func<dynamic, ClayModel>)null!).ToList());
+        Assert.Throws<ArgumentNullException>(() => clay.Map((Func<object, dynamic, string>)null!).ToList());
+    }
+
+    [Fact]
+    public void Map_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        var list = clay.Map(item => item.ToString()).ToList();
+        Assert.Equal(["1", "furion"], list);
+
+        var list2 = clay.Map((key, item) => item.ToString()).ToList();
+        Assert.Equal(["1", "furion"], list2);
+
+        var array = Clay.Parse("[1,2,3]");
+        var list3 = array.Map(item => (int)item).ToList();
+        Assert.Equal([1, 2, 3], list3);
+
+        var list4 = array.Map((index, item) => (int)item).ToList();
+        Assert.Equal([1, 2, 3], list4);
+    }
+
+    [Fact]
+    public void Filter_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        Assert.Throws<ArgumentNullException>(() => clay.Filter((Func<dynamic, bool>)null!));
+        Assert.Throws<ArgumentNullException>(() => clay.Filter((Func<object, dynamic, bool>)null!));
+    }
+
+    [Fact]
+    public void Filter_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\",\"age\":30}");
+        Assert.Equal("{\"name\":\"furion\",\"age\":30}", clay.Filter(item => item.ToString() != "1").ToJsonString());
+        Assert.Equal("{\"name\":\"furion\",\"age\":30}",
+            clay.Filter((key, value) => key.ToString() != "id").ToJsonString());
+
+        var array = Clay.Parse("[1,2,3]");
+        Assert.Equal("[2,3]", array.Filter(item => item > 1).ToJsonString());
+        Assert.Equal("[2,3]", array.Filter((index, item) => item > 1).ToJsonString());
+    }
 }

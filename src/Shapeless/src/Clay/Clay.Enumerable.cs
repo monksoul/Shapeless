@@ -110,6 +110,7 @@ public partial class Clay
     /// <summary>
     ///     遍历 <see cref="Clay" />
     /// </summary>
+    /// <param name="action">自定义委托</param>
     public void ForEach(Action<dynamic> action)
     {
         // 空检查
@@ -121,6 +122,7 @@ public partial class Clay
     /// <summary>
     ///     遍历 <see cref="Clay" />
     /// </summary>
+    /// <param name="action">自定义委托</param>
     public void ForEach(Action<object, dynamic> action)
     {
         ArgumentNullException.ThrowIfNull(action);
@@ -130,5 +132,72 @@ public partial class Clay
         {
             action(identifier, item);
         }
+    }
+
+    /// <summary>
+    ///     遍历 <see cref="Clay " /> 并返回映射后的 <typeparamref name="T" /> 集合
+    /// </summary>
+    /// <param name="func">自定义委托</param>
+    /// <typeparam name="T">目标结果类型</typeparam>
+    /// <returns>
+    ///     <see cref="IEnumerable{T}" />
+    /// </returns>
+    public IEnumerable<T> Map<T>(Func<dynamic, T> func)
+    {
+        // 空检查
+        ArgumentNullException.ThrowIfNull(func);
+
+        return Map<T>((_, item) => func(item));
+    }
+
+    /// <summary>
+    ///     遍历 <see cref="Clay " /> 并返回映射后的 <typeparamref name="T" /> 集合
+    /// </summary>
+    /// <param name="func">自定义委托</param>
+    /// <typeparam name="T">目标结果类型</typeparam>
+    /// <returns>
+    ///     <see cref="IEnumerable{T}" />
+    /// </returns>
+    public IEnumerable<T> Map<T>(Func<object, dynamic, T> func)
+    {
+        ArgumentNullException.ThrowIfNull(func);
+
+        // 逐条遍历
+        foreach (var (identifier, item) in AsEnumerable())
+        {
+            yield return func(identifier, item);
+        }
+    }
+
+    /// <summary>
+    ///     根据条件过滤并返回新的 <see cref="Clay" />
+    /// </summary>
+    /// <param name="predicate">自定义条件委托</param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    public Clay Filter(Func<dynamic, bool> predicate)
+    {
+        // 空检查
+        ArgumentNullException.ThrowIfNull(predicate);
+
+        return Filter((_, item) => predicate(item));
+    }
+
+    /// <summary>
+    ///     根据条件过滤并返回新的 <see cref="Clay" />
+    /// </summary>
+    /// <param name="predicate">自定义条件委托</param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    public Clay Filter(Func<object, dynamic, bool> predicate)
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+
+        // 根据条件过滤
+        var keyValuePairs = AsEnumerable().Where(u => predicate(u.Key, u.Value));
+
+        return Parse(IsObject ? keyValuePairs.ToDictionary() : keyValuePairs.Select(u => u.Value), Options);
     }
 }

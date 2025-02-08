@@ -453,6 +453,15 @@ public class ClayOverrideTests
         {
             ClayModel _ = clay;
         });
+
+        IEnumerable<KeyValuePair<string, dynamic?>> clayObject = clay;
+        var list2 = clayObject.ToList();
+        Assert.Equal(["id", "name"], list2.Select(u => u.Key).ToList());
+
+        dynamic array = Clay.Parse("[1,2,3]");
+        IEnumerable<KeyValuePair<int, dynamic?>> arrayArray = array;
+        var list3 = arrayArray.ToList();
+        Assert.Equal([1, 2, 3], list3.Select(u => u.Value).ToList());
     }
 
     [Fact]
