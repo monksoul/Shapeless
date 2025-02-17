@@ -198,6 +198,19 @@ public partial class Clay
     }
 
     /// <summary>
+    ///     将对象转换为 <see cref="Clay" /> 实例
+    /// </summary>
+    /// <param name="obj">
+    ///     <see cref="object" />
+    /// </param>
+    /// <param name="configure">自定义配置委托</param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    public static Clay Parse(object? obj, Action<ClayOptions> configure) =>
+        Parse(obj, ClayOptions.Default.Configure(configure));
+
+    /// <summary>
     ///     将 <see cref="Utf8JsonReader" /> 转换为 <see cref="Clay" /> 实例
     /// </summary>
     /// <param name="utf8JsonReader">
@@ -211,6 +224,19 @@ public partial class Clay
     /// </returns>
     public static Clay Parse(ref Utf8JsonReader utf8JsonReader, ClayOptions? options = null) =>
         Parse(utf8JsonReader.GetRawText(), options);
+
+    /// <summary>
+    ///     将 <see cref="Utf8JsonReader" /> 转换为 <see cref="Clay" /> 实例
+    /// </summary>
+    /// <param name="utf8JsonReader">
+    ///     <see cref="Utf8JsonReader" />
+    /// </param>
+    /// <param name="configure">自定义配置委托</param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    public static Clay Parse(ref Utf8JsonReader utf8JsonReader, Action<ClayOptions> configure) =>
+        Parse(ref utf8JsonReader, ClayOptions.Default.Configure(configure));
 
     /// <summary>
     ///     检查标识符是否定义

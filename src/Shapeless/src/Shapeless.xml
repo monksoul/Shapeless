@@ -541,6 +541,18 @@
                 <see cref="T:Shapeless.Clay" />
             </returns>
         </member>
+        <member name="M:Shapeless.Clay.Parse(System.Object,System.Action{Shapeless.ClayOptions})">
+            <summary>
+                将对象转换为 <see cref="T:Shapeless.Clay" /> 实例
+            </summary>
+            <param name="obj">
+                <see cref="T:System.Object" />
+            </param>
+            <param name="configure">自定义配置委托</param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
         <member name="M:Shapeless.Clay.Parse(System.Text.Json.Utf8JsonReader@,Shapeless.ClayOptions)">
             <summary>
                 将 <see cref="T:System.Text.Json.Utf8JsonReader" /> 转换为 <see cref="T:Shapeless.Clay" /> 实例
@@ -551,6 +563,18 @@
             <param name="options">
                 <see cref="T:Shapeless.ClayOptions" />
             </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.Parse(System.Text.Json.Utf8JsonReader@,System.Action{Shapeless.ClayOptions})">
+            <summary>
+                将 <see cref="T:System.Text.Json.Utf8JsonReader" /> 转换为 <see cref="T:Shapeless.Clay" /> 实例
+            </summary>
+            <param name="utf8JsonReader">
+                <see cref="T:System.Text.Json.Utf8JsonReader" />
+            </param>
+            <param name="configure">自定义配置委托</param>
             <returns>
                 <see cref="T:Shapeless.Clay" />
             </returns>

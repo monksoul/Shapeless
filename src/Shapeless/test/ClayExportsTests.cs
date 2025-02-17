@@ -150,7 +150,18 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Parse_Invalid_Parameters() => Assert.Throws<ArgumentNullException>(() => Clay.Parse(null));
+    public void Parse_Invalid_Parameters()
+    {
+        Assert.Throws<ArgumentNullException>(() => Clay.Parse(null));
+        Assert.Throws<ArgumentNullException>(() => Clay.Parse(new { }, (Action<ClayOptions>)null!));
+
+        Assert.Throws<ArgumentNullException>(() =>
+        {
+            var utf8Bytes = "{\"id\":1,\"name\":\"furion\"}"u8.ToArray();
+            var utf8JsonReader = new Utf8JsonReader(utf8Bytes, true, default);
+            Clay.Parse(ref utf8JsonReader, (Action<ClayOptions>)null!);
+        });
+    }
 
     [Fact]
     public void Parse_ReturnOK()
@@ -255,6 +266,26 @@ public class ClayExportsTests(ITestOutputHelper output)
         using var jsonDocument = JsonDocument.Parse("{\"id\":1,\"name\":\"Furion\"}");
         dynamic clay16 = Clay.Parse(jsonDocument.RootElement);
         Assert.Equal("{\"id\":1,\"name\":\"Furion\"}", clay16.ToJsonString());
+
+        // 结构体
+        var clay17 = Clay.Parse(new Point { X = 100, Y = 100 });
+        Assert.Equal("{}", clay17.ToJsonString());
+
+        var clay18 = Clay.Parse(new Point { X = 100, Y = 100 },
+            ClayOptions.Default.Configure(options => options.JsonSerializerOptions.IncludeFields = true));
+        Assert.Equal("{\"X\":100,\"Y\":100}", clay18.ToJsonString());
+
+        var clay19 = Clay.Parse(new Point2 { X = 100, Y = 100 });
+        Assert.Equal("{\"X\":100,\"Y\":100}", clay19.ToJsonString());
+
+        // 委托
+        var clay20 = Clay.Parse(new Point { X = 100, Y = 100 },
+            options => options.JsonSerializerOptions.IncludeFields = true);
+        Assert.Equal("{\"X\":100,\"Y\":100}", clay20.ToJsonString());
+
+        var utf8JsonReader2 = new Utf8JsonReader("{\"id\":1,\"name\":\"furion\"}"u8.ToArray(), true, default);
+        var clay21 = Clay.Parse(ref utf8JsonReader2, options => { });
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay21.ToJsonString());
     }
 
     [Fact]
@@ -1437,4 +1468,16 @@ public class ClayExportsTests(ITestOutputHelper output)
         clay3.Rebuilt(u => u.KeyValueJsonToObject = true);
         Assert.Equal("{\"id\":1,\"name\":\"Furion\"}", clay3.ToJsonString());
     }
+}
+
+public struct Point
+{
+    public int X;
+    public int Y;
+}
+
+public struct Point2
+{
+    [JsonInclude] public int X;
+    [JsonInclude] public int Y;
 }
