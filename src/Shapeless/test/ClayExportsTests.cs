@@ -11,6 +11,7 @@ public class ClayExportsTests(ITestOutputHelper output)
     {
         var clay = new Clay();
         Assert.NotNull(clay);
+        Assert.NotNull(Clay._jsonResultType);
         Assert.True(clay.IsObject);
         Assert.False(clay.IsArray);
         Assert.Equal(ClayType.Object, clay.Type);
@@ -950,6 +951,16 @@ public class ClayExportsTests(ITestOutputHelper output)
         var model8 = array.As<IEnumerable<KeyValuePair<int, object?>>>();
         Assert.NotNull(model8);
         Assert.Equal([1, 2, 3], model8.Select(u => u.Value));
+
+        // IActionResult 类型
+        var actionResult = clay.As<IActionResult>();
+        Assert.NotNull(actionResult);
+        Assert.True(actionResult is JsonResult);
+
+        dynamic clay2 = clay;
+        IActionResult actionResult2 = clay2;
+        Assert.NotNull(actionResult2);
+        Assert.True(actionResult2 is JsonResult);
     }
 
     [Fact]

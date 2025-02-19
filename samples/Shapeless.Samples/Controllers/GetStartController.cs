@@ -872,4 +872,39 @@ public class GetStartController
         model.Clay?.Rebuilt(options.Value);
         return model;
     }
+
+    /// <summary>
+    ///     自动转换为目标类型
+    /// </summary>
+    /// <returns></returns>
+    [HttpPost]
+    public YourModel PostData()
+    {
+        dynamic clay = Clay.Parse("""{"id":1,"name":"shapeless"}""");
+        return clay; // 自动转换为目标类型
+    }
+
+    /// <summary>
+    ///     自动转换为 IActionResult 类型
+    /// </summary>
+    /// <returns></returns>
+    [HttpPost]
+    public IActionResult PostData2()
+    {
+        dynamic clay = Clay.Parse("""{"id":1,"name":"shapeless"}""");
+
+        return clay; // 自动转换为目标类型
+    }
+
+    /// <summary>
+    ///     自动转换为 IActionResult 类型
+    /// </summary>
+    /// <returns></returns>
+    [HttpPost]
+    public async Task<IActionResult> PostData3()
+    {
+        dynamic clay = Clay.Parse("""{"id":1,"name":"shapeless"}""");
+        await Task.Delay(10);
+        return clay; // 自动转换为目标类型
+    }
 }

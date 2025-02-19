@@ -10,6 +10,12 @@ namespace Shapeless;
 public partial class Clay
 {
     /// <summary>
+    ///     初始化 <c>Microsoft.AspNetCore.Mvc.JsonResult</c> 类型
+    /// </summary>
+    internal static readonly Lazy<Type> _jsonResultType = new(() =>
+        System.Type.GetType("Microsoft.AspNetCore.Mvc.JsonResult, Microsoft.AspNetCore.Mvc.Core")!);
+
+    /// <summary>
     ///     <inheritdoc cref="Clay" />
     /// </summary>
     /// <param name="options">
@@ -724,6 +730,12 @@ public partial class Clay
         if (resultType == typeof(IEnumerable<KeyValuePair<int, object?>>) && IsArray)
         {
             return AsEnumerateArray();
+        }
+
+        // 检查是否是 IActionResult 类型
+        if (resultType.FullName?.Contains("Microsoft.AspNetCore.Mvc.IActionResult") == true)
+        {
+            return Activator.CreateInstance(_jsonResultType.Value, this);
         }
 
         // 将 JsonNode 转换为目标类型
