@@ -54,7 +54,7 @@ public partial class Clay
     /// </returns>
     public IEnumerable<KeyValuePair<object, dynamic?>> AsEnumerable() => IsObject
         ? AsEnumerateObject().Select(u => new KeyValuePair<object, dynamic?>(u.Key, u.Value))
-        : AsEnumerateArray().Select(u => new KeyValuePair<object, dynamic?>(u.Key, u.Value));
+        : AsEnumerateArray().Select((item, index) => new KeyValuePair<object, dynamic?>(index, item));
 
     /// <summary>
     ///     获取单一对象的迭代器
@@ -86,7 +86,7 @@ public partial class Clay
     /// <returns>
     ///     <see cref="IEnumerable{T}" />
     /// </returns>
-    public IEnumerable<KeyValuePair<int, dynamic?>> AsEnumerateArray()
+    public IEnumerable<dynamic?> AsEnumerateArray()
     {
         // 检查是否是单一对象实例调用
         ThrowIfMethodCalledOnSingleObject(nameof(AsEnumerateArray));
@@ -94,16 +94,13 @@ public partial class Clay
         // 获取循环访问 JsonArray 的枚举数
         using var enumerator = JsonCanvas.AsArray().GetEnumerator();
 
-        // 定义索引变量用于记录数组中元素的位置
-        var index = 0;
-
         // 遍历 JsonArray 项
         while (enumerator.MoveNext())
         {
             // 获取当前的元素
             var current = enumerator.Current;
 
-            yield return new KeyValuePair<int, dynamic?>(index++, DeserializeNode(current, Options));
+            yield return DeserializeNode(current, Options);
         }
     }
 
@@ -111,7 +108,7 @@ public partial class Clay
     ///     遍历 <see cref="Clay" />
     /// </summary>
     /// <param name="action">自定义委托</param>
-    public void ForEach(Action<dynamic> action)
+    public void ForEach(Action<dynamic?> action)
     {
         // 空检查
         ArgumentNullException.ThrowIfNull(action);
@@ -123,7 +120,7 @@ public partial class Clay
     ///     遍历 <see cref="Clay" />
     /// </summary>
     /// <param name="action">自定义委托</param>
-    public void ForEach(Action<object, dynamic> action)
+    public void ForEach(Action<object, dynamic?> action)
     {
         ArgumentNullException.ThrowIfNull(action);
 
@@ -142,7 +139,7 @@ public partial class Clay
     /// <returns>
     ///     <see cref="IEnumerable{T}" />
     /// </returns>
-    public IEnumerable<T> Map<T>(Func<dynamic, T> func)
+    public IEnumerable<T> Map<T>(Func<dynamic?, T> func)
     {
         // 空检查
         ArgumentNullException.ThrowIfNull(func);
@@ -158,7 +155,7 @@ public partial class Clay
     /// <returns>
     ///     <see cref="IEnumerable{T}" />
     /// </returns>
-    public IEnumerable<T> Map<T>(Func<object, dynamic, T> func)
+    public IEnumerable<T> Map<T>(Func<object, dynamic?, T> func)
     {
         ArgumentNullException.ThrowIfNull(func);
 
@@ -176,7 +173,7 @@ public partial class Clay
     /// <returns>
     ///     <see cref="Clay" />
     /// </returns>
-    public Clay Filter(Func<dynamic, bool> predicate)
+    public Clay Filter(Func<dynamic?, bool> predicate)
     {
         // 空检查
         ArgumentNullException.ThrowIfNull(predicate);
@@ -191,7 +188,7 @@ public partial class Clay
     /// <returns>
     ///     <see cref="Clay" />
     /// </returns>
-    public Clay Filter(Func<object, dynamic, bool> predicate)
+    public Clay Filter(Func<object, dynamic?, bool> predicate)
     {
         ArgumentNullException.ThrowIfNull(predicate);
 

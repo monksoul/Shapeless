@@ -961,6 +961,10 @@ public class ClayExportsTests(ITestOutputHelper output)
         IActionResult actionResult2 = clay2;
         Assert.NotNull(actionResult2);
         Assert.True(actionResult2 is JsonResult);
+
+        var list = array.As<IEnumerable<dynamic>>();
+        Assert.NotNull(list);
+        Assert.Equal([1, 2, 3], list.ToList());
     }
 
     [Fact]

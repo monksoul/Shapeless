@@ -720,14 +720,20 @@ public partial class Clay
             return this;
         }
 
-        // 检查是否是 IEnumerable<KeyValuePair<string, object?>> 类型且是单一对象
-        if (resultType == typeof(IEnumerable<KeyValuePair<string, object?>>) && IsObject)
+        // 检查是否是 IEnumerable<KeyValuePair<string, dynamic?>> 类型且是单一对象
+        if (resultType == typeof(IEnumerable<KeyValuePair<string, dynamic?>>) && IsObject)
         {
             return AsEnumerateObject();
         }
 
-        // 检查是否是 IEnumerable<KeyValuePair<int, object?>> 类型且是集合或数组
-        if (resultType == typeof(IEnumerable<KeyValuePair<int, object?>>) && IsArray)
+        // 检查是否是 IEnumerable<KeyValuePair<int, dynamic?>> 类型且是集合或数组
+        if (resultType == typeof(IEnumerable<KeyValuePair<int, dynamic?>>) && IsArray)
+        {
+            return AsEnumerateArray().Select((item, index) => new KeyValuePair<int, dynamic?>(index, item));
+        }
+
+        // 检查是否是 IEnumerable<dynamic> 类型且是集合或数组
+        if (resultType == typeof(IEnumerable<dynamic?>) && IsArray)
         {
             return AsEnumerateArray();
         }

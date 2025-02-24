@@ -363,9 +363,9 @@ public class GetStartController
         foreach (KeyValuePair<object, dynamic?> item in array) // 或使用 clay.AsEnumerable()
             Console.WriteLine($"Index: {item.Key} Value: {item.Value}");
 
-        // 遍历项（int 类型索引）
-        foreach (KeyValuePair<int, dynamic?> item in array.AsEnumerateArray())
-            Console.WriteLine($"Index: {item.Key} Value: {item.Value}");
+        // 遍历项
+        foreach (var item in array.AsEnumerateArray())
+            Console.WriteLine($"Value: {item}");
 
         // 遍历索引
         foreach (var index in array.Keys) Console.WriteLine($"Index: {index}");
@@ -471,8 +471,8 @@ public class GetStartController
         var list2 = ((IEnumerable<KeyValuePair<object, dynamic?>>)clay).Where(u => (int)u.Key > 2)
             .OrderBy(u => u.Key).ToList();
 
-        // Lambda 查询索引与值（int 类型索引）
-        var list3 = ((Clay)clay).AsEnumerateArray().Where(u => u.Key > 2).OrderBy(u => u.Key).ToList();
+        // Lambda 查询值
+        var list3 = ((Clay)clay).AsEnumerateArray().Where(u => u?.Equals(2) == false).ToList();
 
         // Linq 查询索引与值（object 类型索引）
         var query1 = from item in (Clay)clay
@@ -482,10 +482,9 @@ public class GetStartController
 
         var list4 = query1.ToList();
 
-        // Linq 查询索引与值（int 类型索引）
+        // Linq 查询值
         var query2 = from item in ((Clay)clay).AsEnumerateArray()
-            where item.Key > 2
-            orderby item.Key
+            where item?.Equals(2) == false
             select item;
 
         var list5 = query2.ToList();
@@ -496,8 +495,8 @@ public class GetStartController
         // Lambda 查询索引与值（object 类型索引）
         var list6 = clayArray.Where(u => (int)u.Key > 2).OrderBy(u => u.Key).ToList();
 
-        // Lambda 查询索引与值（int 类型索引）
-        var list7 = clayArray.AsEnumerateArray().Where(u => u.Key > 2).OrderBy(u => u.Key).ToList();
+        // Lambda 查询值
+        var list7 = clayArray.AsEnumerateArray().Where(u => u?.Equals(2) == false).ToList();
 
         // Linq 查询索引与值（object 类型索引）
         var query3 = from item in clayArray
@@ -509,8 +508,7 @@ public class GetStartController
 
         // Linq 查询索引与值（int 类型索引）
         var query4 = from item in clayArray.AsEnumerateArray()
-            where item.Key > 2
-            orderby item.Key
+            where item?.Equals(2) == false
             select item;
 
         var list9 = query4.ToList();
