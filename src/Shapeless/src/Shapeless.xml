@@ -1301,6 +1301,11 @@
                 默认 <see cref="T:Shapeless.ClayOptions" /> 实例
             </summary>
         </member>
+        <member name="P:Shapeless.ClayOptions.Flexible">
+            <summary>
+                允许访问缺失的属性或数组越界的 <see cref="T:Shapeless.ClayOptions" /> 实例
+            </summary>
+        </member>
         <member name="P:Shapeless.ClayOptions.ScalarValueKey">
             <summary>
                 配置用于包裹非对象和非数组类型的键名
