@@ -64,6 +64,42 @@
         <member name="M:Shapeless.ClayBinderProvider.GetBinder(Microsoft.AspNetCore.Mvc.ModelBinding.ModelBinderProviderContext)">
             <inheritdoc />
         </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.ControllerExtensions">
+            <summary>
+                <see cref="T:Microsoft.AspNetCore.Mvc.Controller" /> 拓展类
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.ControllerExtensions.ViewClay(Microsoft.AspNetCore.Mvc.Controller,System.Object,Shapeless.ClayOptions)">
+            <summary>
+                创建一个 <see cref="T:Microsoft.AspNetCore.Mvc.ViewResult" /> 对象，并将视图模型设置为 <see cref="T:Shapeless.Clay" /> 类型
+            </summary>
+            <param name="controller">
+                <see cref="T:Microsoft.AspNetCore.Mvc.Controller" />
+            </param>
+            <param name="model">视图模型</param>
+            <param name="clayOptions">
+                <see cref="T:Shapeless.ClayOptions" />
+            </param>
+            <returns>
+                <see cref="T:Microsoft.AspNetCore.Mvc.ViewResult" />
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.ControllerExtensions.ViewClay(Microsoft.AspNetCore.Mvc.Controller,System.String,System.Object,Shapeless.ClayOptions)">
+            <summary>
+                创建一个 <see cref="T:Microsoft.AspNetCore.Mvc.ViewResult" /> 对象，并将视图模型设置为 <see cref="T:Shapeless.Clay" /> 类型
+            </summary>
+            <param name="controller">
+                <see cref="T:Microsoft.AspNetCore.Mvc.Controller" />
+            </param>
+            <param name="viewName">视图名称</param>
+            <param name="model">视图模型</param>
+            <param name="clayOptions">
+                <see cref="T:Shapeless.ClayOptions" />
+            </param>
+            <returns>
+                <see cref="T:Microsoft.AspNetCore.Mvc.ViewResult" />
+            </returns>
+        </member>
         <member name="T:Microsoft.Extensions.DependencyInjection.ShapelessMvcBuilderExtensions">
             <summary>
                 流变对象模块 <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder" /> 拓展类

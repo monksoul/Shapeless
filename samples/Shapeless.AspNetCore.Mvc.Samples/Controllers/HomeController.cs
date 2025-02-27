@@ -6,7 +6,8 @@ public class HomeController(ILogger<HomeController> logger) : Controller
 
     public IActionResult Index()
     {
-        return View(Clay.Parse("""{"id":1,"name":"Furion"}"""));
+        // return View(Clay.Parse("""{"id":1,"name":"Furion"}"""));
+        return this.ViewClay("""{"id":1,"name":"Furion"}""");
     }
 
     public IActionResult Privacy()
