@@ -140,7 +140,7 @@ public class ClayEventsTests
     }
 
     [Fact]
-    public void AddEvent_Action_ReturnOK()
+    public void AddEvent_WithAction_ReturnOK()
     {
         var clay = new Clay();
         var events = new string[4];

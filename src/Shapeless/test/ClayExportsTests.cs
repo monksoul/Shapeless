@@ -1093,20 +1093,20 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.Equal("[-3,-2,-1,0,null,1,10,20,30,2,3]", clay.ToJsonString());
     }
 
-    // [Fact]
-    // public void ToDictionary_ReturnOK()
-    // {
-    //     var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
-    //     var dictionary = clay.ToDictionary((dynamic? u) => u?.Key, u => u?.Value);
-    //     Assert.NotNull(dictionary);
-    //     Assert.True(dictionary.ContainsKey("id"));
-    //     Assert.True(dictionary.ContainsKey("name"));
-    //
-    //     var dictionary2 = clay.ToDictionary((dynamic? u) => u?.Key, u => u?.Value);
-    //     Assert.NotNull(dictionary2);
-    //     Assert.True(dictionary2.ContainsKey("id"));
-    //     Assert.True(dictionary2.ContainsKey("name"));
-    // }
+    [Fact]
+    public void ToDictionary_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        var dictionary = clay.ToDictionary((dynamic? u) => u!.Key, u => u?.Value);
+        Assert.NotNull(dictionary);
+        Assert.True(dictionary.ContainsKey("id"));
+        Assert.True(dictionary.ContainsKey("name"));
+
+        var dictionary2 = clay.AsEnumerateObject().ToDictionary(u => u.Key, u => u.Value);
+        Assert.NotNull(dictionary2);
+        Assert.True(dictionary2.ContainsKey("id"));
+        Assert.True(dictionary2.ContainsKey("name"));
+    }
 
     [Fact]
     public void Add_Invalid_Parameters()
