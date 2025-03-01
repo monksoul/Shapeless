@@ -355,7 +355,7 @@
             <remarks>
                 若为单一对象，则项的类型为 <![CDATA[KeyValuePair<string, dynamic?>]]>。
             </remarks>
-            <param name="action">自定义委托</param>
+            <param name="predicate">自定义委托</param>
         </member>
         <member name="M:Shapeless.Clay.Map``1(System.Func{System.Object,``0})">
             <summary>
@@ -364,7 +364,7 @@
             <remarks>
                 若为单一对象，则项的类型为 <![CDATA[KeyValuePair<string, dynamic?>]]>。
             </remarks>
-            <param name="func">自定义委托</param>
+            <param name="selector">选择器</param>
             <typeparam name="T">目标结果类型</typeparam>
             <returns>
                 <see cref="T:System.Collections.Generic.IEnumerable`1" />

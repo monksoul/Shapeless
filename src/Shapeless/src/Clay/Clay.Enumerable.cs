@@ -126,15 +126,15 @@ public partial class Clay
     /// <remarks>
     ///     若为单一对象，则项的类型为 <![CDATA[KeyValuePair<string, dynamic?>]]>。
     /// </remarks>
-    /// <param name="action">自定义委托</param>
-    public void ForEach(Action<dynamic?> action)
+    /// <param name="predicate">自定义委托</param>
+    public void ForEach(Action<dynamic?> predicate)
     {
-        ArgumentNullException.ThrowIfNull(action);
+        ArgumentNullException.ThrowIfNull(predicate);
 
         // 逐条遍历
         foreach (var item in this)
         {
-            action(item);
+            predicate(item);
         }
     }
 
@@ -144,19 +144,19 @@ public partial class Clay
     /// <remarks>
     ///     若为单一对象，则项的类型为 <![CDATA[KeyValuePair<string, dynamic?>]]>。
     /// </remarks>
-    /// <param name="func">自定义委托</param>
+    /// <param name="selector">选择器</param>
     /// <typeparam name="T">目标结果类型</typeparam>
     /// <returns>
     ///     <see cref="IEnumerable{T}" />
     /// </returns>
-    public IEnumerable<T> Map<T>(Func<dynamic?, T> func)
+    public IEnumerable<T> Map<T>(Func<dynamic?, T> selector)
     {
-        ArgumentNullException.ThrowIfNull(func);
+        ArgumentNullException.ThrowIfNull(selector);
 
         // 逐条遍历
         foreach (var item in this)
         {
-            yield return func(item);
+            yield return selector(item);
         }
     }
 
