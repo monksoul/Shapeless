@@ -402,6 +402,32 @@
                 移除数据之后事件
             </summary>
         </member>
+        <member name="M:Shapeless.Clay.AddEvent(System.String,Shapeless.ClayEventHandler)">
+            <summary>
+                添加事件
+            </summary>
+            <param name="eventName">事件名。可选值：Changing、Changed、Removing 和 Removed。</param>
+            <param name="handler">
+                <see cref="T:Shapeless.ClayEventHandler" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:Shapeless.Clay.AddEvent(System.String,System.Action{System.Object,Shapeless.ClayEventArgs})">
+            <summary>
+                添加事件
+            </summary>
+            <param name="eventName">事件名。可选值：Changing、Changed、Removing 和 Removed。</param>
+            <param name="handler">
+                <see cref="T:Shapeless.ClayEventHandler" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
         <member name="M:Shapeless.Clay.OnChanging(System.Object)">
             <summary>
                 触发数据变更之前事件
