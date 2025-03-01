@@ -66,7 +66,7 @@ public class ClayEnumerableTests(ITestOutputHelper output)
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
         using var objectEnumerator = clay.GetEnumerator();
 
-        var list = new List<KeyValuePair<object, dynamic?>>();
+        var list = new List<KeyValuePair<string, dynamic?>>();
         while (objectEnumerator.MoveNext())
         {
             list.Add(objectEnumerator.Current);
@@ -81,33 +81,30 @@ public class ClayEnumerableTests(ITestOutputHelper output)
         var clay2 = Clay.Parse("[1,2,3]");
         using var arrayEnumerator = clay2.GetEnumerator();
 
-        var list2 = new List<KeyValuePair<object, dynamic?>>();
+        var list2 = new List<dynamic>();
         while (arrayEnumerator.MoveNext())
         {
             list2.Add(arrayEnumerator.Current);
         }
 
         Assert.Equal(3, list2.Count);
-        Assert.Equal(0, list2[0].Key);
-        Assert.Equal(1, list2[0].Value);
-        Assert.Equal(1, list2[1].Key);
-        Assert.Equal(2, list2[1].Value);
-        Assert.Equal(2, list2[2].Key);
-        Assert.Equal(3, list2[2].Value);
+        Assert.Equal(1, list2[0]);
+        Assert.Equal(2, list2[1]);
+        Assert.Equal(3, list2[2]);
 
-        Assert.Equal(["id", "name"], clay.Select(u => u.Key).ToList());
-        Assert.Equal([0, 1, 2], clay2.Select(u => u.Key).ToList());
+        Assert.Equal(["id", "name"], clay.Select((dynamic? u) => u?.Key).ToList());
+        Assert.Equal([1, 2, 3], clay2.Select(u => u).ToList());
 
         dynamic clay3 = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
-        foreach (KeyValuePair<object, dynamic?> item in clay3)
+        foreach (KeyValuePair<string, dynamic?> item in clay3)
         {
-            output.WriteLine(item.Key.ToString());
+            output.WriteLine(item.Key);
         }
 
         dynamic clay4 = Clay.Parse("[1,2,3]");
-        foreach (KeyValuePair<object, dynamic?> item in clay4)
+        foreach (var item in clay4)
         {
-            output.WriteLine(item.Key.ToString());
+            output.WriteLine(item?.ToString());
         }
     }
 
@@ -164,8 +161,7 @@ public class ClayEnumerableTests(ITestOutputHelper output)
     public void ForEach_Invalid_Parameters()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
-        Assert.Throws<ArgumentNullException>(() => clay.ForEach((Action<dynamic?>)null!));
-        Assert.Throws<ArgumentNullException>(() => clay.ForEach((Action<object, dynamic?>)null!));
+        Assert.Throws<ArgumentNullException>(() => clay.ForEach(null!));
     }
 
     [Fact]
@@ -177,21 +173,16 @@ public class ClayEnumerableTests(ITestOutputHelper output)
             output.WriteLine($"Value:{item}");
         });
 
-        clay.ForEach((key, item) =>
+        clay.ForEach(u =>
         {
-            output.WriteLine($"Key: {key}, Value:{item}");
+            output.WriteLine($"Key: {u?.Key}, Value:{u?.Value}");
         });
         Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay.ToJsonString());
 
         var array = Clay.Parse("[1,2,3]");
-        array.ForEach(item =>
+        array.ForEach(u =>
         {
-            output.WriteLine($"Value:{item}");
-        });
-
-        array.ForEach((index, item) =>
-        {
-            output.WriteLine($"Index: {index}, Value:{item}");
+            output.WriteLine($"Value:{u}");
         });
 
         Assert.Equal("[1,2,3]", array.ToJsonString());
@@ -201,46 +192,36 @@ public class ClayEnumerableTests(ITestOutputHelper output)
     public void Map_Invalid_Parameters()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
-        Assert.Throws<ArgumentNullException>(() => clay.Map((Func<dynamic?, ClayModel>)null!).ToList());
-        Assert.Throws<ArgumentNullException>(() => clay.Map((Func<object, dynamic?, string>)null!).ToList());
+        Assert.Throws<ArgumentNullException>(() => clay.Map<ClayModel>(null!).ToList());
     }
 
     [Fact]
     public void Map_ReturnOK()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
-        var list = clay.Map(item => item?.ToString()).ToList();
-        Assert.Equal(["1", "furion"], list);
-
-        var list2 = clay.Map((key, item) => item?.ToString()).ToList();
-        Assert.Equal(["1", "furion"], list2);
+        var list = clay.Map(item => item?.Value).ToList();
+        Assert.Equal([1, "furion"], list);
 
         var array = Clay.Parse("[1,2,3]");
-        var list3 = array.Map(item => (int)item!).ToList();
+        var list3 = array.Map(item => item!).ToList();
         Assert.Equal([1, 2, 3], list3);
-
-        var list4 = array.Map((index, item) => (int)item!).ToList();
-        Assert.Equal([1, 2, 3], list4);
     }
 
     [Fact]
     public void Filter_Invalid_Parameters()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
-        Assert.Throws<ArgumentNullException>(() => clay.Filter((Func<dynamic?, bool>)null!));
-        Assert.Throws<ArgumentNullException>(() => clay.Filter((Func<object, dynamic?, bool>)null!));
+        Assert.Throws<ArgumentNullException>(() => clay.Filter(null!));
     }
 
     [Fact]
     public void Filter_ReturnOK()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\",\"age\":30}");
-        Assert.Equal("{\"name\":\"furion\",\"age\":30}", clay.Filter(item => item?.ToString() != "1").ToJsonString());
         Assert.Equal("{\"name\":\"furion\",\"age\":30}",
-            clay.Filter((key, value) => key.ToString() != "id").ToJsonString());
+            clay.Filter(item => item?.Value.Equals(1) == false).ToJsonString());
 
         var array = Clay.Parse("[1,2,3]");
         Assert.Equal("[2,3]", array.Filter(item => item > 1).ToJsonString());
-        Assert.Equal("[2,3]", array.Filter((index, item) => item > 1).ToJsonString());
     }
 }

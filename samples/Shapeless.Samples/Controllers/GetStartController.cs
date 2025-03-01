@@ -91,6 +91,14 @@ public class GetStartController
         // 组合使用格式化符
         Console.WriteLine($"{clay:ZUC}");
 
+        // 便捷初始化方式
+        dynamic clay2 = new Clay
+        {
+            ["id"] = 1,
+            ["name"] = "Shapeless"
+        };
+        Console.WriteLine(clay2);
+
         return clay;
     }
 
@@ -153,6 +161,15 @@ public class GetStartController
 
         // 输出字符串
         Console.WriteLine(parts); // 或使用 parts.ToString();
+
+        // 便捷初始化方式
+        dynamic array2 = new Clay.Array
+        {
+            [0] = 1,
+            [1] = "Shapeless",
+            [2] = true
+        };
+        Console.WriteLine(array2);
 
         return clay;
     }
@@ -300,8 +317,7 @@ public class GetStartController
         dataTable.Rows.Add(2, "百小僧");
 
         dynamic clay13 = Clay.Parse(dataTable,
-            new ClayOptions().Configure(options =>
-                options.JsonSerializerOptions.Converters.Add(new DataTableJsonConverter())));
+            options => options.JsonSerializerOptions.Converters.Add(new DataTableJsonConverter()));
 
         // 打印 JSON
         Console.WriteLine(
@@ -321,77 +337,73 @@ public class GetStartController
 
         dynamic clay = Clay.Parse("""{"id":1,"name":"shapeless"}""");
 
-        // 遍历键值（object 类型键）
-        foreach (KeyValuePair<object, dynamic?> item in clay) // 或使用 clay.AsEnumerable()
+        // 遍历键值
+        foreach (KeyValuePair<string, dynamic?> item in clay) // 或使用 clay.AsEnumerateObject()
+        {
             Console.WriteLine($"Key: {item.Key} Value: {item.Value}");
-
-        // 遍历键值（string 类型键）
-        foreach (KeyValuePair<string, dynamic?> item in clay.AsEnumerateObject())
-            Console.WriteLine($"Key: {item.Key} Value: {item.Value}");
+        }
 
         // 遍历键
-        foreach (var key in clay.Keys) Console.WriteLine($"Key: {key}");
+        foreach (var key in clay.Keys)
+        {
+            Console.WriteLine($"Key: {key}");
+        }
 
         // 遍历值
-        foreach (var value in clay.Values) Console.WriteLine($"Value: {value}");
+        foreach (var value in clay.Values)
+        {
+            Console.WriteLine($"Value: {value}");
+        }
 
         // 使用枚举器方式遍历
-        using IEnumerator<KeyValuePair<object, dynamic?>> objectEnumerator = clay.GetEnumerator();
+        using IEnumerator<dynamic?> objectEnumerator = clay.GetEnumerator();
 
-        var listObject = new List<KeyValuePair<object, dynamic?>>();
-        while (objectEnumerator.MoveNext()) listObject.Add(objectEnumerator.Current);
+        var listObject = new List<KeyValuePair<string, dynamic?>>();
+        while (objectEnumerator.MoveNext())
+        {
+            listObject.Add(objectEnumerator.Current);
+        }
 
         Debug.Assert(listObject.Count == 2);
 
-        // 使用 ForEach 方法遍历值
-        clay.ForEach(new Action<dynamic?>(value => { Console.WriteLine($"Value: {value}"); }));
-
-        // 使用 ForEach 方法遍历键值
-        clay.ForEach(new Action<object, dynamic?>((key, value) =>
-        {
-            Console.WriteLine($"Key: {key} Value: {value}");
-        }));
-
-        // 享受友好的代码智能完成编程体验
-        foreach (var (key, value) in (Clay)clay) Console.WriteLine($"Key: {key} Value: {value}");
+        // 使用 ForEach 方法遍历
+        clay.ForEach(new Action<dynamic?>(item => { Console.WriteLine($"Key: {item?.Key} Value: {item?.Value}"); }));
 
         // ===================== 集合或数组 =====================
 
         dynamic array = Clay.Parse("""[1,2,true,false,"Furion",{"id":1,"name":"shapeless"},null]""");
 
-        // 遍历项（object 类型索引）
-        foreach (KeyValuePair<object, dynamic?> item in array) // 或使用 clay.AsEnumerable()
-            Console.WriteLine($"Index: {item.Key} Value: {item.Value}");
-
         // 遍历项
-        foreach (var item in array.AsEnumerateArray())
+        foreach (var item in array) // 或使用 array.AsEnumerateArray()
+        {
             Console.WriteLine($"Value: {item}");
+        }
 
         // 遍历索引
-        foreach (var index in array.Keys) Console.WriteLine($"Index: {index}");
+        foreach (var index in array.Keys)
+        {
+            Console.WriteLine($"Index: {index}");
+        }
 
         // 遍历值
-        foreach (var value in array.Values) Console.WriteLine($"Value: {value}");
+        foreach (var value in array.Values)
+        {
+            Console.WriteLine($"Value: {value}");
+        }
 
         // 使用枚举器方式遍历
-        using IEnumerator<KeyValuePair<object, dynamic?>> arrayEnumerator = array.GetEnumerator();
+        using IEnumerator<dynamic?> arrayEnumerator = array.GetEnumerator();
 
-        var listArray = new List<KeyValuePair<object, dynamic?>>();
-        while (arrayEnumerator.MoveNext()) listArray.Add(objectEnumerator.Current);
+        var listArray = new List<dynamic?>();
+        while (arrayEnumerator.MoveNext())
+        {
+            listArray.Add(objectEnumerator.Current);
+        }
 
         Debug.Assert(listArray.Count == 7);
 
-        // 使用 ForEach 方法遍历值
+        // 使用 ForEach 方法遍历
         array.ForEach(new Action<dynamic?>(value => { Console.WriteLine($"Value: {value}"); }));
-
-        // 使用 ForEach 方法遍历索引与值
-        array.ForEach(new Action<object, dynamic?>((index, value) =>
-        {
-            Console.WriteLine($"Index: {index} Value: {value}");
-        }));
-
-        // 享受友好的代码智能完成编程体验
-        foreach (var (index, value) in (Clay)array) Console.WriteLine($"Index: {index} Value: {value}");
     }
 
     /// <summary>
@@ -405,56 +417,25 @@ public class GetStartController
 
         dynamic clay = Clay.Parse("""{"id":1,"name":"shapeless"}""");
 
-        // Lambda 查询键值（object 类型键）
-        var list1 = ((Clay)clay).Where(u => (string)u.Key == "id").OrderBy(u => u.Key).ToList();
-        var list2 = ((IEnumerable<KeyValuePair<object, dynamic?>>)clay).Where(u => (string)u.Key == "id")
-            .OrderBy(u => u.Key).ToList();
+        // 将 dynamic 对象显式转换回 Clay 类型
+        Clay clayObject = clay;
 
-        // Lambda 查询键值（string 类型键）
-        var list3 = ((Clay)clay).AsEnumerateObject().Where(u => u.Key == "id").OrderBy(u => u.Key).ToList();
+        // Lambda 操作
+        var list1 = clayObject.Where((dynamic? u) => u?.Key == "id").OrderBy(u => u?.Key).ToList();
+        var list2 = clayObject.Select((dynamic? u) => u?.Value).ToList();
 
-        // Linq 查询键值（object 类型键）
-        var query1 = from item in (Clay)clay
-            where (string)item.Key == "id"
-            orderby item.Key
-            select item;
+        // 或使用 clayObject.AsEnumerateObject()
+        var list3 = clayObject.AsEnumerateObject().Where(u => u.Key == "id").OrderBy(u => u.Key).ToList();
+        var list4 = clayObject.AsEnumerateObject().Select(u => u.Value).ToList();
 
-        var list4 = query1.ToList();
-
-        // Linq 查询键值（string 类型键）
-        var query2 = from item in ((Clay)clay).AsEnumerateObject()
+        // Linq 操作
+        var query = from item in clayObject.AsEnumerateObject()
             where item.Key == "id"
             orderby item.Key
             select item;
+        var list5 = query.ToList();
 
-        var list5 = query2.ToList();
-
-        // 将 dynamic 对象显式转换回 Clay 类型，简化类型转换操作
-        Clay clayObject = clay; // 或使用 var clayObject = (Clay)clay;
-
-        // Lambda 查询键值（object 类型键）
-        var list6 = clayObject.Where(u => (string)u.Key == "id").OrderBy(u => u.Key).ToList();
-
-        // Lambda 查询键值（string 类型键）
-        var list7 = clayObject.AsEnumerateObject().Where(u => u.Key == "id").OrderBy(u => u.Key).ToList();
-
-        // Linq 查询键值（object 类型键）
-        var query3 = from item in clayObject
-            where (string)item.Key == "id"
-            orderby item.Key
-            select item;
-
-        var list8 = query3.ToList();
-
-        // Linq 查询键值（string 类型键）
-        var query4 = from item in clayObject.AsEnumerateObject()
-            where item.Key == "id"
-            orderby item.Key
-            select item;
-
-        var list9 = query4.ToList();
-
-        return new { list1, list2, list3, list4, list5, list6, list7, list8, list9 };
+        return new { list1, list2, list3, list4, list5 };
     }
 
     /// <summary>
@@ -466,54 +447,24 @@ public class GetStartController
     {
         dynamic clay = Clay.Parse("""[1,2,true,false,"Furion",{"id":1,"name":"shapeless"},null]""");
 
-        // Lambda 查询索引与值（object 类型索引）
-        var list1 = ((Clay)clay).Where(u => (int)u.Key > 2).OrderBy(u => u.Key).ToList();
-        var list2 = ((IEnumerable<KeyValuePair<object, dynamic?>>)clay).Where(u => (int)u.Key > 2)
-            .OrderBy(u => u.Key).ToList();
+        // 将 dynamic 对象显式转换回 Clay 类型
+        Clay clayArray = clay;
 
-        // Lambda 查询值
-        var list3 = ((Clay)clay).AsEnumerateArray().Where(u => u?.Equals(2) == false).ToList();
+        // Lambda 操作
+        var list1 = clayArray.Where((dynamic? u) => u?.Equals(2) == false).ToList();
+        var list2 = clayArray.Select((dynamic? u) => new { data = u }).ToList();
 
-        // Linq 查询索引与值（object 类型索引）
-        var query1 = from item in (Clay)clay
-            where (int)item.Key > 2
-            orderby item.Key
-            select item;
+        // 或使用 clayArray.AsEnumerateArray()
+        var list3 = clayArray.AsEnumerateArray().Where(u => u?.Equals(2) == false).ToList();
+        var list4 = clayArray.AsEnumerateArray().Select(u => new { data = u }).ToList();
 
-        var list4 = query1.ToList();
-
-        // Linq 查询值
-        var query2 = from item in ((Clay)clay).AsEnumerateArray()
+        // Linq 操作
+        var query = from item in clayArray.AsEnumerateArray()
             where item?.Equals(2) == false
-            select item;
+            select new { data = item };
+        var list5 = query.ToList();
 
-        var list5 = query2.ToList();
-
-        // 将 dynamic 对象显式转换回 Clay 类型，简化类型转换操作
-        Clay clayArray = clay; // 或使用 var clayArray = (Clay)clay;
-
-        // Lambda 查询索引与值（object 类型索引）
-        var list6 = clayArray.Where(u => (int)u.Key > 2).OrderBy(u => u.Key).ToList();
-
-        // Lambda 查询值
-        var list7 = clayArray.AsEnumerateArray().Where(u => u?.Equals(2) == false).ToList();
-
-        // Linq 查询索引与值（object 类型索引）
-        var query3 = from item in clayArray
-            where (int)item.Key > 2
-            orderby item.Key
-            select item;
-
-        var list8 = query3.ToList();
-
-        // Linq 查询索引与值（int 类型索引）
-        var query4 = from item in clayArray.AsEnumerateArray()
-            where item?.Equals(2) == false
-            select item;
-
-        var list9 = query4.ToList();
-
-        return new { list1, list2, list3, list4, list5, list6, list7, list8, list9 };
+        return new { list1, list2, list3, list4, list5 };
     }
 
     /// <summary>
@@ -666,9 +617,10 @@ public class GetStartController
         // ===================== 单一对象 =====================
 
         dynamic clay = Clay.Parse("""{"id":1,"name":"shapeless"}""");
+        Clay clayObject = clay;
 
         // 数据变更之前
-        ((Clay)clay).Changing += (sender, args) =>
+        clayObject.Changing += (sender, args) =>
         {
             Console.WriteLine(args.IsFound
                 ? $"变更之前 (键：{args.Identifier}，值：{sender[args.Identifier]})"
@@ -676,13 +628,13 @@ public class GetStartController
         };
 
         // 数据变更之后
-        ((Clay)clay).Changed += (sender, args) =>
+        clayObject.Changed += (sender, args) =>
         {
             Console.WriteLine($"变更之后 (键：{args.Identifier}，值：{sender[args.Identifier]})");
         };
 
         // 移除数据之前
-        ((Clay)clay).Removing += (sender, args) =>
+        clayObject.Removing += (sender, args) =>
         {
             Console.WriteLine(args.IsFound
                 ? $"移除之前 (键：{args.Identifier}，值：{sender[args.Identifier]})"
@@ -690,7 +642,7 @@ public class GetStartController
         };
 
         // 移除数据之后
-        ((Clay)clay).Removed += (sender, args) => { Console.WriteLine($"移除之后 (键: {args.Identifier}) 不存在"); };
+        clayObject.Removed += (sender, args) => { Console.WriteLine($"移除之后 (键: {args.Identifier}) 不存在"); };
 
         clay.id = 2;
         clay.name = "Shapeless";
@@ -701,9 +653,10 @@ public class GetStartController
         // ===================== 集合或数组 =====================
 
         dynamic array = Clay.Parse("[1,2,10.3,true,false]");
+        Clay clayArray = array;
 
         // 数据变更之前
-        ((Clay)array).Changing += (sender, args) =>
+        clayArray.Changing += (sender, args) =>
         {
             Console.WriteLine(args.IsFound
                 ? $"变更之前 (索引：{args.Identifier}，值：{sender[args.Identifier]})"
@@ -711,13 +664,13 @@ public class GetStartController
         };
 
         // 数据变更之后
-        ((Clay)array).Changed += (sender, args) =>
+        clayArray.Changed += (sender, args) =>
         {
             Console.WriteLine($"变更之后 (索引：{args.Identifier}，值：{sender[args.Identifier]})");
         };
 
         // 移除数据之前
-        ((Clay)array).Removing += (sender, args) =>
+        clayArray.Removing += (sender, args) =>
         {
             Console.WriteLine(args.IsFound
                 ? $"移除之前 (索引：{args.Identifier}，值：{sender[args.Identifier]})"
@@ -725,7 +678,7 @@ public class GetStartController
         };
 
         // 移除数据之后
-        ((Clay)array).Removed += (sender, args) => { Console.WriteLine($"移除之后 (索引: {args.Identifier}) 不存在"); };
+        clayArray.Removed += (sender, args) => { Console.WriteLine($"移除之后 (索引: {args.Identifier}) 不存在"); };
 
         array.Add("Furion");
         array.Insert(0, "One");

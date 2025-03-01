@@ -317,6 +317,9 @@
             <summary>
                 获取循环访问元素的枚举数
             </summary>
+            <remarks>
+                若为单一对象，则项的类型为 <![CDATA[KeyValuePair<string, dynamic?>]]>。
+            </remarks>
             <returns>
                 <see cref="T:System.Collections.Generic.IEnumerator`1" />
             </returns>
@@ -349,28 +352,18 @@
             <summary>
                 遍历 <see cref="T:Shapeless.Clay" />
             </summary>
-            <param name="action">自定义委托</param>
-        </member>
-        <member name="M:Shapeless.Clay.ForEach(System.Action{System.Object,System.Object})">
-            <summary>
-                遍历 <see cref="T:Shapeless.Clay" />
-            </summary>
+            <remarks>
+                若为单一对象，则项的类型为 <![CDATA[KeyValuePair<string, dynamic?>]]>。
+            </remarks>
             <param name="action">自定义委托</param>
         </member>
         <member name="M:Shapeless.Clay.Map``1(System.Func{System.Object,``0})">
             <summary>
                 遍历 <see cref="T:Shapeless.Clay" /> 并返回映射后的 <typeparamref name="T" /> 集合
             </summary>
-            <param name="func">自定义委托</param>
-            <typeparam name="T">目标结果类型</typeparam>
-            <returns>
-                <see cref="T:System.Collections.Generic.IEnumerable`1" />
-            </returns>
-        </member>
-        <member name="M:Shapeless.Clay.Map``1(System.Func{System.Object,System.Object,``0})">
-            <summary>
-                遍历 <see cref="T:Shapeless.Clay" /> 并返回映射后的 <typeparamref name="T" /> 集合
-            </summary>
+            <remarks>
+                若为单一对象，则项的类型为 <![CDATA[KeyValuePair<string, dynamic?>]]>。
+            </remarks>
             <param name="func">自定义委托</param>
             <typeparam name="T">目标结果类型</typeparam>
             <returns>
@@ -381,15 +374,9 @@
             <summary>
                 根据条件过滤并返回新的 <see cref="T:Shapeless.Clay" />
             </summary>
-            <param name="predicate">自定义条件委托</param>
-            <returns>
-                <see cref="T:Shapeless.Clay" />
-            </returns>
-        </member>
-        <member name="M:Shapeless.Clay.Filter(System.Func{System.Object,System.Object,System.Boolean})">
-            <summary>
-                根据条件过滤并返回新的 <see cref="T:Shapeless.Clay" />
-            </summary>
+            <remarks>
+                若为单一对象，则项的类型为 <![CDATA[KeyValuePair<string, dynamic?>]]>。
+            </remarks>
             <param name="predicate">自定义条件委托</param>
             <returns>
                 <see cref="T:Shapeless.Clay" />

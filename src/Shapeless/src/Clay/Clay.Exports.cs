@@ -643,7 +643,10 @@ public partial class Clay
         // 遍历所有 Clay 并设置值
         foreach (var clay in clays)
         {
-            clay.ForEach((key, value) => combineClay[$"{key}"] = value);
+            foreach (var (key, value) in clay.AsEnumerateObject())
+            {
+                combineClay[key] = value;
+            }
         }
 
         return combineClay;
@@ -714,10 +717,16 @@ public partial class Clay
     /// </returns>
     public object? As(Type resultType, JsonSerializerOptions? jsonSerializerOptions = null)
     {
-        // 检查是否是 Clay 类型或 IEnumerable<KeyValuePair<object, object?>> 类型
-        if (IsClay(resultType) || resultType == typeof(IEnumerable<KeyValuePair<object, object?>>))
+        // 检查是否是 Clay 类型或 IEnumerable<dynamic?> 类型
+        if (IsClay(resultType) || resultType == typeof(IEnumerable<dynamic?>))
         {
             return this;
+        }
+
+        // 检查是否是 IEnumerable<KeyValuePair<object, dynamic?>> 类型
+        if (resultType == typeof(IEnumerable<KeyValuePair<object, dynamic?>>))
+        {
+            return AsEnumerable();
         }
 
         // 检查是否是 IEnumerable<KeyValuePair<string, dynamic?>> 类型且是单一对象
@@ -730,12 +739,6 @@ public partial class Clay
         if (resultType == typeof(IEnumerable<KeyValuePair<int, dynamic?>>) && IsArray)
         {
             return AsEnumerateArray().Select((item, index) => new KeyValuePair<int, dynamic?>(index, item));
-        }
-
-        // 检查是否是 IEnumerable<dynamic> 类型且是集合或数组
-        if (resultType == typeof(IEnumerable<dynamic?>) && IsArray)
-        {
-            return AsEnumerateArray();
         }
 
         // 检查是否是 IActionResult 类型

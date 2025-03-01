@@ -41,10 +41,26 @@ public partial class Clay
     /// <summary>
     ///     获取循环访问元素的枚举数
     /// </summary>
+    /// <remarks>
+    ///     若为单一对象，则项的类型为 <![CDATA[KeyValuePair<string, dynamic?>]]>。
+    /// </remarks>
     /// <returns>
     ///     <see cref="IEnumerator{T}" />
     /// </returns>
-    public IEnumerator<KeyValuePair<object, dynamic?>> GetEnumerator() => AsEnumerable().GetEnumerator();
+    public IEnumerator<dynamic?> GetEnumerator()
+    {
+        foreach (var (identifier, value) in AsEnumerable())
+        {
+            if (IsObject)
+            {
+                yield return new KeyValuePair<string, dynamic?>((string)identifier, value);
+            }
+            else
+            {
+                yield return value;
+            }
+        }
+    }
 
     /// <summary>
     ///     获取单一对象或集合或数组的迭代器
@@ -107,33 +123,27 @@ public partial class Clay
     /// <summary>
     ///     遍历 <see cref="Clay" />
     /// </summary>
+    /// <remarks>
+    ///     若为单一对象，则项的类型为 <![CDATA[KeyValuePair<string, dynamic?>]]>。
+    /// </remarks>
     /// <param name="action">自定义委托</param>
     public void ForEach(Action<dynamic?> action)
-    {
-        // 空检查
-        ArgumentNullException.ThrowIfNull(action);
-
-        ForEach((_, item) => action(item));
-    }
-
-    /// <summary>
-    ///     遍历 <see cref="Clay" />
-    /// </summary>
-    /// <param name="action">自定义委托</param>
-    public void ForEach(Action<object, dynamic?> action)
     {
         ArgumentNullException.ThrowIfNull(action);
 
         // 逐条遍历
-        foreach (var (identifier, item) in AsEnumerable())
+        foreach (var item in this)
         {
-            action(identifier, item);
+            action(item);
         }
     }
 
     /// <summary>
     ///     遍历 <see cref="Clay " /> 并返回映射后的 <typeparamref name="T" /> 集合
     /// </summary>
+    /// <remarks>
+    ///     若为单一对象，则项的类型为 <![CDATA[KeyValuePair<string, dynamic?>]]>。
+    /// </remarks>
     /// <param name="func">自定义委托</param>
     /// <typeparam name="T">目标结果类型</typeparam>
     /// <returns>
@@ -141,60 +151,34 @@ public partial class Clay
     /// </returns>
     public IEnumerable<T> Map<T>(Func<dynamic?, T> func)
     {
-        // 空检查
-        ArgumentNullException.ThrowIfNull(func);
-
-        return Map<T>((_, item) => func(item));
-    }
-
-    /// <summary>
-    ///     遍历 <see cref="Clay " /> 并返回映射后的 <typeparamref name="T" /> 集合
-    /// </summary>
-    /// <param name="func">自定义委托</param>
-    /// <typeparam name="T">目标结果类型</typeparam>
-    /// <returns>
-    ///     <see cref="IEnumerable{T}" />
-    /// </returns>
-    public IEnumerable<T> Map<T>(Func<object, dynamic?, T> func)
-    {
         ArgumentNullException.ThrowIfNull(func);
 
         // 逐条遍历
-        foreach (var (identifier, item) in AsEnumerable())
+        foreach (var item in this)
         {
-            yield return func(identifier, item);
+            yield return func(item);
         }
     }
 
     /// <summary>
     ///     根据条件过滤并返回新的 <see cref="Clay" />
     /// </summary>
+    /// <remarks>
+    ///     若为单一对象，则项的类型为 <![CDATA[KeyValuePair<string, dynamic?>]]>。
+    /// </remarks>
     /// <param name="predicate">自定义条件委托</param>
     /// <returns>
     ///     <see cref="Clay" />
     /// </returns>
     public Clay Filter(Func<dynamic?, bool> predicate)
     {
-        // 空检查
-        ArgumentNullException.ThrowIfNull(predicate);
-
-        return Filter((_, item) => predicate(item));
-    }
-
-    /// <summary>
-    ///     根据条件过滤并返回新的 <see cref="Clay" />
-    /// </summary>
-    /// <param name="predicate">自定义条件委托</param>
-    /// <returns>
-    ///     <see cref="Clay" />
-    /// </returns>
-    public Clay Filter(Func<object, dynamic?, bool> predicate)
-    {
         ArgumentNullException.ThrowIfNull(predicate);
 
         // 根据条件过滤
-        var keyValuePairs = AsEnumerable().Where(u => predicate(u.Key, u.Value));
+        var keyValuePairs = this.Where((dynamic? u) => predicate(u));
 
-        return Parse(IsObject ? keyValuePairs.ToDictionary() : keyValuePairs.Select(u => u.Value), Options);
+        return Parse(IsObject
+            ? keyValuePairs.ToDictionary(u => u!.Key, u => u?.Value)
+            : keyValuePairs.Select(u => u), Options);
     }
 }

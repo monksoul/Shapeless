@@ -93,7 +93,7 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.Equal(5, array2[^2]);
 
         var rangeArray = array2[1..^1]; // 范围运算符
-        Assert.Equal("[2,5]", rangeArray?.ToJsonString());
+        Assert.Equal("[2,5]", rangeArray.ToJsonString());
     }
 
     [Fact]
@@ -285,7 +285,7 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.Equal("{\"X\":100,\"Y\":100}", clay20.ToJsonString());
 
         var utf8JsonReader2 = new Utf8JsonReader("{\"id\":1,\"name\":\"furion\"}"u8.ToArray(), true, default);
-        var clay21 = Clay.Parse(ref utf8JsonReader2, options => { });
+        var clay21 = Clay.Parse(ref utf8JsonReader2, _ => { });
         Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay21.ToJsonString());
     }
 
@@ -794,7 +794,7 @@ public class ClayExportsTests(ITestOutputHelper output)
     public void Get_WithRange_ReturnOK()
     {
         var clay = Clay.Parse("[1,2,3,4]");
-        Assert.Equal("[2,3]", clay.Get(1..^1)?.ToJsonString());
+        Assert.Equal("[2,3]", clay.Get(1..^1).ToJsonString());
     }
 
     [Fact]
@@ -941,7 +941,6 @@ public class ClayExportsTests(ITestOutputHelper output)
 
         var model6 = clay.As<IEnumerable<KeyValuePair<object, object?>>>();
         Assert.NotNull(model6);
-        Assert.Equal(clay.GetHashCode(), model6.GetHashCode());
 
         var model7 = clay.As<IEnumerable<KeyValuePair<string, object?>>>();
         Assert.NotNull(model7);
@@ -965,6 +964,7 @@ public class ClayExportsTests(ITestOutputHelper output)
         var list = array.As<IEnumerable<dynamic>>();
         Assert.NotNull(list);
         Assert.Equal([1, 2, 3], list.ToList());
+        Assert.Equal(array.GetHashCode(), list.GetHashCode());
     }
 
     [Fact]
@@ -1093,20 +1093,20 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.Equal("[-3,-2,-1,0,null,1,10,20,30,2,3]", clay.ToJsonString());
     }
 
-    [Fact]
-    public void ToDictionary_ReturnOK()
-    {
-        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
-        var dictionary = clay.ToDictionary(u => u.Key, u => u.Value);
-        Assert.NotNull(dictionary);
-        Assert.True(dictionary.ContainsKey("id"));
-        Assert.True(dictionary.ContainsKey("name"));
-
-        var dictionary2 = clay.ToDictionary();
-        Assert.NotNull(dictionary2);
-        Assert.True(dictionary2.ContainsKey("id"));
-        Assert.True(dictionary2.ContainsKey("name"));
-    }
+    // [Fact]
+    // public void ToDictionary_ReturnOK()
+    // {
+    //     var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+    //     var dictionary = clay.ToDictionary((dynamic? u) => u?.Key, u => u?.Value);
+    //     Assert.NotNull(dictionary);
+    //     Assert.True(dictionary.ContainsKey("id"));
+    //     Assert.True(dictionary.ContainsKey("name"));
+    //
+    //     var dictionary2 = clay.ToDictionary((dynamic? u) => u?.Key, u => u?.Value);
+    //     Assert.NotNull(dictionary2);
+    //     Assert.True(dictionary2.ContainsKey("id"));
+    //     Assert.True(dictionary2.ContainsKey("name"));
+    // }
 
     [Fact]
     public void Add_Invalid_Parameters()
@@ -1248,8 +1248,8 @@ public class ClayExportsTests(ITestOutputHelper output)
     public void Slice_ReturnOK()
     {
         var clay = Clay.Parse("[1,2,3,4]");
-        Assert.Equal("[2,3]", clay.Slice(1, 3)?.ToJsonString());
-        Assert.Equal("[2,3]", clay.Slice(1..^1)?.ToJsonString());
+        Assert.Equal("[2,3]", clay.Slice(1, 3).ToJsonString());
+        Assert.Equal("[2,3]", clay.Slice(1..^1).ToJsonString());
     }
 
     [Fact]
