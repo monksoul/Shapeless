@@ -287,6 +287,12 @@ public class ClayExportsTests(ITestOutputHelper output)
         var utf8JsonReader2 = new Utf8JsonReader("{\"id\":1,\"name\":\"furion\"}"u8.ToArray(), true, default);
         var clay21 = Clay.Parse(ref utf8JsonReader2, _ => { });
         Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay21.ToJsonString());
+
+        dynamic expandoObject = new ExpandoObject();
+        expandoObject.id = 1;
+        expandoObject.name = "furion";
+        var clay22 = Clay.Parse(expandoObject);
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay22.ToJsonString());
     }
 
     [Fact]
