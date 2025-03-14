@@ -105,7 +105,12 @@ public sealed class ClayOptions
         // 解决中文乱码问题
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
         AllowTrailingCommas = true,
-        Converters = { new ClayJsonConverter() }
+        Converters =
+        {
+            new ClayJsonConverter(),
+            new DateTimeConverterUsingDateTimeParseAsFallback(),
+            new DateTimeOffsetConverterUsingDateTimeOffsetParseAsFallback()
+        }
     };
 
     /// <summary>

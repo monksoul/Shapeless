@@ -50,8 +50,12 @@ public class ClayOptionsTests
         Assert.Null(clayOptions.JsonSerializerOptions.PropertyNamingPolicy);
         Assert.Equal(JsonNumberHandling.AllowReadingFromString, clayOptions.JsonSerializerOptions.NumberHandling);
         Assert.Equal(JavaScriptEncoder.UnsafeRelaxedJsonEscaping, clayOptions.JsonSerializerOptions.Encoder);
-        Assert.Single(clayOptions.JsonSerializerOptions.Converters);
-        Assert.True(clayOptions.JsonSerializerOptions.Converters.First() is ClayJsonConverter);
+        Assert.Equal(3, clayOptions.JsonSerializerOptions.Converters.Count);
+        Assert.True(clayOptions.JsonSerializerOptions.Converters[0] is ClayJsonConverter);
+        Assert.True(clayOptions.JsonSerializerOptions.Converters[1] is DateTimeConverterUsingDateTimeParseAsFallback);
+        Assert.True(
+            clayOptions.JsonSerializerOptions.Converters[2] is
+                DateTimeOffsetConverterUsingDateTimeOffsetParseAsFallback);
     }
 
     [Fact]
@@ -65,10 +69,15 @@ public class ClayOptionsTests
     public void Configure_ReturnOK()
     {
         var clayOptions = new ClayOptions();
-        Assert.Single(clayOptions.JsonSerializerOptions.Converters);
+        Assert.Equal(3, clayOptions.JsonSerializerOptions.Converters.Count);
+        Assert.True(clayOptions.JsonSerializerOptions.Converters[0] is ClayJsonConverter);
+        Assert.True(clayOptions.JsonSerializerOptions.Converters[1] is DateTimeConverterUsingDateTimeParseAsFallback);
+        Assert.True(
+            clayOptions.JsonSerializerOptions.Converters[2] is
+                DateTimeOffsetConverterUsingDateTimeOffsetParseAsFallback);
 
         clayOptions.Configure(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
-        Assert.Equal(2, clayOptions.JsonSerializerOptions.Converters.Count);
+        Assert.Equal(4, clayOptions.JsonSerializerOptions.Converters.Count);
         Assert.True(clayOptions.JsonSerializerOptions.Converters.Last() is JsonStringEnumConverter);
     }
 }
