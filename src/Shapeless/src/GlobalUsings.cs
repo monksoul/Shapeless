@@ -2,6 +2,7 @@
 //
 // 此源代码遵循位于源代码树根目录中的 LICENSE 文件的许可证。
 
+global using Shapeless.Core.Converters.Json;
 global using Shapeless.Core.Extensions;
 global using System.Collections;
 global using System.ComponentModel.DataAnnotations;

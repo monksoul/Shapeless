@@ -1124,28 +1124,28 @@
         <member name="M:Shapeless.ClayJsonConverter.Write(System.Text.Json.Utf8JsonWriter,Shapeless.Clay,System.Text.Json.JsonSerializerOptions)">
             <inheritdoc />
         </member>
-        <member name="T:Shapeless.DateTimeConverterUsingDateTimeParseAsFallback">
+        <member name="T:Shapeless.Core.Converters.Json.DateTimeConverterUsingDateTimeParseAsFallback">
             <summary>
                 <see cref="T:System.DateTime" /> JSON 序列化转换器
             </summary>
             <remarks>在不符合 <c>ISO 8601-1:2019</c> 格式的 <see cref="T:System.DateTime" /> 时间使用 <c>DateTime.Parse</c> 作为回退。</remarks>
         </member>
-        <member name="M:Shapeless.DateTimeConverterUsingDateTimeParseAsFallback.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+        <member name="M:Shapeless.Core.Converters.Json.DateTimeConverterUsingDateTimeParseAsFallback.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
             <inheritdoc />
         </member>
-        <member name="M:Shapeless.DateTimeConverterUsingDateTimeParseAsFallback.Write(System.Text.Json.Utf8JsonWriter,System.DateTime,System.Text.Json.JsonSerializerOptions)">
+        <member name="M:Shapeless.Core.Converters.Json.DateTimeConverterUsingDateTimeParseAsFallback.Write(System.Text.Json.Utf8JsonWriter,System.DateTime,System.Text.Json.JsonSerializerOptions)">
             <inheritdoc />
         </member>
-        <member name="T:Shapeless.DateTimeOffsetConverterUsingDateTimeOffsetParseAsFallback">
+        <member name="T:Shapeless.Core.Converters.Json.DateTimeOffsetConverterUsingDateTimeOffsetParseAsFallback">
             <summary>
                 <see cref="T:System.DateTimeOffset" /> JSON 序列化转换器
             </summary>
             <remarks>在不符合 <c>ISO 8601-1:2019</c> 格式的 <see cref="T:System.DateTimeOffset" /> 时间使用 <c>DateTimeOffset.Parse</c> 作为回退。</remarks>
         </member>
-        <member name="M:Shapeless.DateTimeOffsetConverterUsingDateTimeOffsetParseAsFallback.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+        <member name="M:Shapeless.Core.Converters.Json.DateTimeOffsetConverterUsingDateTimeOffsetParseAsFallback.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
             <inheritdoc />
         </member>
-        <member name="M:Shapeless.DateTimeOffsetConverterUsingDateTimeOffsetParseAsFallback.Write(System.Text.Json.Utf8JsonWriter,System.DateTimeOffset,System.Text.Json.JsonSerializerOptions)">
+        <member name="M:Shapeless.Core.Converters.Json.DateTimeOffsetConverterUsingDateTimeOffsetParseAsFallback.Write(System.Text.Json.Utf8JsonWriter,System.DateTimeOffset,System.Text.Json.JsonSerializerOptions)">
             <inheritdoc />
         </member>
         <member name="T:Shapeless.Core.Extensions.ICollectionExtensions">

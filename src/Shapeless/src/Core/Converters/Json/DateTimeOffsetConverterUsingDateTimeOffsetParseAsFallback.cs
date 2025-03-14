@@ -2,7 +2,7 @@
 // 
 // 此源代码遵循位于源代码树根目录中的 LICENSE 文件的许可证。
 
-namespace Shapeless;
+namespace Shapeless.Core.Converters.Json;
 
 /// <summary>
 ///     <see cref="DateTimeOffset" /> JSON 序列化转换器

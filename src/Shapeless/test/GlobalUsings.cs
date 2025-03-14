@@ -4,6 +4,7 @@
 
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.CSharp.RuntimeBinder;
+global using Shapeless.Core.Converters.Json;
 global using System.ComponentModel.DataAnnotations;
 global using System.Data;
 global using System.Diagnostics;
