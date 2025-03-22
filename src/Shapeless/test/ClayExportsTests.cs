@@ -971,6 +971,20 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.NotNull(list);
         Assert.Equal([1, 2, 3], list.ToList());
         Assert.Equal(array.GetHashCode(), list.GetHashCode());
+
+        var clay3 = Clay.Parse("""
+                               {
+                                 "String1": 601139524199,
+                                 "String2": true,
+                                 "String3": false
+                               }
+                               """);
+
+        var model9 = clay3.As<StringClassTest>();
+        Assert.NotNull(model9);
+        Assert.Equal("601139524199", model9.String1);
+        Assert.Equal("True", model9.String2);
+        Assert.Equal("False", model9.String3);
     }
 
     [Fact]
@@ -1501,4 +1515,11 @@ public struct Point2
 {
     [JsonInclude] public int X;
     [JsonInclude] public int Y;
+}
+
+public class StringClassTest
+{
+    public string? String1 { get; set; }
+    public string? String2 { get; set; }
+    public string? String3 { get; set; }
 }

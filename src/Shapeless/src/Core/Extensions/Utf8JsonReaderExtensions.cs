@@ -25,4 +25,17 @@ internal static class Utf8JsonReaderExtensions
 
         return jsonDocument.RootElement.Clone().GetRawText();
     }
+
+    /// <summary>
+    ///     从 <see cref="Utf8JsonReader" /> 中提取原始值，并将其转换为字符串
+    /// </summary>
+    /// <remarks>支持处理各种类型的原始值（例如数字、布尔值等）。</remarks>
+    /// <param name="reader">
+    ///     <see cref="Utf8JsonReader" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="string" />
+    /// </returns>
+    internal static string ConvertRawValueToString(this Utf8JsonReader reader) =>
+        Encoding.UTF8.GetString(reader.HasValueSequence ? reader.ValueSequence.ToArray() : reader.ValueSpan);
 }

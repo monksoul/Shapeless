@@ -1148,6 +1148,18 @@
         <member name="M:Shapeless.Core.Converters.Json.DateTimeOffsetConverterUsingDateTimeOffsetParseAsFallback.Write(System.Text.Json.Utf8JsonWriter,System.DateTimeOffset,System.Text.Json.JsonSerializerOptions)">
             <inheritdoc />
         </member>
+        <member name="T:Shapeless.Core.Converters.Json.StringJsonConverter">
+            <summary>
+                <see cref="T:System.String" /> JSON 序列化转换器
+            </summary>
+            <remarks>解决 Number 类型和 Boolean 类型转 String 类型时异常。</remarks>
+        </member>
+        <member name="M:Shapeless.Core.Converters.Json.StringJsonConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <inheritdoc />
+        </member>
+        <member name="M:Shapeless.Core.Converters.Json.StringJsonConverter.Write(System.Text.Json.Utf8JsonWriter,System.String,System.Text.Json.JsonSerializerOptions)">
+            <inheritdoc />
+        </member>
         <member name="T:Shapeless.Core.Extensions.ICollectionExtensions">
             <summary>
                 <see cref="T:System.Collections.Generic.ICollection`1" /> 拓展类
@@ -1254,6 +1266,18 @@
             <summary>
                 获取 JSON 原始输入数据
             </summary>
+            <param name="reader">
+                <see cref="T:System.Text.Json.Utf8JsonReader" />
+            </param>
+            <returns>
+                <see cref="T:System.String" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Core.Extensions.Utf8JsonReaderExtensions.ConvertRawValueToString(System.Text.Json.Utf8JsonReader)">
+            <summary>
+                从 <see cref="T:System.Text.Json.Utf8JsonReader" /> 中提取原始值，并将其转换为字符串
+            </summary>
+            <remarks>支持处理各种类型的原始值（例如数字、布尔值等）。</remarks>
             <param name="reader">
                 <see cref="T:System.Text.Json.Utf8JsonReader" />
             </param>

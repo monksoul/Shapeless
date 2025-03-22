@@ -4,6 +4,7 @@
 
 global using Shapeless.Core.Converters.Json;
 global using Shapeless.Core.Extensions;
+global using System.Buffers;
 global using System.Collections;
 global using System.ComponentModel.DataAnnotations;
 global using System.Diagnostics.CodeAnalysis;

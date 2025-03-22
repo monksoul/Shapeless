@@ -101,6 +101,7 @@ public sealed class ClayOptions
     public JsonSerializerOptions JsonSerializerOptions { get; set; } = new(JsonSerializerOptions.Default)
     {
         PropertyNameCaseInsensitive = true,
+        // 允许 String 转 Number
         NumberHandling = JsonNumberHandling.AllowReadingFromString,
         // 解决中文乱码问题
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
@@ -109,7 +110,9 @@ public sealed class ClayOptions
         {
             new ClayJsonConverter(),
             new DateTimeConverterUsingDateTimeParseAsFallback(),
-            new DateTimeOffsetConverterUsingDateTimeOffsetParseAsFallback()
+            new DateTimeOffsetConverterUsingDateTimeOffsetParseAsFallback(),
+            // 允许 Number 或 Boolean 转 String
+            new StringJsonConverter()
         }
     };
 
