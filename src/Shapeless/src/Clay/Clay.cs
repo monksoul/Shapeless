@@ -521,6 +521,9 @@ public partial class Clay : DynamicObject, IEnumerable<object?>, IFormattable
             JsonNode jsonNode => jsonNode.DeepClone(),
             // 该操作不会复制自定义委托方法
             Clay clay => clay.DeepClone(options).JsonCanvas,
+            // 排除 ExpandoObject 委托属性
+            ExpandoObject expandoObject => SerializeToNode(
+                expandoObject.Where(kvp => kvp.Value is not Delegate).ToDictionary(u => u.Key, u => u.Value), options),
             _ => JsonSerializer.SerializeToNode(obj, options?.JsonSerializerOptions)
         };
 

@@ -220,6 +220,15 @@ public class ClayTests(ITestOutputHelper output)
         var jsonNode6 = Clay.SerializeToNode(dictionary);
         Assert.NotNull(jsonNode6);
         Assert.Equal("{\"name\":\"Furion\",\"id\":1}", jsonNode6.ToJsonString());
+
+        dynamic expandoObject = new ExpandoObject();
+        expandoObject.id = 1;
+        expandoObject.name = "furion";
+        expandoObject.sayHello = new Action(() => Console.WriteLine("Hello!"));
+        
+        var jsonNode7 = Clay.SerializeToNode(expandoObject);
+        Assert.NotNull(jsonNode7);
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", jsonNode7.ToJsonString());
     }
 
     [Fact]

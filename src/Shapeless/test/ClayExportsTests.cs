@@ -291,6 +291,8 @@ public class ClayExportsTests(ITestOutputHelper output)
         dynamic expandoObject = new ExpandoObject();
         expandoObject.id = 1;
         expandoObject.name = "furion";
+        expandoObject.sayHello = new Action(() => Console.WriteLine("Hello!"));
+
         var clay22 = Clay.Parse(expandoObject);
         Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay22.ToJsonString());
     }
