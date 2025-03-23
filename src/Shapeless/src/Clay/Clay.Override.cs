@@ -30,6 +30,10 @@ public partial class Clay
     });
 
     /// <inheritdoc />
+    /// <remarks>可用于控制序列化时能够被序列化的标识符。</remarks>
+    public override IEnumerable<string> GetDynamicMemberNames() => Keys.Select(u => u.ToString()!);
+
+    /// <inheritdoc />
     public override bool TryGetMember(GetMemberBinder binder, out object? result)
     {
         result = GetValue(binder.Name);

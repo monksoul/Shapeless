@@ -802,6 +802,16 @@
             <exception cref="T:System.ArgumentException"></exception>
             <exception cref="T:System.InvalidOperationException"></exception>
         </member>
+        <member name="M:Shapeless.Clay.Extend(System.Object[])">
+            <summary>
+                拓展属性或项
+            </summary>
+            <param name="values">值集合</param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
         <member name="M:Shapeless.Clay.Remove(System.Object)">
             <summary>
                 根据标识符删除数据
@@ -1056,6 +1066,10 @@
             </summary>
             <remarks>实际上获取的是内部类型 <c>CSharpInvokeMemberBinder</c> 的 <c>TypeArguments</c> 属性访问器。</remarks>
         </member>
+        <member name="M:Shapeless.Clay.GetDynamicMemberNames">
+            <inheritdoc />
+            <remarks>可用于控制序列化时能够被序列化的标识符。</remarks>
+        </member>
         <member name="M:Shapeless.Clay.TryGetMember(System.Dynamic.GetMemberBinder,System.Object@)">
             <inheritdoc />
         </member>
@@ -1238,10 +1252,73 @@
                 <see cref="T:System.Text.Json.Nodes.JsonNode" />
             </returns>
         </member>
+        <member name="T:Shapeless.Core.Extensions.ObjectExtensions">
+            <summary>
+                <see cref="T:System.Object" /> 拓展类
+            </summary>
+        </member>
+        <member name="M:Shapeless.Core.Extensions.ObjectExtensions.ObjectToDictionary(System.Object)">
+            <summary>
+                将对象转换为 <see cref="T:System.Collections.Generic.IDictionary`2" /> 类型对象
+            </summary>
+            <param name="obj">
+                <see cref="T:System.Object" />
+            </param>
+            <returns>
+                <see cref="T:System.Collections.Generic.IDictionary`2" />
+            </returns>
+            <exception cref="T:System.NotSupportedException"></exception>
+        </member>
         <member name="T:Shapeless.Core.Extensions.TypeExtensions">
             <summary>
                 <see cref="T:System.Type" /> 拓展类
             </summary>
+        </member>
+        <member name="M:Shapeless.Core.Extensions.TypeExtensions.IsBasicType(System.Type)">
+            <summary>
+                检查类型是否是基本类型
+            </summary>
+            <param name="type">
+                <see cref="T:System.Type" />
+            </param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Core.Extensions.TypeExtensions.IsKeyValuePair(System.Type)">
+            <summary>
+                检查类型是否是 <see cref="T:System.Collections.Generic.KeyValuePair`2" /> 类型
+            </summary>
+            <param name="type">
+                <see cref="T:System.Type" />
+            </param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Core.Extensions.TypeExtensions.IsKeyValueCollection(System.Type,System.Boolean@)">
+            <summary>
+                检查类型是否是键值对集合类型
+            </summary>
+            <param name="type">
+                <see cref="T:System.Type" />
+            </param>
+            <param name="isKeyValuePairCollection">是否是 <see cref="T:System.Collections.Generic.KeyValuePair`2" /> 集合类型</param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Core.Extensions.TypeExtensions.GetKeyValuePairOrJPropertyGetters(System.Type)">
+            <summary>
+                获取 <see cref="T:System.Collections.Generic.KeyValuePair`2" /> 或 <c>Newtonsoft.Json.Linq.JProperty</c> 类型键值属性值访问器
+            </summary>
+            <param name="keyValuePairType">
+                <see cref="T:System.Type" />
+            </param>
+            <returns>
+                <see cref="T:System.Tuple`2" />
+            </returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
         </member>
         <member name="M:Shapeless.Core.Extensions.TypeExtensions.CreatePropertyGetter(System.Type,System.Reflection.PropertyInfo)">
             <summary>
@@ -1281,6 +1358,23 @@
             <param name="reader">
                 <see cref="T:System.Text.Json.Utf8JsonReader" />
             </param>
+            <returns>
+                <see cref="T:System.String" />
+            </returns>
+        </member>
+        <member name="T:Shapeless.Core.Utilities.AliasAsUtility">
+            <summary>
+                提供别名获取实用方法
+            </summary>
+        </member>
+        <member name="M:Shapeless.Core.Utilities.AliasAsUtility.GetPropertyName(System.Reflection.PropertyInfo,System.Boolean@)">
+            <summary>
+                获取属性名
+            </summary>
+            <param name="property">
+                <see cref="T:System.Reflection.PropertyInfo" />
+            </param>
+            <param name="isDefined">是否定义特性</param>
             <returns>
                 <see cref="T:System.String" />
             </returns>
@@ -1500,6 +1594,22 @@
                         ○ Match a Unicode digit.<br/>
             </code>
             </remarks>
+        </member>
+        <member name="T:System.AliasAsAttribute">
+            <summary>
+                设置别名特性
+            </summary>
+        </member>
+        <member name="M:System.AliasAsAttribute.#ctor(System.String)">
+            <summary>
+                <inheritdoc cref="T:System.AliasAsAttribute" />
+            </summary>
+            <param name="aliasAs">别名</param>
+        </member>
+        <member name="P:System.AliasAsAttribute.AliasAs">
+            <summary>
+                别名
+            </summary>
         </member>
         <member name="T:System.Text.RegularExpressions.Generated.WordBoundaryRegex_0">
             <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the WordBoundaryRegex method.</summary>

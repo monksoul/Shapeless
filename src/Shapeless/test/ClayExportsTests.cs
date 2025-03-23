@@ -1503,6 +1503,55 @@ public class ClayExportsTests(ITestOutputHelper output)
         clay3.Rebuilt(u => u.KeyValueJsonToObject = true);
         Assert.Equal("{\"id\":1,\"name\":\"Furion\"}", clay3.ToJsonString());
     }
+
+    [Fact]
+    public void Extend_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        Assert.Throws<ArgumentNullException>(() => clay.Extend(null!));
+
+        var exception = Assert.Throws<InvalidOperationException>(() => clay.Extend([null]));
+        Assert.Equal("Cannot extend a single object with null or basic type values.", exception.Message);
+
+        var exception2 = Assert.Throws<InvalidOperationException>(() => clay.Extend(1));
+        Assert.Equal("Cannot extend a single object with null or basic type values.", exception2.Message);
+
+        var exception3 = Assert.Throws<InvalidOperationException>(() => clay.Extend(true));
+        Assert.Equal("Cannot extend a single object with null or basic type values.", exception3.Message);
+
+        var exception4 = Assert.Throws<InvalidOperationException>(() => clay.Extend("furion"));
+        Assert.Equal("Cannot extend a single object with null or basic type values.", exception4.Message);
+    }
+
+    [Fact]
+    public void Extend_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        clay.Extend(new { age = 30, name = "shapeless" });
+        Assert.Equal("{\"id\":1,\"name\":\"shapeless\",\"age\":30}", clay.ToJsonString());
+
+        var clay2 = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        clay2.Extend(Clay.Parse(new { age = 30, name = "shapeless" }));
+        Assert.Equal("{\"id\":1,\"name\":\"shapeless\",\"age\":30}", clay2.ToJsonString());
+
+        var clay3 = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        clay3.Extend(new Dictionary<string, object> { { "age", 30 }, { "name", "shapeless" } });
+        Assert.Equal("{\"id\":1,\"name\":\"shapeless\",\"age\":30}", clay3.ToJsonString());
+
+        var clay4 = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        clay4.Extend(new KeyValuePair<string, object>("age", 30),
+            new KeyValuePair<string, object>("name", "shapeless"));
+        Assert.Equal("{\"id\":1,\"name\":\"shapeless\",\"age\":30}", clay4.ToJsonString());
+
+        var clay5 = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        clay5.Extend(ClayType.Object);
+        Assert.Equal("{\"id\":1,\"name\":\"furion\",\"Object\":0}", clay5.ToJsonString());
+
+        var array = Clay.Parse("[1,2,3]");
+        array.Extend(null, "10", clay).Extend(true, new object[] { 1, 2, 3 });
+        Assert.Equal("[1,2,3,null,\"10\",{\"id\":1,\"name\":\"shapeless\",\"age\":30},true,[1,2,3]]",
+            array.ToJsonString());
+    }
 }
 
 public struct Point

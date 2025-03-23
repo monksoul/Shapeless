@@ -625,7 +625,7 @@ public partial class Clay
             throw new ArgumentException("Clay array contains one or more null elements.", nameof(clays));
         }
 
-        // 检查是流变对象类型是否一致
+        // 检查流变对象类型是否一致
         if (clays.Any(u => u.Type != Type))
         {
             throw new InvalidOperationException("All Clay objects must be of the same type.");
@@ -650,6 +650,51 @@ public partial class Clay
         }
 
         return combineClay;
+    }
+
+    /// <summary>
+    ///     拓展属性或项
+    /// </summary>
+    /// <param name="values">值集合</param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    public Clay Extend(params object?[] values)
+    {
+        // 空检查
+        ArgumentNullException.ThrowIfNull(values);
+
+        // 检查是否是集合或数组
+        if (IsArray)
+        {
+            AddRange(values);
+
+            return this;
+        }
+
+        // 遍历所有值
+        foreach (var item in values)
+        {
+            // 检查值是否为空值或基本类型的值
+            if (item is null || item.GetType().IsBasicType())
+            {
+                throw new InvalidOperationException("Cannot extend a single object with null or basic type values.");
+            }
+
+            // 将对象转换为字典集合
+            var dictionary = item is Clay clayItem
+                ? clayItem.AsEnumerateObject().ToDictionary(object (u) => u.Key, u => u.Value)
+                : item.ObjectToDictionary();
+
+            // 遍历字典键值并设置
+            foreach (var (key, value) in dictionary!)
+            {
+                this[key] = value;
+            }
+        }
+
+        return this;
     }
 
     /// <summary>

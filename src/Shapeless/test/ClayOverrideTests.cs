@@ -490,6 +490,17 @@ public class ClayOverrideTests
             clay.DynamicInvokeDelegate(new Func<ClayContext, string>(ctx => ctx.Current.name), [], out var result2));
         Assert.Equal("furion", result2);
     }
+
+    [Fact]
+    public void GetDynamicMemberNames_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        var names = clay.GetDynamicMemberNames();
+        Assert.Equal(["id", "name"], names);
+
+        var array = Clay.Parse("[1,2,3]");
+        Assert.Equal(["0", "1", "2"], array.GetDynamicMemberNames());
+    }
 }
 
 public class ClayModel
