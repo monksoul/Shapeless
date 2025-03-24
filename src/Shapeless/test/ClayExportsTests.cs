@@ -298,6 +298,30 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void ParseFromFile_Invalid_Parameters()
+    {
+        Assert.Throws<ArgumentNullException>(() => Clay.ParseFromFile(null!));
+        Assert.Throws<ArgumentException>(() => Clay.ParseFromFile(string.Empty));
+        Assert.Throws<ArgumentException>(() => Clay.ParseFromFile(" "));
+
+        Assert.Throws<ArgumentNullException>(() => Clay.ParseFromFile("json.txt", (Action<ClayOptions>)null!));
+
+        Assert.Throws<FileNotFoundException>(() => Clay.ParseFromFile("json2.txt"));
+    }
+
+    [Fact]
+    public void ParseFromFile_ReturnOK()
+    {
+        var filePath = Path.Combine(AppContext.BaseDirectory, "json.txt");
+        var clay = Clay.ParseFromFile(filePath);
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay.ToJsonString());
+
+        dynamic clay2 = Clay.ParseFromFile(filePath,
+            options => options.PropertyNameCaseInsensitive = true);
+        Assert.Equal(1, clay2.Id);
+    }
+
+    [Fact]
     public void Parse_BigJson_ReturnOK()
     {
         var stopwatch = Stopwatch.StartNew();

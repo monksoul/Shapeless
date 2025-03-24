@@ -31,6 +31,11 @@ public partial class Clay
     public IEnumerable<object> Keys => AsEnumerable().Select(u => u.Key);
 
     /// <summary>
+    ///     获取单一对象键（属性名）的列表
+    /// </summary>
+    public IEnumerable<string> MemberNames => AsEnumerateObject().Select(u => u.Key);
+
+    /// <summary>
     ///     获取值或元素的列表
     /// </summary>
     public IEnumerable<dynamic?> Values => AsEnumerable().Select(u => u.Value);

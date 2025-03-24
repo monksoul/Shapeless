@@ -245,6 +245,38 @@ public partial class Clay
         Parse(ref utf8JsonReader, ClayOptions.Default.Configure(configure));
 
     /// <summary>
+    ///     从文件中读取数据并转换为 <see cref="Clay" /> 实例
+    /// </summary>
+    /// <param name="path">文件路径</param>
+    /// <param name="options">
+    ///     <see cref="ClayOptions" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    public static Clay ParseFromFile(string path, ClayOptions? options = null)
+    {
+        // 空检查
+        ArgumentException.ThrowIfNullOrWhiteSpace(path);
+
+        // 打开文件并读取流
+        using var fileStream = File.OpenRead(path);
+
+        return Parse(fileStream, options);
+    }
+
+    /// <summary>
+    ///     从文件中读取数据并转换为 <see cref="Clay" /> 实例
+    /// </summary>
+    /// <param name="path">文件路径</param>
+    /// <param name="configure">自定义配置委托</param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    public static Clay ParseFromFile(string path, Action<ClayOptions> configure) =>
+        ParseFromFile(path, ClayOptions.Default.Configure(configure));
+
+    /// <summary>
     ///     检查标识符是否定义
     /// </summary>
     /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或索引运算符（Index）或范围运算符（Range）</param>

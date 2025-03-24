@@ -305,6 +305,11 @@
                 获取键或索引的列表
             </summary>
         </member>
+        <member name="P:Shapeless.Clay.MemberNames">
+            <summary>
+                获取单一对象键（属性名）的列表
+            </summary>
+        </member>
         <member name="P:Shapeless.Clay.Values">
             <summary>
                 获取值或元素的列表
@@ -592,6 +597,28 @@
             <param name="utf8JsonReader">
                 <see cref="T:System.Text.Json.Utf8JsonReader" />
             </param>
+            <param name="configure">自定义配置委托</param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.ParseFromFile(System.String,Shapeless.ClayOptions)">
+            <summary>
+                从文件中读取数据并转换为 <see cref="T:Shapeless.Clay" /> 实例
+            </summary>
+            <param name="path">文件路径</param>
+            <param name="options">
+                <see cref="T:Shapeless.ClayOptions" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.ParseFromFile(System.String,System.Action{Shapeless.ClayOptions})">
+            <summary>
+                从文件中读取数据并转换为 <see cref="T:Shapeless.Clay" /> 实例
+            </summary>
+            <param name="path">文件路径</param>
             <param name="configure">自定义配置委托</param>
             <returns>
                 <see cref="T:Shapeless.Clay" />

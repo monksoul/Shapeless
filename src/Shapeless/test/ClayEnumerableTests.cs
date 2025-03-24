@@ -51,6 +51,16 @@ public class ClayEnumerableTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void MemberNames_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        Assert.Equal(["id", "name"], clay.MemberNames);
+
+        var clay2 = Clay.Parse("[1,2,3]");
+        Assert.Throws<NotSupportedException>(() => clay2.MemberNames.ToList());
+    }
+
+    [Fact]
     public void Values_ReturnOK()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");

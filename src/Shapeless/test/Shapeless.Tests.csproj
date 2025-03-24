@@ -4,4 +4,11 @@
         <ProjectReference Include="..\src\Shapeless.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <None Remove="json.txt"/>
+        <Content Include="json.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
 </Project>
