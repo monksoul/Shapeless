@@ -25,6 +25,7 @@ public class ClayOptionsTests
 
         Assert.NotNull(ClayOptions.Flexible);
         var flexible = ClayOptions.Flexible;
+        Assert.True(flexible.PropertyNameCaseInsensitive);
         Assert.True(flexible.AllowMissingProperty);
         Assert.True(flexible.AllowIndexOutOfRange);
     }

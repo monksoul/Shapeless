@@ -15,9 +15,12 @@ public sealed class ClayOptions
     public static ClayOptions Default => new();
 
     /// <summary>
-    ///     允许访问缺失的属性或数组越界的 <see cref="ClayOptions" /> 实例
+    ///     允许属性名不区分大小写、访问缺失的属性或数组越界的 <see cref="ClayOptions" /> 实例
     /// </summary>
-    public static ClayOptions Flexible => new() { AllowMissingProperty = true, AllowIndexOutOfRange = true };
+    public static ClayOptions Flexible => new()
+    {
+        PropertyNameCaseInsensitive = true, AllowMissingProperty = true, AllowIndexOutOfRange = true
+    };
 
     /// <summary>
     ///     配置用于包裹非对象和非数组类型的键名
