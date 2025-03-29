@@ -15,6 +15,17 @@ public static class ShapelessMvcBuilderExtensions
     /// <param name="builder">
     ///     <see cref="IMvcBuilder" />
     /// </param>
+    /// <returns>
+    ///     <see cref="IMvcBuilder" />
+    /// </returns>
+    public static IMvcBuilder AddClayOptions(this IMvcBuilder builder) => builder.AddClayOptions(_ => { });
+
+    /// <summary>
+    ///     添加 <see cref="Clay" /> 配置
+    /// </summary>
+    /// <param name="builder">
+    ///     <see cref="IMvcBuilder" />
+    /// </param>
     /// <param name="configure">自定义配置委托</param>
     /// <returns>
     ///     <see cref="IMvcBuilder" />

@@ -62,4 +62,24 @@ public class ShapelessMvcBuilderExtensionsTests
         var mvcOptions = app.Services.GetRequiredService<IOptions<MvcOptions>>().Value;
         Assert.Single(mvcOptions.ModelBinderProviders.OfType<ClayBinderProvider>());
     }
+
+    [Fact]
+    public void AddClayOptions_NoParameters_ReturnOK()
+    {
+        var builder = WebApplication.CreateBuilder();
+
+        builder.Services.AddControllers().AddClayOptions();
+
+        using var app = builder.Build();
+
+        var jsonOptions = app.Services.GetRequiredService<IOptions<JsonOptions>>().Value;
+        Assert.NotNull(jsonOptions.JsonSerializerOptions.Converters);
+        Assert.Single(jsonOptions.JsonSerializerOptions.Converters.OfType<ClayJsonConverter>());
+
+        var clayOptions = app.Services.GetRequiredService<IOptions<ClayOptions>>().Value;
+        Assert.False(clayOptions.KeyValueJsonToObject);
+
+        var mvcOptions = app.Services.GetRequiredService<IOptions<MvcOptions>>().Value;
+        Assert.Single(mvcOptions.ModelBinderProviders.OfType<ClayBinderProvider>());
+    }
 }

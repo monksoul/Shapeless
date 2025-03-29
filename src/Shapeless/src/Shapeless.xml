@@ -1296,6 +1296,22 @@
             </returns>
             <exception cref="T:System.NotSupportedException"></exception>
         </member>
+        <member name="T:Shapeless.Core.Extensions.StringExtensions">
+            <summary>
+                <see cref="T:System.String" /> 拓展类
+            </summary>
+        </member>
+        <member name="M:Shapeless.Core.Extensions.StringExtensions.ParseFormatKeyValueString(System.String,System.Char[],System.Nullable{System.Char})">
+            <summary>
+                解析符合键值对格式的字符串为键值对列表
+            </summary>
+            <param name="keyValueString">键值对格式的字符串</param>
+            <param name="separators">分隔符字符数组</param>
+            <param name="trimChar">要删除的前导字符</param>
+            <returns>
+                <see cref="T:System.Collections.Generic.List`1" />
+            </returns>
+        </member>
         <member name="T:Shapeless.Core.Extensions.TypeExtensions">
             <summary>
                 <see cref="T:System.Type" /> 拓展类
