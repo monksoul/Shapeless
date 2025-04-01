@@ -909,6 +909,28 @@ public class ClayExportsTests(ITestOutputHelper output)
                                """);
         Assert.Equal("Furion", array.PathValue("1:name"));
         Assert.Equal("中国", array.PathValue("2:AppInfo:Company:Address:City"));
+
+        var clay2 = Clay.Parse("""
+                               {
+                                 "AppInfo": {
+                                   "Name": "Furion",
+                                   "Version": "1.0.0",
+                                   "Company": {
+                                     "Name": "Baiqian",
+                                     "Address": {
+                                       "City": "中国",
+                                       "Province": "广东省",
+                                       "Detail": "中山市东区紫马公园西门"
+                                     },
+                                     "Telephones":["0760-88888888","0760-88888881"],
+                                     "Date":"2024-12-26T00:00:00"
+                                   }
+                                 }
+                               }
+                               """, new ClayOptions { PathSeparator = [":", "/"] });
+        Assert.Equal("Furion", clay2.PathValue("AppInfo:Name"));
+        Assert.Equal("中国", clay2.PathValue("AppInfo:Company/Address:City"));
+        Assert.Equal("0760-88888888", clay2.PathValue("AppInfo/Company/Telephones/0"));
     }
 
     [Fact]
