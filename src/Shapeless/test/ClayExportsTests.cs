@@ -812,6 +812,10 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.Contains(
             "The delegate type `System.Action` cannot be cast to the target type",
             exception.Message);
+
+        var clay5 = Clay.Parse("{\"id\":1,\"name\":\"furion\",\"children\":{\"id\":1,\"name\":\"furion\"}}");
+        var obj = clay5.Get<object>("children");
+        Assert.True(obj is Clay);
     }
 
     [Fact]
@@ -827,6 +831,84 @@ public class ClayExportsTests(ITestOutputHelper output)
     {
         var clay = Clay.Parse("[1,2,3,4]");
         Assert.Equal("[2,3]", clay.Get(1..^1).ToJsonString());
+    }
+
+    [Fact]
+    public void PathValue_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        Assert.Throws<ArgumentNullException>(() => clay.PathValue(null!));
+        Assert.Throws<KeyNotFoundException>(() => clay.PathValue("age"));
+        var exception = Assert.Throws<InvalidOperationException>(() => clay.PathValue("name:firstName"));
+        Assert.Equal("The identifier `name` at path `name:firstName` does not support further lookup.",
+            exception.Message);
+
+        var clay2 = Clay.Parse("{\"id\":1,\"name\":\"furion\",\"children\":{\"id\":1,\"name\":\"furion\"}}");
+        var exception2 = Assert.Throws<InvalidOperationException>(() => clay2.PathValue("children:name:firstName"));
+        Assert.Equal("The identifier `name` at path `name:firstName` does not support further lookup.",
+            exception2.Message);
+    }
+
+    [Fact]
+    public void PathValue_ReturnOK()
+    {
+        var clay = Clay.Parse("""
+                              {
+                                "AppInfo": {
+                                  "Name": "Furion",
+                                  "Version": "1.0.0",
+                                  "Company": {
+                                    "Name": "Baiqian",
+                                    "Address": {
+                                      "City": "中国",
+                                      "Province": "广东省",
+                                      "Detail": "中山市东区紫马公园西门"
+                                    },
+                                    "Telephones":["0760-88888888","0760-88888881"],
+                                    "Date":"2024-12-26T00:00:00"
+                                  }
+                                }
+                              }
+                              """);
+        var name = clay.PathValue("AppInfo:Name");
+        Assert.Equal("Furion", name);
+
+        var city = clay.PathValue("AppInfo:Company:Address:City");
+        Assert.Equal("中国", city);
+
+        var telephone = clay.PathValue("AppInfo:Company:Telephones:0");
+        Assert.Equal("0760-88888888", telephone);
+
+        var date1 = clay.PathValue("AppInfo:Company:Date");
+        Assert.Equal("2024-12-26T00:00:00", date1);
+        var date2 = clay.PathValue<DateTime>("AppInfo:Company:Date");
+        Assert.Equal("2024-12-26", date2.ToString("yyyy-MM-dd"));
+
+        clay.Rebuilt(ClayOptions.Flexible);
+        Assert.Null(clay.PathValue("AppInfo:Undefined"));
+
+        var array = Clay.Parse("""
+                               [0,
+                               {"id":1,"name":"Furion"},
+                               {
+                                 "AppInfo": {
+                                   "Name": "Furion",
+                                   "Version": "1.0.0",
+                                   "Company": {
+                                     "Name": "Baiqian",
+                                     "Address": {
+                                       "City": "中国",
+                                       "Province": "广东省",
+                                       "Detail": "中山市东区紫马公园西门"
+                                     },
+                                     "Telephones":["0760-88888888","0760-88888881"],
+                                     "Date":"2024-12-26T00:00:00"
+                                   }
+                                 }
+                               }]
+                               """);
+        Assert.Equal("Furion", array.PathValue("1:name"));
+        Assert.Equal("中国", array.PathValue("2:AppInfo:Company:Address:City"));
     }
 
     [Fact]

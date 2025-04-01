@@ -45,6 +45,7 @@ public class ClayOptionsTests
         Assert.False(clayOptions.PropertyNameCaseInsensitive);
         Assert.False(clayOptions.ReadOnly);
         Assert.False(clayOptions.KeyValueJsonToObject);
+        Assert.Equal([":"], clayOptions.PathSeparator);
 
         Assert.NotNull(clayOptions.JsonSerializerOptions);
         Assert.True(clayOptions.JsonSerializerOptions.PropertyNameCaseInsensitive);

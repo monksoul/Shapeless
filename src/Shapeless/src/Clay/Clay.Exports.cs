@@ -391,6 +391,12 @@ public partial class Clay
         // 根据标识符查找 JsonNode 节点
         var jsonNode = FindNode(identifier);
 
+        // 处理 object 类型生成 JsonElement 问题
+        if (resultType == typeof(object))
+        {
+            return DeserializeNode(jsonNode, Options);
+        }
+
         return IsClay(resultType)
             ? new Clay(jsonNode, Options)
             : Helpers.DeserializeNode(jsonNode, resultType, jsonSerializerOptions ?? Options.JsonSerializerOptions);
@@ -409,6 +415,94 @@ public partial class Clay
     /// </returns>
     public TResult? Get<TResult>(object identifier, JsonSerializerOptions? jsonSerializerOptions = null) =>
         (TResult?)Get(identifier, typeof(TResult), jsonSerializerOptions);
+
+    /// <summary>
+    ///     根据路径获取值
+    /// </summary>
+    /// <remarks>不支持获取自定义委托。</remarks>
+    /// <param name="path">带路径的标识符</param>
+    /// <returns>
+    ///     <see cref="object" />
+    /// </returns>
+    public object? PathValue(string path) => PathValue<object>(path);
+
+    /// <summary>
+    ///     根据路径获取值
+    /// </summary>
+    /// <remarks>不支持获取自定义委托。</remarks>
+    /// <param name="path">带路径的标识符</param>
+    /// <param name="resultType">转换的目标类型</param>
+    /// <param name="jsonSerializerOptions">
+    ///     <see cref="JsonSerializerOptions" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="object" />
+    /// </returns>
+    public object? PathValue(string path, Type resultType, JsonSerializerOptions? jsonSerializerOptions = null)
+    {
+        // 空检查
+        ArgumentNullException.ThrowIfNull(path);
+
+        // 根据路径分隔符进行分割，并确保至少有一个标识符
+        var identifiers = path.Split(Options.PathSeparator, StringSplitOptions.RemoveEmptyEntries);
+        if (identifiers is { Length: 0 })
+        {
+            return null;
+        }
+
+        // 根据标识符查找 JsonNode 节点
+        var currentNode = FindNode(identifiers[0]);
+        if (currentNode is null)
+        {
+            return null;
+        }
+
+        // 遍历剩余的标识符
+        for (var i = 1; i < identifiers.Length; i++)
+        {
+            // 将 currentNode 转换为对象实例
+            var currentValue = DeserializeNode(currentNode, Options);
+
+            // 检查是否是 Clay 类型
+            if (!IsClay(currentValue))
+            {
+                throw new InvalidOperationException(
+                    $"The identifier `{identifiers[i - 1]}` at path `{identifiers[i - 1]}:{identifiers[i]}` does not support further lookup.");
+            }
+
+            // 进行下一级查找
+            currentNode = ((Clay?)currentValue)?.FindNode(identifiers[i]);
+            if (currentNode is null)
+            {
+                return null;
+            }
+        }
+
+        // 处理 object 类型生成 JsonElement 问题
+        if (resultType == typeof(object))
+        {
+            return DeserializeNode(currentNode, Options);
+        }
+
+        return IsClay(resultType)
+            ? new Clay(currentNode, Options)
+            : Helpers.DeserializeNode(currentNode, resultType, jsonSerializerOptions ?? Options.JsonSerializerOptions);
+    }
+
+    /// <summary>
+    ///     根据路径获取值
+    /// </summary>
+    /// <remarks>不支持获取自定义委托。</remarks>
+    /// <param name="path">带路径的标识符</param>
+    /// <param name="jsonSerializerOptions">
+    ///     <see cref="JsonSerializerOptions" />
+    /// </param>
+    /// <typeparam name="TResult">转换的目标类型</typeparam>
+    /// <returns>
+    ///     <typeparamref name="TResult" />
+    /// </returns>
+    public TResult? PathValue<TResult>(string path, JsonSerializerOptions? jsonSerializerOptions = null) =>
+        (TResult?)PathValue(path, typeof(TResult), jsonSerializerOptions);
 
     /// <summary>
     ///     根据标识符查找 <see cref="JsonNode" /> 节点

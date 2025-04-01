@@ -93,6 +93,12 @@ public sealed class ClayOptions
     public bool PropertyNameCaseInsensitive { get; set; }
 
     /// <summary>
+    ///     路径分隔符
+    /// </summary>
+    /// <remarks>默认值为：<c>:</c>。</remarks>
+    public string[] PathSeparator { get; set; } = [":"];
+
+    /// <summary>
     ///     是否是只读模式
     /// </summary>
     /// <remarks>默认值为：<c>false</c>。</remarks>
