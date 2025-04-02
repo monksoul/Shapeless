@@ -15,3 +15,4 @@ global using System.Net.Http.Headers;
 global using System.Net.Mime;
 global using System.Reflection;
 global using System.Runtime.CompilerServices;
+global using System.Web;
