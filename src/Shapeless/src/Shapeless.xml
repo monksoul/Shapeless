@@ -1081,6 +1081,16 @@
                 <see cref="T:Shapeless.Clay" />
             </returns>
         </member>
+        <member name="M:Shapeless.Clay.IsJsonString(System.String,System.Boolean)">
+            <summary>
+                检查字符串是否是 JSON 格式
+            </summary>
+            <param name="input">字符串</param>
+            <param name="allowTrailingCommas">是否允许末尾多余逗号。默认值为：<c>false</c>。</param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
         <member name="T:Shapeless.Clay.Object">
             <summary>
                 单一对象

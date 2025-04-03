@@ -1187,6 +1187,45 @@ public partial class Clay
     }
 
     /// <summary>
+    ///     检查字符串是否是 JSON 格式
+    /// </summary>
+    /// <param name="input">字符串</param>
+    /// <param name="allowTrailingCommas">是否允许末尾多余逗号。默认值为：<c>false</c>。</param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
+    public static bool IsJsonString(string? input, bool allowTrailingCommas = false)
+    {
+        // 检查输入是否为字符串类型，且字符串不是由空白字符组成
+        if (input is null || string.IsNullOrWhiteSpace(input))
+        {
+            return false;
+        }
+
+        // 去除字符串两端空格
+        var text = input.Trim();
+
+        // 检查字符串是否以 '{' 开头和 '}' 结尾，或者以 '[' 开头和 ']' 结尾
+        if ((!text.StartsWith('{') || !text.EndsWith('}')) && (!text.StartsWith('[') || !text.EndsWith(']')))
+        {
+            return false;
+        }
+
+        try
+        {
+            // 使用 JsonDocument 解析字符串，若解析成功，说明是一个有效的 JSON 格式
+            using var jsonDocument = JsonDocument.Parse(text,
+                new JsonDocumentOptions { AllowTrailingCommas = allowTrailingCommas });
+
+            return true;
+        }
+        catch (JsonException)
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
     ///     单一对象
     /// </summary>
     public sealed class Object : Clay

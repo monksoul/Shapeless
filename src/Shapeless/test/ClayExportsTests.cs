@@ -1682,6 +1682,25 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.Equal("[1,2,3,null,\"10\",{\"id\":1,\"name\":\"shapeless\",\"age\":30},true,[1,2,3]]",
             array.ToJsonString());
     }
+
+    [Theory]
+    [InlineData(null, false, false)]
+    [InlineData("", false, false)]
+    [InlineData("  ", false, false)]
+    [InlineData("""["id":1,"name":"Furion"}""", false, false)]
+    [InlineData("""{"id":1,"name":"Furion"]""", false, false)]
+    [InlineData("""{id:1,name:"Furion"}""", false, false)]
+    [InlineData("""{'id':1,'name':"Furion"}""", false, false)]
+    [InlineData("""{"id":1,"name":"Furion"}""", true, false)]
+    [InlineData("""{"id":1,"name":"Furion",}""", false, false)]
+    [InlineData("""{"id":1,"name":"Furion",}""", true, true)]
+    [InlineData("[1,2,3]", true, false)]
+    [InlineData("[1,2,3,]", false, false)]
+    [InlineData("[1,2,3,]", true, true)]
+    [InlineData("1,2,3]", false, false)]
+    [InlineData("[1,2,3", false, false)]
+    public void IsJsonString_ReturnOK(string? input, bool result, bool allowTrailingCommas = false) =>
+        Assert.Equal(result, Clay.IsJsonString(input, allowTrailingCommas));
 }
 
 public struct Point
