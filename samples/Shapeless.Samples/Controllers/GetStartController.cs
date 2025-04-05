@@ -801,23 +801,23 @@ public class GetStartController
     }
 
     /// <summary>
-    ///     接收流变对象作为参数
+    ///     接收流变对象作为参数（或返回值）
     /// </summary>
-    /// <param name="clay"></param>
+    /// <param name="clay" example="&quot;{}&quot;"></param>
     /// <returns></returns>
     [HttpPost]
     public Clay PostClay(Clay clay)
     {
         return clay;
     }
-    
+
     /// <summary>
     ///     接收流变对象作为参数
     /// </summary>
-    /// <param name="clay"></param>
+    /// <param name="clay" example="&quot;{}&quot;"></param>
     /// <returns></returns>
     [HttpPost]
-    public Clay PostClayNew([Clay] dynamic clay)
+    public dynamic PostClay2([Clay] dynamic clay)
     {
         return clay;
     }
@@ -829,7 +829,7 @@ public class GetStartController
     /// <param name="model"></param>
     /// <returns></returns>
     [HttpPost]
-    public ClayModel2 PostClay2([FromServices] IOptions<ClayOptions> options, ClayModel2 model)
+    public ClayModel2 PostClay3([FromServices] IOptions<ClayOptions> options, ClayModel2 model)
     {
         model.Clay?.Rebuilt(options.Value);
         return model;
