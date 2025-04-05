@@ -810,6 +810,17 @@ public class GetStartController
     {
         return clay;
     }
+    
+    /// <summary>
+    ///     接收流变对象作为参数
+    /// </summary>
+    /// <param name="clay"></param>
+    /// <returns></returns>
+    [HttpPost]
+    public Clay PostClayNew([Clay] dynamic clay)
+    {
+        return clay;
+    }
 
     /// <summary>
     ///     流变对象作为属性时应用全局配置

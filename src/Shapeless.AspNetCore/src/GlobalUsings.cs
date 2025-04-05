@@ -7,6 +7,7 @@ global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Mvc.ModelBinding;
 global using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+global using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Options;
 global using Shapeless.Core.Extensions;

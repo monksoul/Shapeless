@@ -45,4 +45,66 @@ public class ClayBinderProviderTests(ITestOutputHelper output)
 
         await app.StopAsync();
     }
+
+    [Fact]
+    public async Task PostClayParameter_ReturnOK()
+    {
+        var port = NetworkUtility.FindAvailableTcpPort();
+        var urls = new[] { "--urls", $"http://localhost:{port}" };
+        var builder = WebApplication.CreateBuilder(urls);
+
+        builder.Services.AddControllers()
+            .AddApplicationPart(typeof(ClayController).Assembly)
+            .AddClayOptions();
+        builder.Services.AddHttpClient();
+
+        await using var app = builder.Build();
+        app.MapControllers();
+
+        await app.StartAsync();
+
+        var httpClient = app.Services.GetRequiredService<IHttpClientFactory>().CreateClient();
+        var httpRequestMessage =
+            new HttpRequestMessage(HttpMethod.Post, new Uri($"http://localhost:{port}/clay/post1"));
+        httpRequestMessage.Content =
+            new StringContent("""{"id":1,"name":"Furion"}""", new MediaTypeHeaderValue("application/json"));
+
+        var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
+        httpResponseMessage.EnsureSuccessStatusCode();
+        var str = await httpResponseMessage.Content.ReadAsStringAsync();
+        Assert.Equal("""{"id":1,"name":"Furion"}""", str);
+
+        await app.StopAsync();
+    }
+
+    [Fact]
+    public async Task PostDynamicParameter_ReturnOK()
+    {
+        var port = NetworkUtility.FindAvailableTcpPort();
+        var urls = new[] { "--urls", $"http://localhost:{port}" };
+        var builder = WebApplication.CreateBuilder(urls);
+
+        builder.Services.AddControllers()
+            .AddApplicationPart(typeof(ClayController).Assembly)
+            .AddClayOptions();
+        builder.Services.AddHttpClient();
+
+        await using var app = builder.Build();
+        app.MapControllers();
+
+        await app.StartAsync();
+
+        var httpClient = app.Services.GetRequiredService<IHttpClientFactory>().CreateClient();
+        var httpRequestMessage =
+            new HttpRequestMessage(HttpMethod.Post, new Uri($"http://localhost:{port}/clay/post2"));
+        httpRequestMessage.Content =
+            new StringContent("""{"id":1,"name":"Furion"}""", new MediaTypeHeaderValue("application/json"));
+
+        var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
+        httpResponseMessage.EnsureSuccessStatusCode();
+        var str = await httpResponseMessage.Content.ReadAsStringAsync();
+        Assert.Equal("""{"id":1,"name":"Furion"}""", str);
+
+        await app.StopAsync();
+    }
 }

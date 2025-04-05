@@ -104,8 +104,8 @@ public class ClayEventsTests
         Assert.Throws<ArgumentException>(() => clay.AddEvent(" ", (ClayEventHandler)null!));
 
         Assert.Throws<ArgumentNullException>(() => clay.AddEvent("Changing", (ClayEventHandler)null!));
-        var exception = Assert.Throws<ArgumentException>(() => clay.AddEvent("Test", new ClayEventHandler(
-            (sender, args) => { })));
+        var exception =
+            Assert.Throws<ArgumentException>(() => clay.AddEvent("Test", new ClayEventHandler((sender, args) => { })));
         Assert.Equal("Unknown event name: `Test`. (Parameter 'Test')", exception.Message);
 
         Assert.Throws<ArgumentException>(() => clay.AddEvent(null!, (Action<dynamic, ClayEventArgs>)null!));

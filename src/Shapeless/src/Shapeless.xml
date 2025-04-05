@@ -1470,6 +1470,29 @@
                 <see cref="T:System.String" />
             </returns>
         </member>
+        <member name="T:Shapeless.Core.Utilities.NetworkUtility">
+            <summary>
+                提供网络相关的实用方法
+            </summary>
+        </member>
+        <member name="M:Shapeless.Core.Utilities.NetworkUtility.FindAvailableTcpPort">
+            <summary>
+                查找一个可用的 TCP 端口
+            </summary>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Core.Utilities.NetworkUtility.IsPortInUse(System.Int32)">
+            <summary>
+                检查指定端口是否正在使用
+            </summary>
+            <remarks>如果端口正在使用则返回 <c>true</c>，否则返回 <c>false</c>。</remarks>
+            <param name="port">要检查的端口号。</param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
         <member name="T:Shapeless.Helpers">
             <summary>
                 流变对象模块帮助类
