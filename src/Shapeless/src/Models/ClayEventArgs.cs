@@ -5,7 +5,7 @@
 namespace Shapeless;
 
 /// <summary>
-///     <see cref="Clay" /> 对象事件数据
+///     <see cref="Clay" /> 对象事件参数
 /// </summary>
 public sealed class ClayEventArgs : EventArgs
 {

@@ -1532,7 +1532,7 @@
         </member>
         <member name="T:Shapeless.ClayEventArgs">
             <summary>
-                <see cref="T:Shapeless.Clay" /> 对象事件数据
+                <see cref="T:Shapeless.Clay" /> 对象事件参数
             </summary>
         </member>
         <member name="M:Shapeless.ClayEventArgs.#ctor(System.Object,System.Boolean)">
