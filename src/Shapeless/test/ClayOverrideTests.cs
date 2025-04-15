@@ -203,6 +203,12 @@ public class ClayOverrideTests
         clay8.expando = expandoObject;
         Assert.Equal(1, clay8.expando.id);
         Assert.Equal("furion", clay8.expando.name);
+
+        dynamic clay9 = new Clay();
+        var jsonElement = JsonSerializer.Deserialize<object>("{\"id\":1,\"name\":\"furion\"}");
+        clay9.element = jsonElement;
+        Assert.Equal(1, clay9.element.id);
+        Assert.Equal("furion", clay9.element.name);
     }
 
     [Fact]
