@@ -368,7 +368,7 @@ public partial class Clay
     }
 
     /// <summary>
-    ///     检查项（元素）在集合或数组中的索引
+    ///     获取集合或数组中指定项（元素）的索引
     /// </summary>
     /// <param name="value">项（元素）</param>
     /// <returns>
