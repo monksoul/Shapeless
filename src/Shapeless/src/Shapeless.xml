@@ -240,6 +240,34 @@
                 <see cref="T:System.Boolean" />
             </returns>
         </member>
+        <member name="M:Shapeless.Clay.AreObjectEqual(Shapeless.Clay,Shapeless.Clay)">
+            <summary>
+                检查两个单一对象实例是否相等
+            </summary>
+            <param name="clay1">
+                <see cref="T:Shapeless.Clay" />
+            </param>
+            <param name="clay2">
+                <see cref="T:Shapeless.Clay" />
+            </param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.AreArrayEqual(Shapeless.Clay,Shapeless.Clay)">
+            <summary>
+                检查两个集合或数组实例是否相等
+            </summary>
+            <param name="clay1">
+                <see cref="T:Shapeless.Clay" />
+            </param>
+            <param name="clay2">
+                <see cref="T:Shapeless.Clay" />
+            </param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
         <member name="M:Shapeless.Clay.ThrowIfOutOfRange(System.Int32,System.Int32)">
             <summary>
                 抛出越界的数组索引异常
@@ -525,6 +553,9 @@
                 判断是否为只读模式
             </summary>
         </member>
+        <member name="M:Shapeless.Clay.Equals(Shapeless.Clay)">
+            <inheritdoc />
+        </member>
         <member name="M:Shapeless.Clay.ToString(System.String,System.IFormatProvider)">
             <inheritdoc />
         </member>
@@ -639,6 +670,24 @@
             </summary>
             <remarks>兼容旧版本粘土对象。</remarks>
             <param name="identifier">标识符，可以是键（字符串）或索引（整数）或索引运算符（Index）或范围运算符（Range）</param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.HasProperty(System.String)">
+            <summary>
+                检查属性（键）是否定义
+            </summary>
+            <param name="propertyName">属性名（键）</param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.IndexOf(System.Object)">
+            <summary>
+                检查项（元素）在集合或数组中的索引
+            </summary>
+            <param name="value">项（元素）</param>
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
@@ -1091,6 +1140,12 @@
                 <see cref="T:System.Boolean" />
             </returns>
         </member>
+        <member name="M:Shapeless.Clay.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Shapeless.Clay.GetHashCode">
+            <inheritdoc />
+        </member>
         <member name="T:Shapeless.Clay.Object">
             <summary>
                 单一对象
@@ -1491,6 +1546,37 @@
             <param name="port">要检查的端口号。</param>
             <returns>
                 <see cref="T:System.Boolean" />
+            </returns>
+        </member>
+        <member name="T:Shapeless.Extensions.ShapelessExtensions">
+            <summary>
+                流变对象模块拓展类
+            </summary>
+        </member>
+        <member name="M:Shapeless.Extensions.ShapelessExtensions.ToClay(System.Object,Shapeless.ClayOptions)">
+            <summary>
+                将对象转换为 <see cref="T:Shapeless.Clay" /> 实例
+            </summary>
+            <param name="obj">
+                <see cref="T:System.Object" />
+            </param>
+            <param name="options">
+                <see cref="T:Shapeless.ClayOptions" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Extensions.ShapelessExtensions.ToClay(System.Object,System.Action{Shapeless.ClayOptions})">
+            <summary>
+                将对象转换为 <see cref="T:Shapeless.Clay" /> 实例
+            </summary>
+            <param name="obj">
+                <see cref="T:System.Object" />
+            </param>
+            <param name="configure">自定义配置委托</param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
             </returns>
         </member>
         <member name="T:Shapeless.Helpers">

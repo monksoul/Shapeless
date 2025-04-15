@@ -7,7 +7,7 @@ namespace Shapeless;
 /// <summary>
 ///     流变对象
 /// </summary>
-public partial class Clay : DynamicObject, IEnumerable<object?>, IFormattable
+public partial class Clay : DynamicObject, IEnumerable<object?>, IFormattable, IEquatable<Clay>
 {
     /// <summary>
     ///     <inheritdoc cref="Clay" />
@@ -693,6 +693,54 @@ public partial class Clay : DynamicObject, IEnumerable<object?>, IFormattable
 
             // 将键值对添加 JsonObject 实例中
             jsonObject[keyNode.GetValue<string>()] = valueNode?.DeepClone();
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    ///     检查两个单一对象实例是否相等
+    /// </summary>
+    /// <param name="clay1">
+    ///     <see cref="Clay" />
+    /// </param>
+    /// <param name="clay2">
+    ///     <see cref="Clay" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
+    internal static bool AreObjectEqual(Clay clay1, Clay clay2) =>
+        clay1.Count == clay2.Count && clay1.All((dynamic? item) =>
+            clay2.HasProperty(item?.Key) && object.Equals(item?.Value, clay2[item?.Key]));
+
+    /// <summary>
+    ///     检查两个集合或数组实例是否相等
+    /// </summary>
+    /// <param name="clay1">
+    ///     <see cref="Clay" />
+    /// </param>
+    /// <param name="clay2">
+    ///     <see cref="Clay" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
+    internal static bool AreArrayEqual(Clay clay1, Clay clay2)
+    {
+        // 检查集合或数组长度是否相等
+        if (clay1.Count != clay2.Count)
+        {
+            return false;
+        }
+
+        // 遍历检查每一项是否相等
+        for (var i = 0; i < clay1.Count; i++)
+        {
+            if (!Equals(clay1[i], clay2[i]))
+            {
+                return false;
+            }
         }
 
         return true;

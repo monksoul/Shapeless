@@ -927,6 +927,28 @@ public class ClayTests(ITestOutputHelper output)
         Assert.Equal("Accessing or setting properties using System.Range `1..^1` is not supported in the Clay.",
             exception2.Message);
     }
+
+    [Fact]
+    public void AreObjectEqual_ReturnOK()
+    {
+        var clay1 = Clay.Parse("""{"id":1,"name":"furion"}""");
+        var clay2 = Clay.Parse("""{"name":"furion","id":1,}""");
+        var clay3 = Clay.Parse("""{"name":"furion","id":1,"age":30}""");
+
+        Assert.True(Clay.AreObjectEqual(clay1, clay2));
+        Assert.False(Clay.AreObjectEqual(clay2, clay3));
+    }
+
+    [Fact]
+    public void AreArrayEqual_ReturnOK()
+    {
+        var clay1 = Clay.Parse("[1,2,3,true,false,{},12.3,\"string\",null,{\"id\":1,\"name\":\"furion\"}]");
+        var clay2 = Clay.Parse("[1,2,3,true,false,{},12.3,\"string\",{\"id\":1,\"name\":\"furion\"},null]");
+
+        Assert.True(Clay.AreArrayEqual(clay1,
+            Clay.Parse("[1,2,3,true,false,{},12.3,\"string\",null,{\"id\":1,\"name\":\"furion\"}]")));
+        Assert.False(Clay.AreArrayEqual(clay1, clay2));
+    }
 }
 
 public class CustomDataTableJsonConverter : JsonConverter<DataTable>

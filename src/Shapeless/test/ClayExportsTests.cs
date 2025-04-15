@@ -772,6 +772,55 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void HasProperty_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("[1,2,3]");
+        var exception = Assert.Throws<NotSupportedException>(() => clay.HasProperty("1"));
+        Assert.Equal("`HasProperty` method can only be used for single object operations.", exception.Message);
+    }
+
+    [Fact]
+    public void HasProperty_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        Assert.False(clay.HasProperty("Id"));
+        Assert.True(clay.HasProperty("id"));
+        Assert.True(clay.HasProperty("name"));
+    }
+
+    [Fact]
+    public void IndexOf_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        var exception = Assert.Throws<NotSupportedException>(() => clay.IndexOf("furion"));
+        Assert.Equal("`IndexOf` method can only be used for array or collection operations.", exception.Message);
+    }
+
+    [Fact]
+    public void IndexOf_ReturnOK()
+    {
+        var clay = Clay.Parse(
+            "[1,2,3,true,false,\"furion\",13.2,{\"id\":1,\"name\":\"furion\"},null,[1,2,3],{\"one\":\"one\",\"some\":null},[1,2,3,{},{\"id\":1}]]");
+        Assert.Equal(0, clay.IndexOf(1));
+        Assert.Equal(1, clay.IndexOf(2));
+        Assert.Equal(2, clay.IndexOf(3));
+        Assert.Equal(3, clay.IndexOf(true));
+        Assert.Equal(4, clay.IndexOf(false));
+        Assert.Equal(5, clay.IndexOf("furion"));
+        Assert.Equal(6, clay.IndexOf(13.2));
+        Assert.Equal(7, clay.IndexOf(Clay.Parse("{\"id\":1,\"name\":\"furion\"}")));
+        Assert.Equal(7, clay.IndexOf(Clay.Parse("{\"name\":\"furion\",\"id\":1}")));
+        Assert.Equal(-1, clay.IndexOf(Clay.Parse("{\"name\":null,\"id\":1}")));
+        Assert.Equal(8, clay.IndexOf(null));
+        Assert.Equal(9, clay.IndexOf(Clay.Parse("[1,2,3]")));
+        Assert.Equal(-1, clay.IndexOf(Clay.Parse("[1,3,2]")));
+        Assert.Equal(10, clay.IndexOf(Clay.Parse("{\"one\":\"one\",\"some\":null}")));
+        Assert.Equal(10, clay.IndexOf(Clay.Parse("{\"some\":null,\"one\":\"one\",}")));
+        Assert.Equal(11, clay.IndexOf(Clay.Parse("[1,2,3,{},{\"id\":1}]")));
+        Assert.Equal(-1, clay.IndexOf(Clay.Parse("[1,2,3,{\"id\":1},{}]")));
+    }
+
+    [Fact]
     public void Get_ReturnOK()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
@@ -1124,11 +1173,11 @@ public class ClayExportsTests(ITestOutputHelper output)
         var deepClay = clay.DeepClone();
 
         Assert.NotEqual(clay.JsonCanvas, deepClay.JsonCanvas);
-        Assert.NotEqual(clay.GetHashCode(), deepClay.GetHashCode());
+        Assert.Equal(clay.GetHashCode(), deepClay.GetHashCode());
 
         var deepClay2 = clay.DeepClone(new ClayOptions { AllowMissingProperty = true });
         Assert.NotEqual(clay.JsonCanvas.GetHashCode(), deepClay2.JsonCanvas.GetHashCode());
-        Assert.NotEqual(clay.GetHashCode(), deepClay2.GetHashCode());
+        Assert.Equal(clay.GetHashCode(), deepClay2.GetHashCode());
         Assert.False(clay.Options.AllowMissingProperty);
         Assert.True(deepClay2.Options.AllowMissingProperty);
     }
@@ -1701,6 +1750,38 @@ public class ClayExportsTests(ITestOutputHelper output)
     [InlineData("[1,2,3", false, false)]
     public void IsJsonString_ReturnOK(string? input, bool result, bool allowTrailingCommas = false) =>
         Assert.Equal(result, Clay.IsJsonString(input, allowTrailingCommas));
+
+    [Fact]
+    public void Equals_ReturnOK()
+    {
+        var clay1 = Clay.Parse("""{"id":1,"name":"furion"}""");
+        var clay2 = Clay.Parse("""{"name":"furion","id":1,}""");
+        var clay3 = Clay.Parse("""{"name":"furion","id":1,"age":30}""");
+
+        Assert.True(clay1.Equals(clay1));
+        Assert.True(clay1.Equals(clay2));
+        Assert.False(clay1.Equals(clay3));
+
+        Assert.True(clay1.Equals((object)clay1));
+        Assert.True(clay1.Equals((object)clay2));
+        Assert.False(clay1.Equals((object)clay3));
+
+        Assert.False(clay1.Equals(new { }));
+    }
+
+    [Fact]
+    public void GetHashCode_ReturnOK()
+    {
+        var clay1 = Clay.Parse("""{"id":1,"name":"furion"}""");
+        var clay2 = Clay.Parse("""{"name":"furion","id":1,}""");
+        var clay3 = Clay.Parse("""{"name":"furion","id":1,"age":30}""");
+        Assert.Equal(clay1.GetHashCode(), clay2.GetHashCode());
+        Assert.NotEqual(clay2.GetHashCode(), clay3.GetHashCode());
+
+        var clay4 = Clay.Parse("[1,2,3,true,false,{},12.3,\"string\",null,{\"id\":1,\"name\":\"furion\"}]");
+        var clay5 = Clay.Parse("[1,2,3,true,false,{},12.3,\"string\",{\"id\":1,\"name\":\"furion\"},null]");
+        Assert.NotEqual(clay4.GetHashCode(), clay5.GetHashCode());
+    }
 }
 
 public struct Point
