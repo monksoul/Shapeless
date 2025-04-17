@@ -474,6 +474,17 @@ public class ClayOverrideTests
         IEnumerable<KeyValuePair<int, dynamic?>> arrayArray = array;
         var list3 = arrayArray.ToList();
         Assert.Equal([1, 2, 3], list3.Select(u => u.Value).ToList());
+
+        dynamic clay2 = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        Dictionary<string, object?> dictionary = clay2;
+        Assert.Equal(1, dictionary["id"]);
+        Assert.Equal("furion", dictionary["name"]);
+
+        dynamic array2 = Clay.Parse("[1,2,3]");
+        Dictionary<int, object?> dictionary2 = array2;
+        Assert.Equal(1, dictionary2[0]);
+        Assert.Equal(2, dictionary2[1]);
+        Assert.Equal(3, dictionary2[2]);
     }
 
     [Fact]

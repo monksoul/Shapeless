@@ -126,6 +126,17 @@ public partial class Clay
     }
 
     /// <summary>
+    ///     将流变对象转换为 <see cref="Dictionary{TKey,TValue}" />
+    /// </summary>
+    /// <returns>
+    ///     <see cref="Dictionary{TKey,TValue}" />
+    /// </returns>
+    public Dictionary<string, dynamic?> ToDictionary() =>
+        IsObject
+            ? As<Dictionary<string, dynamic?>>()!
+            : As<Dictionary<int, dynamic?>>()!.ToDictionary(u => u.Key.ToString(), u => u.Value);
+
+    /// <summary>
     ///     遍历 <see cref="Clay" />
     /// </summary>
     /// <remarks>

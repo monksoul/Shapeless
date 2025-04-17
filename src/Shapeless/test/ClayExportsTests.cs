@@ -1164,6 +1164,17 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.Equal("601139524199", model9.String1);
         Assert.Equal("True", model9.String2);
         Assert.Equal("False", model9.String3);
+
+        var clay4 = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        var dictionary = clay4.As<Dictionary<string, object?>>()!;
+        Assert.Equal(1, dictionary["id"]);
+        Assert.Equal("furion", dictionary["name"]);
+
+        var array2 = Clay.Parse("[1,2,3]");
+        var dictionary2 = array2.As<Dictionary<int, object?>>()!;
+        Assert.Equal(1, dictionary2[0]);
+        Assert.Equal(2, dictionary2[1]);
+        Assert.Equal(3, dictionary2[2]);
     }
 
     [Fact]

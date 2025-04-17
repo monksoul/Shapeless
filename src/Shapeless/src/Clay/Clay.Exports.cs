@@ -950,15 +950,23 @@ public partial class Clay
         }
 
         // 检查是否是 IEnumerable<KeyValuePair<string, dynamic?>> 类型且是单一对象
-        if (resultType == typeof(IEnumerable<KeyValuePair<string, dynamic?>>) && IsObject)
+        if (typeof(IEnumerable<KeyValuePair<string, dynamic?>>).IsAssignableFrom(resultType) && IsObject)
         {
-            return AsEnumerateObject();
+            return resultType.IsGenericType && resultType.GetGenericTypeDefinition() == typeof(Dictionary<,>)
+                ? AsEnumerateObject().ToDictionary(u => u.Key, u => u.Value)
+                : AsEnumerateObject();
         }
 
         // 检查是否是 IEnumerable<KeyValuePair<int, dynamic?>> 类型且是集合或数组
-        if (resultType == typeof(IEnumerable<KeyValuePair<int, dynamic?>>) && IsArray)
+        if (typeof(IEnumerable<KeyValuePair<int, dynamic?>>).IsAssignableFrom(resultType) && IsArray)
         {
-            return AsEnumerateArray().Select((item, index) => new KeyValuePair<int, dynamic?>(index, item));
+            // 将流变对象转换为键值对集合
+            var keyValuePairs =
+                AsEnumerateArray().Select((item, index) => new KeyValuePair<int, dynamic?>(index, item));
+
+            return resultType.IsGenericType && resultType.GetGenericTypeDefinition() == typeof(Dictionary<,>)
+                ? keyValuePairs.ToDictionary(u => u.Key, u => u.Value)
+                : keyValuePairs;
         }
 
         // 检查是否是 IActionResult 类型

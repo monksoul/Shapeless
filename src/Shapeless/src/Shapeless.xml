@@ -381,6 +381,14 @@
                 <see cref="T:System.Collections.Generic.IEnumerable`1" />
             </returns>
         </member>
+        <member name="M:Shapeless.Clay.ToDictionary">
+            <summary>
+                将流变对象转换为 <see cref="T:System.Collections.Generic.Dictionary`2" />
+            </summary>
+            <returns>
+                <see cref="T:System.Collections.Generic.Dictionary`2" />
+            </returns>
+        </member>
         <member name="M:Shapeless.Clay.ForEach(System.Action{System.Object})">
             <summary>
                 遍历 <see cref="T:Shapeless.Clay" />

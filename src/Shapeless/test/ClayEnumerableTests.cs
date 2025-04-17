@@ -168,6 +168,21 @@ public class ClayEnumerableTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void ToDictionary_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        var dictionary = clay.ToDictionary();
+        Assert.Equal(1, dictionary["id"]);
+        Assert.Equal("furion", dictionary["name"]);
+
+        var array = Clay.Parse("[1,2,3]");
+        var dictionary2 = array.ToDictionary();
+        Assert.Equal(1, dictionary2["0"]);
+        Assert.Equal(2, dictionary2["1"]);
+        Assert.Equal(3, dictionary2["2"]);
+    }
+
+    [Fact]
     public void ForEach_Invalid_Parameters()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
