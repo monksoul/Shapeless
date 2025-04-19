@@ -1781,6 +1781,25 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void Operator_ReturnOK()
+    {
+        var clay1 = Clay.Parse("""{"id":1,"name":"furion"}""");
+        var clay2 = Clay.Parse("""{"name":"furion","id":1,}""");
+        var clay3 = Clay.Parse("""{"name":"furion","id":1,"age":30}""");
+
+        Assert.True(clay1 == clay2);
+        Assert.False(clay1 == clay3);
+        Assert.True(clay1 != clay3);
+
+        var clay4 = Clay.Parse("[1,2,3,true,false,{},12.3,\"string\",null,{\"id\":1,\"name\":\"furion\"}]");
+        var clay5 = Clay.Parse("[1,2,3,true,false,{},12.3,\"string\",{\"id\":1,\"name\":\"furion\"},null]");
+        Assert.False(clay4 == clay5);
+
+        var clay7 = new Clay.Object { ["id"] = 1, ["name"] = "furion" };
+        Assert.True(clay1 == clay7);
+    }
+
+    [Fact]
     public void GetHashCode_ReturnOK()
     {
         var clay1 = Clay.Parse("""{"id":1,"name":"furion"}""");
@@ -1792,6 +1811,9 @@ public class ClayExportsTests(ITestOutputHelper output)
         var clay4 = Clay.Parse("[1,2,3,true,false,{},12.3,\"string\",null,{\"id\":1,\"name\":\"furion\"}]");
         var clay5 = Clay.Parse("[1,2,3,true,false,{},12.3,\"string\",{\"id\":1,\"name\":\"furion\"},null]");
         Assert.NotEqual(clay4.GetHashCode(), clay5.GetHashCode());
+
+        var clay6 = new Clay.Object { ["id"] = 1, ["name"] = "furion" };
+        Assert.Equal(clay1.GetHashCode(), clay6.GetHashCode());
     }
 }
 
