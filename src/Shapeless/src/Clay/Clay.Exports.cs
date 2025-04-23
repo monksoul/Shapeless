@@ -937,8 +937,8 @@ public partial class Clay
     /// </returns>
     public object? As(Type resultType, JsonSerializerOptions? jsonSerializerOptions = null)
     {
-        // 检查是否是 Clay 类型或 IEnumerable<dynamic?> 类型
-        if (IsClay(resultType) || resultType == typeof(IEnumerable<dynamic?>))
+        // 检查是否是 Clay 类型或 IEnumerable<dynamic?> 类型或 object 类型
+        if (IsClay(resultType) || resultType == typeof(IEnumerable<dynamic?>) || resultType == typeof(object))
         {
             return this;
         }

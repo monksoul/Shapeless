@@ -13,8 +13,4 @@
         <ProjectReference Include="..\..\Shapeless\src\Shapeless.csproj"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="Properties\"/>
-    </ItemGroup>
-
 </Project>

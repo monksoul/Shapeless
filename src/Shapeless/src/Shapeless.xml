@@ -1304,6 +1304,17 @@
         <member name="M:Shapeless.ClayJsonConverter.Write(System.Text.Json.Utf8JsonWriter,Shapeless.Clay,System.Text.Json.JsonSerializerOptions)">
             <inheritdoc />
         </member>
+        <member name="T:Shapeless.ObjectToClayJsonConverter">
+            <summary>
+                <see cref="T:System.Object" /> 转 <see cref="T:Shapeless.Clay" /> JSON 序列化转换器
+            </summary>
+        </member>
+        <member name="M:Shapeless.ObjectToClayJsonConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <inheritdoc />
+        </member>
+        <member name="M:Shapeless.ObjectToClayJsonConverter.Write(System.Text.Json.Utf8JsonWriter,System.Object,System.Text.Json.JsonSerializerOptions)">
+            <inheritdoc />
+        </member>
         <member name="T:Shapeless.Core.Converters.Json.DateTimeConverterUsingDateTimeParseAsFallback">
             <summary>
                 <see cref="T:System.DateTime" /> JSON 序列化转换器
