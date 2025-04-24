@@ -35,7 +35,7 @@ public class ObjectToClayJsonConverterTests
     [Fact]
     public void Write_ReturnOK()
     {
-        var obj = new { id = 1, name = "furion" };
+        object obj = new { id = 1, name = "furion" };
         Assert.Equal("{\"id\":1,\"name\":\"furion\"}", JsonSerializer.Serialize(obj));
 
         var jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerOptions.Default);
