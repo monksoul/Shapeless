@@ -24,5 +24,5 @@ public sealed class DateTimeOffsetConverterUsingDateTimeOffsetParseAsFallback : 
 
     /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, DateTimeOffset value, JsonSerializerOptions options) =>
-        JsonSerializer.Serialize(writer, value, value.GetType(), options);
+        JsonSerializer.Serialize(writer, value);
 }

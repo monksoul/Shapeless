@@ -24,5 +24,5 @@ public sealed class DateTimeConverterUsingDateTimeParseAsFallback : JsonConverte
 
     /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options) =>
-        JsonSerializer.Serialize(writer, value, value.GetType(), options);
+        JsonSerializer.Serialize(writer, value);
 }
