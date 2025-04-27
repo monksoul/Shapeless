@@ -158,6 +158,35 @@ public partial class Clay
     }
 
     /// <summary>
+    ///     解构函数
+    /// </summary>
+    /// <param name="clay">dynamic 类型的 <see cref="Clay" /></param>
+    /// <param name="enumerableClay">
+    ///     <see cref="IEnumerable{T}" />
+    /// </param>
+    public void Deconstruct(out dynamic clay, out IEnumerable<dynamic?> enumerableClay)
+    {
+        clay = this;
+        enumerableClay = this;
+    }
+
+    /// <summary>
+    /// </summary>
+    /// <param name="clay">dynamic 类型的 <see cref="Clay" /></param>
+    /// <param name="enumerableClay">
+    ///     <see cref="IEnumerable{T}" />
+    /// </param>
+    /// <param name="rawClay">
+    ///     <see cref="Clay" />
+    /// </param>
+    public void Deconstruct(out dynamic clay, out IEnumerable<dynamic?> enumerableClay, out Clay rawClay)
+    {
+        clay = this;
+        enumerableClay = this;
+        rawClay = this;
+    }
+
+    /// <summary>
     ///     创建空的单一对象
     /// </summary>
     /// <param name="options">

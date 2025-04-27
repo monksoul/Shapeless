@@ -1815,6 +1815,21 @@ public class ClayExportsTests(ITestOutputHelper output)
         var clay6 = new Clay.Object { ["id"] = 1, ["name"] = "furion" };
         Assert.Equal(clay1.GetHashCode(), clay6.GetHashCode());
     }
+
+    [Fact]
+    public void Deconstruct_ReturnOK()
+    {
+        var (clay, enumerable) = Clay.Parse("""{"id":1,"name":"furion"}""");
+        Assert.Same(clay, enumerable);
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay.ToJsonString());
+        Assert.Equal(["id", "name"], enumerable.ToDictionary(u => u?.Key!, u => u?.Value).Keys);
+
+        var (clay2, enumerable2, rawClay) = Clay.Parse("""{"id":1,"name":"furion"}""");
+        Assert.Same(clay2, enumerable2);
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay2.ToJsonString());
+        Assert.Equal(["id", "name"], enumerable2.ToDictionary(u => u?.Key!, u => u?.Value).Keys);
+        Assert.Equal(["id", "name"], rawClay.Keys);
+    }
 }
 
 public struct Point

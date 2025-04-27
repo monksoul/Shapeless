@@ -567,6 +567,26 @@
         <member name="M:Shapeless.Clay.ToString(System.String,System.IFormatProvider)">
             <inheritdoc />
         </member>
+        <member name="M:Shapeless.Clay.Deconstruct(System.Object@,System.Collections.Generic.IEnumerable{System.Object}@)">
+            <summary>
+                解构函数
+            </summary>
+            <param name="clay">dynamic 类型的 <see cref="T:Shapeless.Clay" /></param>
+            <param name="enumerableClay">
+                <see cref="T:System.Collections.Generic.IEnumerable`1" />
+            </param>
+        </member>
+        <member name="M:Shapeless.Clay.Deconstruct(System.Object@,System.Collections.Generic.IEnumerable{System.Object}@,Shapeless.Clay@)">
+            <summary>
+            </summary>
+            <param name="clay">dynamic 类型的 <see cref="T:Shapeless.Clay" /></param>
+            <param name="enumerableClay">
+                <see cref="T:System.Collections.Generic.IEnumerable`1" />
+            </param>
+            <param name="rawClay">
+                <see cref="T:Shapeless.Clay" />
+            </param>
+        </member>
         <member name="M:Shapeless.Clay.EmptyObject(Shapeless.ClayOptions)">
             <summary>
                 创建空的单一对象
