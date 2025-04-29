@@ -1680,6 +1680,31 @@
                 <see cref="T:Shapeless.Clay" />
             </returns>
         </member>
+        <member name="M:Shapeless.Extensions.ShapelessExtensions.PipeAsync(System.Threading.Tasks.Task{Shapeless.Clay},System.Func{System.Object,System.Object})">
+            <summary>
+                将 <see cref="T:Shapeless.Clay" /> 实例通过转换管道传递并返回新的 <see cref="T:Shapeless.Clay" />（失败时抛出异常）
+            </summary>
+            <param name="clayTask">
+                <see cref="T:System.Threading.Tasks.Task`1" />
+            </param>
+            <param name="transformer">转换函数</param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:Shapeless.Extensions.ShapelessExtensions.PipeTryAsync(System.Threading.Tasks.Task{Shapeless.Clay},System.Func{System.Object,System.Object})">
+            <summary>
+                尝试将 <see cref="T:Shapeless.Clay" /> 实例通过转换管道传递，失败时返回原始对象
+            </summary>
+            <param name="clayTask">
+                <see cref="T:System.Threading.Tasks.Task`1" />
+            </param>
+            <param name="transformer">returns</param>
+            <returns>
+                <see cref="T:System.Threading.Tasks.Task`1" />
+            </returns>
+        </member>
         <member name="T:Shapeless.Helpers">
             <summary>
                 流变对象模块帮助类

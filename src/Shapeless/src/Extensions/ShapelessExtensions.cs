@@ -34,4 +34,37 @@ public static class ShapelessExtensions
     ///     <see cref="Clay" />
     /// </returns>
     public static Clay ToClay(this object? obj, Action<ClayOptions> configure) => Clay.Parse(obj, configure);
+
+    /// <summary>
+    ///     将 <see cref="Clay" /> 实例通过转换管道传递并返回新的 <see cref="Clay" />（失败时抛出异常）
+    /// </summary>
+    /// <param name="clayTask">
+    ///     <see cref="Task{TResult}" />
+    /// </param>
+    /// <param name="transformer">转换函数</param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    public static async Task<Clay?> PipeAsync(this Task<Clay?> clayTask, Func<dynamic, dynamic?> transformer)
+    {
+        var clay = await clayTask;
+        return clay?.Pipe(transformer);
+    }
+
+    /// <summary>
+    ///     尝试将 <see cref="Clay" /> 实例通过转换管道传递，失败时返回原始对象
+    /// </summary>
+    /// <param name="clayTask">
+    ///     <see cref="Task{TResult}" />
+    /// </param>
+    /// <param name="transformer">returns</param>
+    /// <returns>
+    ///     <see cref="Task{TResult}" />
+    /// </returns>
+    public static async Task<Clay?> PipeTryAsync(this Task<Clay?> clayTask, Func<dynamic, dynamic?> transformer)
+    {
+        var clay = await clayTask;
+        return clay?.PipeTry(transformer);
+    }
 }
