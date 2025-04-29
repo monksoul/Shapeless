@@ -747,6 +747,60 @@ public partial class Clay : DynamicObject, IEnumerable<object?>, IFormattable, I
     }
 
     /// <summary>
+    ///     执行 <see cref="Clay" /> 实例的核心转换逻辑，支持严格模式和容错模式
+    /// </summary>
+    /// <param name="transformer">转换函数</param>
+    /// <param name="strictMode">
+    ///     模式开关：
+    ///     - true：严格模式（失败抛出异常）
+    ///     - false：容错模式（失败返回原对象）
+    /// </param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    internal Clay ExecuteTransformation(Func<dynamic, dynamic?> transformer, bool strictMode)
+    {
+        // 空检查
+        ArgumentNullException.ThrowIfNull(transformer);
+
+        try
+        {
+            // 转换当前的流变对象
+            var result = transformer(this);
+
+            // 检查转换结果是否是有效的流变对象
+            if (result is not null && IsClay((object?)result))
+            {
+                return result;
+            }
+
+            // 严格模式下抛出异常
+            if (strictMode)
+            {
+                throw new InvalidOperationException(
+                    "Transformation must return a non-null Clay object. The provided function either returned null or an incompatible type.");
+            }
+
+            // 非严格模式下降级返回原对象
+            return this;
+        }
+        catch (Exception ex) when (strictMode)
+        {
+            throw new InvalidOperationException(
+                "An unexpected error occurred during the transformation. Please verify the implementation of the transformation function.",
+                ex);
+        }
+        catch
+        {
+            // ignored
+        }
+
+        // 非严格模式下降级返回原对象
+        return this;
+    }
+
+    /// <summary>
     ///     抛出越界的数组索引异常
     /// </summary>
     /// <param name="index">索引</param>

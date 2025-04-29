@@ -949,6 +949,65 @@ public class ClayTests(ITestOutputHelper output)
             Clay.Parse("[1,2,3,true,false,{},12.3,\"string\",null,{\"id\":1,\"name\":\"furion\"}]")));
         Assert.False(Clay.AreArrayEqual(clay1, clay2));
     }
+
+    [Fact]
+    public void ExecuteTransformation_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("""{"id":1,"name":"furion"}""");
+        Assert.Throws<ArgumentNullException>(() => clay.ExecuteTransformation(null!, true));
+        Assert.Throws<ArgumentNullException>(() => clay.ExecuteTransformation(null!, false));
+
+        var exception = Assert.Throws<InvalidOperationException>(() => clay.ExecuteTransformation(u => u.name, true));
+        Assert.Equal(
+            "An unexpected error occurred during the transformation. Please verify the implementation of the transformation function.",
+            exception.Message);
+        Assert.Equal(
+            "Transformation must return a non-null Clay object. The provided function either returned null or an incompatible type.",
+            exception.InnerException?.Message);
+    }
+
+    [Fact]
+    public void ExecuteTransformation_ReturnOK()
+    {
+        const string jsonString = """
+                                  {
+                                    "code": 200,
+                                    "name": "toutiao",
+                                    "title": "今日头条",
+                                    "type": "热榜",
+                                    "link": "https://www.toutiao.com/",
+                                    "total": 50,
+                                    "fromCache": true,
+                                    "updateTime": "2025-03-08T15:20:26.252Z",
+                                    "data": [
+                                      {
+                                        "id": "7478865230039121961",
+                                        "title": "二手小米SU7 Ultra卖到65万",
+                                        "cover": "https://p3-sign.toutiaoimg.com/mosaic-legacy/2b29000036f8405561443~tplv-tt-shrink:960:540.jpeg?_iz=30575&from=sign_default&lk3s=8d617dac&x-expires=1743984000&x-signature=z5DHiXWVtpp9UUQQHuYvcW52D%2FM%3D",
+                                        "timestamp": 7478865230039122000,
+                                        "hot": 107679,
+                                        "url": "https://www.toutiao.com/trending/7478865230039121961/",
+                                        "mobileUrl": "https://api.toutiaoapi.com/feoffline/amos_land/new/html/main/index.html?topic_id=7478865230039121961"
+                                      },
+                                      {
+                                        "id": "7478393047366025257",
+                                        "title": "加拿大省长模仿特朗普签令下架美国酒",
+                                        "cover": "https://p3-sign.toutiaoimg.com/mosaic-legacy/2b29000036f8405561443~tplv-tt-shrink:960:540.jpeg?_iz=30575&from=sign_default&lk3s=8d617dac&x-expires=1743984000&x-signature=z5DHiXWVtpp9UUQQHuYvcW52D%2FM%3D",
+                                        "timestamp": 7478393047366025000,
+                                        "hot": 97432,
+                                        "url": "https://www.toutiao.com/trending/7478393047366025257/",
+                                        "mobileUrl": "https://api.toutiaoapi.com/feoffline/amos_land/new/html/main/index.html?topic_id=7478393047366025257"
+                                      }
+                                    ]
+                                  }
+                                  """;
+        var (_, enumerable) = Clay.Parse(jsonString).ExecuteTransformation(u => u.data, true);
+        Assert.Equal(["二手小米SU7 Ultra卖到65万", "加拿大省长模仿特朗普签令下架美国酒"], enumerable.Select(u => u!.title));
+
+        var (_, enumerable2) = Clay.Parse(jsonString).ExecuteTransformation(u => u.data2, false)
+            .ExecuteTransformation(u => u.data, true);
+        Assert.Equal(["二手小米SU7 Ultra卖到65万", "加拿大省长模仿特朗普签令下架美国酒"], enumerable2.Select(u => u!.title));
+    }
 }
 
 public class CustomDataTableJsonConverter : JsonConverter<DataTable>

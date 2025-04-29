@@ -9,7 +9,7 @@
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <PackageOutputPath>$(SolutionDir)nupkgs</PackageOutputPath>
-        <Version>1.0.29</Version>
+        <Version>1.0.30</Version>
         <PackageVersion>$(Version)</PackageVersion>
         <Authors>百小僧</Authors>
         <Description>Shapeless 是一个高性能的 C# 开源库，提供类似 JavaScript JSON 的灵活操作体验，支持动态的增删查改和 Linq、Lambda 表达式查询，极大地简化了运行时对象的构建与操作，同时保持了简洁性和强大的性能表现。</Description>

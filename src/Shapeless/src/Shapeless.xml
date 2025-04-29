@@ -268,6 +268,21 @@
                 <see cref="T:System.Boolean" />
             </returns>
         </member>
+        <member name="M:Shapeless.Clay.ExecuteTransformation(System.Func{System.Object,System.Object},System.Boolean)">
+            <summary>
+                执行 <see cref="T:Shapeless.Clay" /> 实例的核心转换逻辑，支持严格模式和容错模式
+            </summary>
+            <param name="transformer">转换函数</param>
+            <param name="strictMode">
+                模式开关：
+                - true：严格模式（失败抛出异常）
+                - false：容错模式（失败返回原对象）
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
         <member name="M:Shapeless.Clay.ThrowIfOutOfRange(System.Int32,System.Int32)">
             <summary>
                 抛出越界的数组索引异常
@@ -1166,6 +1181,25 @@
             <param name="allowTrailingCommas">是否允许末尾多余逗号。默认值为：<c>false</c>。</param>
             <returns>
                 <see cref="T:System.Boolean" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.Pipe(System.Func{System.Object,System.Object})">
+            <summary>
+                将 <see cref="T:Shapeless.Clay" /> 实例通过转换管道传递并返回新的 <see cref="T:Shapeless.Clay" />（失败时抛出异常）
+            </summary>
+            <param name="transformer">转换函数</param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:Shapeless.Clay.PipeTry(System.Func{System.Object,System.Object})">
+            <summary>
+                尝试将 <see cref="T:Shapeless.Clay" /> 实例通过转换管道传递，失败时返回原始对象
+            </summary>
+            <param name="transformer">转换函数</param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
             </returns>
         </member>
         <member name="M:Shapeless.Clay.Equals(System.Object)">

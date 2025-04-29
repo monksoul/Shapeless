@@ -1167,7 +1167,8 @@ public partial class Clay
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    public static bool IsClay(object? obj) => obj is not null && IsClay(obj as Type ?? obj.GetType());
+    public static bool IsClay([NotNullWhen(true)] object? obj) =>
+        obj is not null && IsClay(obj as Type ?? obj.GetType());
 
     /// <summary>
     ///     按照键升序排序并返回新的 <see cref="Clay" />
@@ -1310,6 +1311,25 @@ public partial class Clay
             return false;
         }
     }
+
+    /// <summary>
+    ///     将 <see cref="Clay" /> 实例通过转换管道传递并返回新的 <see cref="Clay" />（失败时抛出异常）
+    /// </summary>
+    /// <param name="transformer">转换函数</param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    public Clay Pipe(Func<dynamic, dynamic?> transformer) => ExecuteTransformation(transformer, true);
+
+    /// <summary>
+    ///     尝试将 <see cref="Clay" /> 实例通过转换管道传递，失败时返回原始对象
+    /// </summary>
+    /// <param name="transformer">转换函数</param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    public Clay PipeTry(Func<dynamic, dynamic?> transformer) => ExecuteTransformation(transformer, false);
 
     /// <inheritdoc />
     public override bool Equals(object? obj) => ReferenceEquals(this, obj) || Equals(obj as Clay);
