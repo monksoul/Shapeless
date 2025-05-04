@@ -71,6 +71,14 @@ public partial class Clay
     public Clay this[Range range] => (Clay)this[range as object]!;
 
     /// <summary>
+    ///     路径索引
+    /// </summary>
+    /// <remarks>根据路径获取值。</remarks>
+    /// <param name="identifier">带路径的标识符</param>
+    /// <param name="isPath">是否是带路径的标识符</param>
+    public object? this[string identifier, bool isPath] => isPath ? PathValue(identifier) : GetValue(identifier);
+
+    /// <summary>
     ///     判断是否为单一对象
     /// </summary>
     public bool IsObject { get; }
@@ -89,24 +97,6 @@ public partial class Clay
     ///     判断是否为只读模式
     /// </summary>
     public bool IsReadOnly => Options.ReadOnly;
-
-    /// <inheritdoc />
-    public bool Equals(Clay? other)
-    {
-        // 检查是否是相同的实例
-        if (ReferenceEquals(this, other))
-        {
-            return true;
-        }
-
-        // 空检查及基础类型检查
-        if (other is null || Type != other.Type)
-        {
-            return false;
-        }
-
-        return IsObject ? AreObjectEqual(this, other) : AreArrayEqual(this, other);
-    }
 
     /// <inheritdoc />
     public string ToString(string? format, IFormatProvider? formatProvider)
@@ -1274,14 +1264,14 @@ public partial class Clay
     }
 
     /// <summary>
-    ///     检查字符串是否是 JSON 格式
+    ///     检查字符串是否是 JSON 对象（{}）或数组（[]）
     /// </summary>
     /// <param name="input">字符串</param>
     /// <param name="allowTrailingCommas">是否允许末尾多余逗号。默认值为：<c>false</c>。</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    public static bool IsJsonString(string? input, bool allowTrailingCommas = false)
+    public static bool IsJsonObjectOrArray(string? input, bool allowTrailingCommas = false)
     {
         // 检查输入是否为字符串类型，且字符串不是由空白字符组成
         if (input is null || string.IsNullOrWhiteSpace(input))
@@ -1304,7 +1294,7 @@ public partial class Clay
             using var jsonDocument = JsonDocument.Parse(text,
                 new JsonDocumentOptions { AllowTrailingCommas = allowTrailingCommas });
 
-            return true;
+            return jsonDocument.RootElement.ValueKind is JsonValueKind.Object or JsonValueKind.Array;
         }
         catch (JsonException)
         {
@@ -1330,68 +1320,6 @@ public partial class Clay
     ///     <see cref="Clay" />
     /// </returns>
     public Clay PipeTry(Func<dynamic, dynamic?> transformer) => ExecuteTransformation(transformer, false);
-
-    /// <inheritdoc />
-    public override bool Equals(object? obj) => ReferenceEquals(this, obj) || Equals(obj as Clay);
-
-    /// <summary>
-    ///     重载 == 运算符
-    /// </summary>
-    /// <param name="left">
-    ///     <see cref="Clay" />
-    /// </param>
-    /// <param name="right">
-    ///     <see cref="Clay" />
-    /// </param>
-    /// <returns>
-    ///     <see cref="bool" />
-    /// </returns>
-    public static bool operator ==(Clay? left, Clay? right) => Equals(left, right);
-
-    /// <summary>
-    ///     重载 != 运算符
-    /// </summary>
-    /// <param name="left">
-    ///     <see cref="Clay" />
-    /// </param>
-    /// <param name="right">
-    ///     <see cref="Clay" />
-    /// </param>
-    /// <returns>
-    ///     <see cref="bool" />
-    /// </returns>
-    public static bool operator !=(Clay? left, Clay? right) => !(left == right);
-
-    /// <inheritdoc />
-    public override int GetHashCode()
-    {
-        var hash = new HashCode();
-
-        if (IsObject)
-        {
-            // 预处理键值对（排序）
-            var sortedEntries = AsEnumerateObject().OrderBy(kvp => kvp.Key, StringComparer.Ordinal);
-
-            // 遍历键值对集合
-            foreach (var (key, value) in sortedEntries)
-            {
-                // 递归计算键和值的哈希码
-                hash.Add(key?.GetHashCode() ?? 0);
-                hash.Add(value?.GetHashCode() ?? 0);
-            }
-        }
-        else
-        {
-            // 遍历集合或数组集合
-            foreach (var value in AsEnumerateArray())
-            {
-                // 递归计算元素的哈希码
-                hash.Add(value?.GetHashCode() ?? 0);
-            }
-        }
-
-        return hash.ToHashCode();
-    }
 
     /// <summary>
     ///     单一对象

@@ -27,6 +27,9 @@
             <summary>
                 流变对象
             </summary>
+            <summary>
+                流变对象
+            </summary>
         </member>
         <member name="M:Shapeless.Clay.#ctor(System.Text.Json.Nodes.JsonNode,Shapeless.ClayOptions)">
             <summary>
@@ -235,34 +238,6 @@
             </param>
             <param name="jsonObject">
                 <see cref="T:System.Text.Json.Nodes.JsonObject" />
-            </param>
-            <returns>
-                <see cref="T:System.Boolean" />
-            </returns>
-        </member>
-        <member name="M:Shapeless.Clay.AreObjectEqual(Shapeless.Clay,Shapeless.Clay)">
-            <summary>
-                检查两个单一对象实例是否相等
-            </summary>
-            <param name="clay1">
-                <see cref="T:Shapeless.Clay" />
-            </param>
-            <param name="clay2">
-                <see cref="T:Shapeless.Clay" />
-            </param>
-            <returns>
-                <see cref="T:System.Boolean" />
-            </returns>
-        </member>
-        <member name="M:Shapeless.Clay.AreArrayEqual(Shapeless.Clay,Shapeless.Clay)">
-            <summary>
-                检查两个集合或数组实例是否相等
-            </summary>
-            <param name="clay1">
-                <see cref="T:Shapeless.Clay" />
-            </param>
-            <param name="clay2">
-                <see cref="T:Shapeless.Clay" />
             </param>
             <returns>
                 <see cref="T:System.Boolean" />
@@ -556,6 +531,14 @@
                 <see cref="T:System.Range" />
             </param>
         </member>
+        <member name="P:Shapeless.Clay.Item(System.String,System.Boolean)">
+            <summary>
+                路径索引
+            </summary>
+            <remarks>根据路径获取值。</remarks>
+            <param name="identifier">带路径的标识符</param>
+            <param name="isPath">是否是带路径的标识符</param>
+        </member>
         <member name="P:Shapeless.Clay.IsObject">
             <summary>
                 判断是否为单一对象
@@ -575,9 +558,6 @@
             <summary>
                 判断是否为只读模式
             </summary>
-        </member>
-        <member name="M:Shapeless.Clay.Equals(Shapeless.Clay)">
-            <inheritdoc />
         </member>
         <member name="M:Shapeless.Clay.ToString(System.String,System.IFormatProvider)">
             <inheritdoc />
@@ -1173,9 +1153,9 @@
                 <see cref="T:Shapeless.Clay" />
             </returns>
         </member>
-        <member name="M:Shapeless.Clay.IsJsonString(System.String,System.Boolean)">
+        <member name="M:Shapeless.Clay.IsJsonObjectOrArray(System.String,System.Boolean)">
             <summary>
-                检查字符串是否是 JSON 格式
+                检查字符串是否是 JSON 对象（{}）或数组（[]）
             </summary>
             <param name="input">字符串</param>
             <param name="allowTrailingCommas">是否允许末尾多余逗号。默认值为：<c>false</c>。</param>
@@ -1201,40 +1181,6 @@
             <returns>
                 <see cref="T:Shapeless.Clay" />
             </returns>
-        </member>
-        <member name="M:Shapeless.Clay.Equals(System.Object)">
-            <inheritdoc />
-        </member>
-        <member name="M:Shapeless.Clay.op_Equality(Shapeless.Clay,Shapeless.Clay)">
-            <summary>
-                重载 == 运算符
-            </summary>
-            <param name="left">
-                <see cref="T:Shapeless.Clay" />
-            </param>
-            <param name="right">
-                <see cref="T:Shapeless.Clay" />
-            </param>
-            <returns>
-                <see cref="T:System.Boolean" />
-            </returns>
-        </member>
-        <member name="M:Shapeless.Clay.op_Inequality(Shapeless.Clay,Shapeless.Clay)">
-            <summary>
-                重载 != 运算符
-            </summary>
-            <param name="left">
-                <see cref="T:Shapeless.Clay" />
-            </param>
-            <param name="right">
-                <see cref="T:Shapeless.Clay" />
-            </param>
-            <returns>
-                <see cref="T:System.Boolean" />
-            </returns>
-        </member>
-        <member name="M:Shapeless.Clay.GetHashCode">
-            <inheritdoc />
         </member>
         <member name="T:Shapeless.Clay.Object">
             <summary>
@@ -1278,6 +1224,71 @@
             </param>
             <returns>
                 <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.Equals(Shapeless.Clay)">
+            <inheritdoc />
+        </member>
+        <member name="M:Shapeless.Clay.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Shapeless.Clay.op_Equality(Shapeless.Clay,Shapeless.Clay)">
+            <summary>
+                重载 == 运算符
+            </summary>
+            <param name="left">
+                <see cref="T:Shapeless.Clay" />
+            </param>
+            <param name="right">
+                <see cref="T:Shapeless.Clay" />
+            </param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.op_Inequality(Shapeless.Clay,Shapeless.Clay)">
+            <summary>
+                重载 != 运算符
+            </summary>
+            <param name="left">
+                <see cref="T:Shapeless.Clay" />
+            </param>
+            <param name="right">
+                <see cref="T:Shapeless.Clay" />
+            </param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:Shapeless.Clay.AreObjectEqual(Shapeless.Clay,Shapeless.Clay)">
+            <summary>
+                检查两个单一对象实例是否相等
+            </summary>
+            <param name="clay1">
+                <see cref="T:Shapeless.Clay" />
+            </param>
+            <param name="clay2">
+                <see cref="T:Shapeless.Clay" />
+            </param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.AreArrayEqual(Shapeless.Clay,Shapeless.Clay)">
+            <summary>
+                检查两个集合或数组实例是否相等
+            </summary>
+            <param name="clay1">
+                <see cref="T:Shapeless.Clay" />
+            </param>
+            <param name="clay2">
+                <see cref="T:Shapeless.Clay" />
+            </param>
+            <returns>
+                <see cref="T:System.Boolean" />
             </returns>
         </member>
         <member name="F:Shapeless.Clay._getCSharpInvokeMemberBinderTypeArguments">
@@ -1702,7 +1713,7 @@
             </param>
             <param name="transformer">returns</param>
             <returns>
-                <see cref="T:System.Threading.Tasks.Task`1" />
+                <see cref="T:Shapeless.Clay" />
             </returns>
         </member>
         <member name="T:Shapeless.Helpers">

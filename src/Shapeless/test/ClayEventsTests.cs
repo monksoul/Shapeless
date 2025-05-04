@@ -12,19 +12,19 @@ public class ClayEventsTests
         var clay = new Clay();
         var events = new string[4];
 
-        clay.Changing += (s, e) =>
+        clay.Changing += (_, _) =>
         {
             events[0] = nameof(clay.Changing);
         };
-        clay.Changed += (s, e) =>
+        clay.Changed += (_, _) =>
         {
             events[1] = nameof(clay.Changed);
         };
-        clay.Removing += (s, e) =>
+        clay.Removing += (_, _) =>
         {
             events[2] = nameof(clay.Removing);
         };
-        clay.Removed += (s, e) =>
+        clay.Removed += (_, _) =>
         {
             events[3] = nameof(clay.Removed);
         };
@@ -50,19 +50,19 @@ public class ClayEventsTests
         var clay = new Clay.Array();
         var events = new string[4];
 
-        clay.Changing += (s, e) =>
+        clay.Changing += (_, _) =>
         {
             events[0] = nameof(clay.Changing);
         };
-        clay.Changed += (s, e) =>
+        clay.Changed += (_, _) =>
         {
             events[1] = nameof(clay.Changed);
         };
-        clay.Removing += (s, e) =>
+        clay.Removing += (_, _) =>
         {
             events[2] = nameof(clay.Removing);
         };
-        clay.Removed += (s, e) =>
+        clay.Removed += (_, _) =>
         {
             events[3] = nameof(clay.Removed);
         };
@@ -79,11 +79,11 @@ public class ClayEventsTests
         var clay = new Clay.Array { [0] = 1, [1] = 2, [2] = 3, [3] = 4 };
         var events = new List<string>();
 
-        clay.Removing += (s, e) =>
+        clay.Removing += (_, _) =>
         {
             events.Add(nameof(clay.Removing));
         };
-        clay.Removed += (s, e) =>
+        clay.Removed += (_, _) =>
         {
             events.Add(nameof(clay.Removed));
         };
@@ -105,7 +105,7 @@ public class ClayEventsTests
 
         Assert.Throws<ArgumentNullException>(() => clay.AddEvent("Changing", (ClayEventHandler)null!));
         var exception =
-            Assert.Throws<ArgumentException>(() => clay.AddEvent("Test", new ClayEventHandler((sender, args) => { })));
+            Assert.Throws<ArgumentException>(() => clay.AddEvent("Test", new ClayEventHandler((_, _) => { })));
         Assert.Equal("Unknown event name: `Test`. (Parameter 'Test')", exception.Message);
 
         Assert.Throws<ArgumentException>(() => clay.AddEvent(null!, (Action<dynamic, ClayEventArgs>)null!));
@@ -117,16 +117,16 @@ public class ClayEventsTests
         var clay = new Clay();
         var events = new string[4];
 
-        clay.AddEvent(nameof(Clay.Changing), new ClayEventHandler((sender, args) =>
+        clay.AddEvent(nameof(Clay.Changing), new ClayEventHandler((_, _) =>
         {
             events[0] = nameof(clay.Changing);
-        })).AddEvent(nameof(Clay.Changed), new ClayEventHandler((sender, args) =>
+        })).AddEvent(nameof(Clay.Changed), new ClayEventHandler((_, _) =>
         {
             events[1] = nameof(clay.Changed);
-        })).AddEvent(nameof(Clay.Removing), new ClayEventHandler((sender, args) =>
+        })).AddEvent(nameof(Clay.Removing), new ClayEventHandler((_, _) =>
         {
             events[2] = nameof(clay.Removing);
-        })).AddEvent(nameof(Clay.Removed), new ClayEventHandler((sender, args) =>
+        })).AddEvent(nameof(Clay.Removed), new ClayEventHandler((_, _) =>
         {
             events[3] = nameof(clay.Removed);
         }));
@@ -145,16 +145,16 @@ public class ClayEventsTests
         var clay = new Clay();
         var events = new string[4];
 
-        clay.AddEvent(nameof(Clay.Changing), new Action<dynamic, ClayEventArgs>((sender, args) =>
+        clay.AddEvent(nameof(Clay.Changing), new Action<dynamic, ClayEventArgs>((_, _) =>
         {
             events[0] = nameof(clay.Changing);
-        })).AddEvent(nameof(Clay.Changed), new Action<dynamic, ClayEventArgs>((sender, args) =>
+        })).AddEvent(nameof(Clay.Changed), new Action<dynamic, ClayEventArgs>((_, _) =>
         {
             events[1] = nameof(clay.Changed);
-        })).AddEvent(nameof(Clay.Removing), new Action<dynamic, ClayEventArgs>((sender, args) =>
+        })).AddEvent(nameof(Clay.Removing), new Action<dynamic, ClayEventArgs>((_, _) =>
         {
             events[2] = nameof(clay.Removing);
-        })).AddEvent(nameof(Clay.Removed), new Action<dynamic, ClayEventArgs>((sender, args) =>
+        })).AddEvent(nameof(Clay.Removed), new Action<dynamic, ClayEventArgs>((_, _) =>
         {
             events[3] = nameof(clay.Removed);
         }));

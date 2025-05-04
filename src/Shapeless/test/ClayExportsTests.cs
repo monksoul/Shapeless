@@ -94,6 +94,35 @@ public class ClayExportsTests(ITestOutputHelper output)
 
         var rangeArray = array2[1..^1]; // 范围运算符
         Assert.Equal("[2,5]", rangeArray.ToJsonString());
+
+        var pathClay = Clay.Parse("""
+                                  {
+                                    "AppInfo": {
+                                      "Name": "Furion",
+                                      "Version": "1.0.0",
+                                      "Company": {
+                                        "Name": "Baiqian",
+                                        "Address": {
+                                          "City": "中国",
+                                          "Province": "广东省",
+                                          "Detail": "中山市东区紫马公园西门"
+                                        },
+                                        "Telephones":["0760-88888888","0760-88888881"],
+                                        "Date":"2024-12-26T00:00:00"
+                                      }
+                                    }
+                                  }
+                                  """);
+        var name = pathClay["AppInfo:Name", true];
+        Assert.Equal("Furion", name);
+
+        var city = pathClay["AppInfo:Company:Address:City", true];
+        Assert.Equal("中国", city);
+
+        var telephone = pathClay["AppInfo:Company:Telephones:0", true];
+        Assert.Equal("0760-88888888", telephone);
+
+        Assert.Throws<KeyNotFoundException>(() => pathClay["AppInfo:Name", false]);
     }
 
     [Fact]
@@ -1759,62 +1788,8 @@ public class ClayExportsTests(ITestOutputHelper output)
     [InlineData("[1,2,3,]", true, true)]
     [InlineData("1,2,3]", false, false)]
     [InlineData("[1,2,3", false, false)]
-    public void IsJsonString_ReturnOK(string? input, bool result, bool allowTrailingCommas = false) =>
-        Assert.Equal(result, Clay.IsJsonString(input, allowTrailingCommas));
-
-    [Fact]
-    public void Equals_ReturnOK()
-    {
-        var clay1 = Clay.Parse("""{"id":1,"name":"furion"}""");
-        var clay2 = Clay.Parse("""{"name":"furion","id":1,}""");
-        var clay3 = Clay.Parse("""{"name":"furion","id":1,"age":30}""");
-
-        Assert.True(clay1.Equals(clay1));
-        Assert.True(clay1.Equals(clay2));
-        Assert.False(clay1.Equals(clay3));
-
-        Assert.True(clay1.Equals((object)clay1));
-        Assert.True(clay1.Equals((object)clay2));
-        Assert.False(clay1.Equals((object)clay3));
-
-        Assert.False(clay1.Equals(new { }));
-    }
-
-    [Fact]
-    public void Operator_ReturnOK()
-    {
-        var clay1 = Clay.Parse("""{"id":1,"name":"furion"}""");
-        var clay2 = Clay.Parse("""{"name":"furion","id":1,}""");
-        var clay3 = Clay.Parse("""{"name":"furion","id":1,"age":30}""");
-
-        Assert.True(clay1 == clay2);
-        Assert.False(clay1 == clay3);
-        Assert.True(clay1 != clay3);
-
-        var clay4 = Clay.Parse("[1,2,3,true,false,{},12.3,\"string\",null,{\"id\":1,\"name\":\"furion\"}]");
-        var clay5 = Clay.Parse("[1,2,3,true,false,{},12.3,\"string\",{\"id\":1,\"name\":\"furion\"},null]");
-        Assert.False(clay4 == clay5);
-
-        var clay7 = new Clay.Object { ["id"] = 1, ["name"] = "furion" };
-        Assert.True(clay1 == clay7);
-    }
-
-    [Fact]
-    public void GetHashCode_ReturnOK()
-    {
-        var clay1 = Clay.Parse("""{"id":1,"name":"furion"}""");
-        var clay2 = Clay.Parse("""{"name":"furion","id":1,}""");
-        var clay3 = Clay.Parse("""{"name":"furion","id":1,"age":30}""");
-        Assert.Equal(clay1.GetHashCode(), clay2.GetHashCode());
-        Assert.NotEqual(clay2.GetHashCode(), clay3.GetHashCode());
-
-        var clay4 = Clay.Parse("[1,2,3,true,false,{},12.3,\"string\",null,{\"id\":1,\"name\":\"furion\"}]");
-        var clay5 = Clay.Parse("[1,2,3,true,false,{},12.3,\"string\",{\"id\":1,\"name\":\"furion\"},null]");
-        Assert.NotEqual(clay4.GetHashCode(), clay5.GetHashCode());
-
-        var clay6 = new Clay.Object { ["id"] = 1, ["name"] = "furion" };
-        Assert.Equal(clay1.GetHashCode(), clay6.GetHashCode());
-    }
+    public void IsJsonObjectOrArray_ReturnOK(string? input, bool result, bool allowTrailingCommas = false) =>
+        Assert.Equal(result, Clay.IsJsonObjectOrArray(input, allowTrailingCommas));
 
     [Fact]
     public void Deconstruct_ReturnOK()

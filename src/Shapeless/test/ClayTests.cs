@@ -410,13 +410,13 @@ public class ClayTests(ITestOutputHelper output)
 
         var i = 0;
         var j = 0;
-        clay.Changing += (sender, args) =>
+        clay.Changing += (_, args) =>
         {
             output.WriteLine(args.Identifier.ToString());
             i++;
         };
 
-        clay.Changed += (sender, args) =>
+        clay.Changed += (_, _) =>
         {
             j++;
         };
@@ -477,11 +477,11 @@ public class ClayTests(ITestOutputHelper output)
     {
         var clay = new Clay();
         var keys = new List<object>();
-        clay.Changing += (sender, args) =>
+        clay.Changing += (_, args) =>
         {
             keys.Add(args.Identifier);
         };
-        clay.Changed += (sender, args) =>
+        clay.Changed += (_, args) =>
         {
             keys.Add(args.Identifier + "_Changed");
         };
@@ -547,7 +547,7 @@ public class ClayTests(ITestOutputHelper output)
         Assert.True(isUnchanged3);
 
         Assert.Equal("0", Clay.ProcessNestedNullPropagationIdentifier("0?", true, out var isUnchanged4));
-        Assert.False(isUnchanged2);
+        Assert.False(isUnchanged4);
     }
 
     [Fact]
@@ -689,11 +689,11 @@ public class ClayTests(ITestOutputHelper output)
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\",\"arr\":[1,2,3]}");
         var keys = new List<object>();
-        clay.Removing += (sender, args) =>
+        clay.Removing += (_, args) =>
         {
             keys.Add(args.Identifier);
         };
-        clay.Removed += (sender, args) =>
+        clay.Removed += (_, args) =>
         {
             keys.Add(args.Identifier + "_Removed");
         };
@@ -897,13 +897,13 @@ public class ClayTests(ITestOutputHelper output)
 
         var i = 0;
         var j = 0;
-        clay.Changing += (sender, args) =>
+        clay.Changing += (_, args) =>
         {
             output.WriteLine(args.Identifier.ToString());
             i++;
         };
 
-        clay.Changed += (sender, args) =>
+        clay.Changed += (_, _) =>
         {
             j++;
         };
@@ -926,28 +926,6 @@ public class ClayTests(ITestOutputHelper output)
         var exception2 = Assert.Throws<NotSupportedException>(() => Clay.ThrowIfUnsupportedKeyType(1..^1));
         Assert.Equal("Accessing or setting properties using System.Range `1..^1` is not supported in the Clay.",
             exception2.Message);
-    }
-
-    [Fact]
-    public void AreObjectEqual_ReturnOK()
-    {
-        var clay1 = Clay.Parse("""{"id":1,"name":"furion"}""");
-        var clay2 = Clay.Parse("""{"name":"furion","id":1,}""");
-        var clay3 = Clay.Parse("""{"name":"furion","id":1,"age":30}""");
-
-        Assert.True(Clay.AreObjectEqual(clay1, clay2));
-        Assert.False(Clay.AreObjectEqual(clay2, clay3));
-    }
-
-    [Fact]
-    public void AreArrayEqual_ReturnOK()
-    {
-        var clay1 = Clay.Parse("[1,2,3,true,false,{},12.3,\"string\",null,{\"id\":1,\"name\":\"furion\"}]");
-        var clay2 = Clay.Parse("[1,2,3,true,false,{},12.3,\"string\",{\"id\":1,\"name\":\"furion\"},null]");
-
-        Assert.True(Clay.AreArrayEqual(clay1,
-            Clay.Parse("[1,2,3,true,false,{},12.3,\"string\",null,{\"id\":1,\"name\":\"furion\"}]")));
-        Assert.False(Clay.AreArrayEqual(clay1, clay2));
     }
 
     [Fact]

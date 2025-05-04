@@ -60,7 +60,7 @@ public static class ShapelessExtensions
     /// </param>
     /// <param name="transformer">returns</param>
     /// <returns>
-    ///     <see cref="Task{TResult}" />
+    ///     <see cref="Clay" />
     /// </returns>
     public static async Task<Clay?> PipeTryAsync(this Task<Clay?> clayTask, Func<dynamic, dynamic?> transformer)
     {

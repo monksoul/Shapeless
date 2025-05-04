@@ -541,7 +541,7 @@ public class ClayOverrideTests
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
 
         Assert.True(clay.DynamicInvokeDelegate(new Action(() => { }), null, out _));
-        Assert.True(clay.DynamicInvokeDelegate(new Action<string>(str => { }), ["str"], out _));
+        Assert.True(clay.DynamicInvokeDelegate(new Action<string>(_ => { }), ["str"], out _));
         Assert.True(clay.DynamicInvokeDelegate(new Func<string>(() => "Furion"), null, out var result1));
         Assert.Equal("Furion", result1);
         Assert.True(
