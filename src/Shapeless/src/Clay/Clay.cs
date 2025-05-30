@@ -542,8 +542,8 @@ public partial class Clay : DynamicObject, IEnumerable<object?>, IFormattable, I
     internal static object? DeserializeNode(JsonNode? jsonNode, ClayOptions? options = null) =>
         jsonNode?.GetValueKind() switch
         {
-            JsonValueKind.String when options?.DateJsonToDateTime == true &&
-                                      DateTime.TryParse(jsonNode.GetValue<string>(), out var dateTime) => dateTime,
+            JsonValueKind.String when options?.DateJsonToDateTime == true && jsonNode.TryGetDateValue(out var dateTime)
+                => dateTime,
             JsonValueKind.String => jsonNode.GetValue<string>(),
             JsonValueKind.Number => jsonNode.GetNumericValue(),
             JsonValueKind.True or JsonValueKind.False => jsonNode.GetValue<bool>(),

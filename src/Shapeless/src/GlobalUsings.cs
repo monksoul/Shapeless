@@ -11,6 +11,7 @@ global using System.Collections.Specialized;
 global using System.ComponentModel.DataAnnotations;
 global using System.Diagnostics.CodeAnalysis;
 global using System.Dynamic;
+global using System.Globalization;
 global using System.Net.NetworkInformation;
 global using System.Reflection;
 global using System.Reflection.Emit;

@@ -324,6 +324,13 @@ public class ClayExportsTests(ITestOutputHelper output)
 
         var clay22 = Clay.Parse(expandoObject);
         Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay22.ToJsonString());
+
+        dynamic clay23 =
+            Clay.Parse("""{"DateTime":"/Date(1590863400000)/"}""", u =>
+            {
+                u.DateJsonToDateTime = true;
+            });
+        Assert.Equal("2020-05-30T18:30:00.0000000", clay23.DateTime.ToString("O", CultureInfo.CurrentCulture));
     }
 
     [Fact]
@@ -1204,6 +1211,17 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.Equal(1, dictionary2[0]);
         Assert.Equal(2, dictionary2[1]);
         Assert.Equal(3, dictionary2[2]);
+
+        var str = clay.As<string>();
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", str);
+
+        var clay5 =
+            Clay.Parse("""{"DateTime":"/Date(1590863400000)/","DateTimeOffset":"/Date(1590863400000-0700)/"}""");
+        var unixEpoch = clay5.As<UnixEpochDateClass>();
+        Assert.NotNull(unixEpoch);
+        Assert.Equal("2020-05-30T18:30:00.0000000", unixEpoch.DateTime.ToString("O", CultureInfo.CurrentCulture));
+        Assert.Equal("2020-05-30T11:30:00.0000000-07:00",
+            unixEpoch.DateTimeOffset.ToString("O", CultureInfo.CurrentCulture));
     }
 
     [Fact]
@@ -1924,4 +1942,10 @@ public class StringClassTest
     public string? String1 { get; set; }
     public string? String2 { get; set; }
     public string? String3 { get; set; }
+}
+
+public class UnixEpochDateClass
+{
+    public DateTime DateTime { get; set; }
+    public DateTimeOffset DateTimeOffset { get; set; }
 }

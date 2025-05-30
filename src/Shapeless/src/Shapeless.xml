@@ -1380,29 +1380,69 @@
         <member name="M:Shapeless.ObjectToClayJsonConverter.Write(System.Text.Json.Utf8JsonWriter,System.Object,System.Text.Json.JsonSerializerOptions)">
             <inheritdoc />
         </member>
-        <member name="T:Shapeless.Core.Converters.Json.DateTimeConverterUsingDateTimeParseAsFallback">
+        <member name="T:Shapeless.Core.Converters.Json.FlexibleDateTimeConverter">
             <summary>
                 <see cref="T:System.DateTime" /> JSON 序列化转换器
             </summary>
-            <remarks>在不符合 <c>ISO 8601-1:2019</c> 格式的 <see cref="T:System.DateTime" /> 时间使用 <c>DateTime.Parse</c> 作为回退。</remarks>
         </member>
-        <member name="M:Shapeless.Core.Converters.Json.DateTimeConverterUsingDateTimeParseAsFallback.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+        <member name="M:Shapeless.Core.Converters.Json.FlexibleDateTimeConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
             <inheritdoc />
         </member>
-        <member name="M:Shapeless.Core.Converters.Json.DateTimeConverterUsingDateTimeParseAsFallback.Write(System.Text.Json.Utf8JsonWriter,System.DateTime,System.Text.Json.JsonSerializerOptions)">
+        <member name="M:Shapeless.Core.Converters.Json.FlexibleDateTimeConverter.Write(System.Text.Json.Utf8JsonWriter,System.DateTime,System.Text.Json.JsonSerializerOptions)">
             <inheritdoc />
         </member>
-        <member name="T:Shapeless.Core.Converters.Json.DateTimeOffsetConverterUsingDateTimeOffsetParseAsFallback">
+        <member name="M:Shapeless.Core.Converters.Json.FlexibleDateTimeConverter.Regex">
+            <remarks>
+            Pattern:<br/>
+            <code>^/Date\\(([+-]*\\d+)\\)/$</code><br/>
+            Options:<br/>
+            <code>RegexOptions.CultureInvariant</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match if at the beginning of the string.<br/>
+            ○ Match the string "/Date(".<br/>
+            ○ 1st capture group.<br/>
+                ○ Match a character in the set [+-] atomically any number of times.<br/>
+                ○ Match a Unicode digit atomically at least once.<br/>
+            ○ Match the string ")/".<br/>
+            ○ Match if at the end of the string or if before an ending newline.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="T:Shapeless.Core.Converters.Json.FlexibleDateTimeOffsetConverter">
             <summary>
                 <see cref="T:System.DateTimeOffset" /> JSON 序列化转换器
             </summary>
-            <remarks>在不符合 <c>ISO 8601-1:2019</c> 格式的 <see cref="T:System.DateTimeOffset" /> 时间使用 <c>DateTimeOffset.Parse</c> 作为回退。</remarks>
         </member>
-        <member name="M:Shapeless.Core.Converters.Json.DateTimeOffsetConverterUsingDateTimeOffsetParseAsFallback.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+        <member name="M:Shapeless.Core.Converters.Json.FlexibleDateTimeOffsetConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
             <inheritdoc />
         </member>
-        <member name="M:Shapeless.Core.Converters.Json.DateTimeOffsetConverterUsingDateTimeOffsetParseAsFallback.Write(System.Text.Json.Utf8JsonWriter,System.DateTimeOffset,System.Text.Json.JsonSerializerOptions)">
+        <member name="M:Shapeless.Core.Converters.Json.FlexibleDateTimeOffsetConverter.Write(System.Text.Json.Utf8JsonWriter,System.DateTimeOffset,System.Text.Json.JsonSerializerOptions)">
             <inheritdoc />
+        </member>
+        <member name="M:Shapeless.Core.Converters.Json.FlexibleDateTimeOffsetConverter.Regex">
+            <remarks>
+            Pattern:<br/>
+            <code>^/Date\\(([+-]*\\d+)([+-])(\\d{2})(\\d{2})\\)/$</code><br/>
+            Options:<br/>
+            <code>RegexOptions.CultureInvariant</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match if at the beginning of the string.<br/>
+            ○ Match the string "/Date(".<br/>
+            ○ 1st capture group.<br/>
+                ○ Match a character in the set [+-] atomically any number of times.<br/>
+                ○ Match a Unicode digit atomically at least once.<br/>
+            ○ 2nd capture group.<br/>
+                ○ Match a character in the set [+-].<br/>
+            ○ 3rd capture group.<br/>
+                ○ Match a Unicode digit exactly 2 times.<br/>
+            ○ 4th capture group.<br/>
+                ○ Match a Unicode digit exactly 2 times.<br/>
+            ○ Match the string ")/".<br/>
+            ○ Match if at the end of the string or if before an ending newline.<br/>
+            </code>
+            </remarks>
         </member>
         <member name="T:Shapeless.Core.Converters.Json.StringJsonConverter">
             <summary>
@@ -1493,6 +1533,38 @@
             <returns>
                 <see cref="T:System.Text.Json.Nodes.JsonNode" />
             </returns>
+        </member>
+        <member name="M:Shapeless.Core.Extensions.JsonExtensions.TryGetDateValue(System.Text.Json.Nodes.JsonNode,System.DateTime@)">
+            <summary>
+                尝试获取日期值
+            </summary>
+            <param name="jsonNode">
+                <see cref="T:System.Text.Json.Nodes.JsonNode" />
+            </param>
+            <param name="dateTime">
+                <see cref="T:System.DateTime" />
+            </param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Core.Extensions.JsonExtensions.Regex">
+            <remarks>
+            Pattern:<br/>
+            <code>^/Date\\(([+-]*\\d+)\\)/$</code><br/>
+            Options:<br/>
+            <code>RegexOptions.CultureInvariant</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match if at the beginning of the string.<br/>
+            ○ Match the string "/Date(".<br/>
+            ○ 1st capture group.<br/>
+                ○ Match a character in the set [+-] atomically any number of times.<br/>
+                ○ Match a Unicode digit atomically at least once.<br/>
+            ○ Match the string ")/".<br/>
+            ○ Match if at the end of the string or if before an ending newline.<br/>
+            </code>
+            </remarks>
         </member>
         <member name="T:Shapeless.Core.Extensions.ObjectExtensions">
             <summary>
@@ -1954,29 +2026,93 @@
                 别名
             </summary>
         </member>
-        <member name="T:System.Text.RegularExpressions.Generated.WordBoundaryRegex_0">
-            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the WordBoundaryRegex method.</summary>
+        <member name="T:System.Text.RegularExpressions.Generated.Regex_0">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the Regex method.</summary>
         </member>
-        <member name="F:System.Text.RegularExpressions.Generated.WordBoundaryRegex_0.Instance">
+        <member name="F:System.Text.RegularExpressions.Generated.Regex_0.Instance">
             <summary>Cached, thread-safe singleton instance.</summary>
         </member>
-        <member name="M:System.Text.RegularExpressions.Generated.WordBoundaryRegex_0.#ctor">
+        <member name="M:System.Text.RegularExpressions.Generated.Regex_0.#ctor">
             <summary>Initializes the instance.</summary>
         </member>
-        <member name="T:System.Text.RegularExpressions.Generated.WordBoundaryRegex_0.RunnerFactory">
+        <member name="T:System.Text.RegularExpressions.Generated.Regex_0.RunnerFactory">
             <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
         </member>
-        <member name="M:System.Text.RegularExpressions.Generated.WordBoundaryRegex_0.RunnerFactory.CreateInstance">
+        <member name="M:System.Text.RegularExpressions.Generated.Regex_0.RunnerFactory.CreateInstance">
             <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
         </member>
-        <member name="T:System.Text.RegularExpressions.Generated.WordBoundaryRegex_0.RunnerFactory.Runner">
+        <member name="T:System.Text.RegularExpressions.Generated.Regex_0.RunnerFactory.Runner">
             <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
         </member>
-        <member name="M:System.Text.RegularExpressions.Generated.WordBoundaryRegex_0.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+        <member name="M:System.Text.RegularExpressions.Generated.Regex_0.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
             <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
             <param name="inputSpan">The text being scanned by the regular expression.</param>
         </member>
-        <member name="M:System.Text.RegularExpressions.Generated.WordBoundaryRegex_0.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+        <member name="M:System.Text.RegularExpressions.Generated.Regex_0.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.Regex_0.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.Regex_1">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the Regex method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Regex_1.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.Regex_1.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.Regex_1.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.Regex_1.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.Regex_1.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.Regex_1.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.Regex_1.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.Regex_1.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.WordBoundaryRegex_2">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the WordBoundaryRegex method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.WordBoundaryRegex_2.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.WordBoundaryRegex_2.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.WordBoundaryRegex_2.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.WordBoundaryRegex_2.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.WordBoundaryRegex_2.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.WordBoundaryRegex_2.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.WordBoundaryRegex_2.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
             <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
             <param name="inputSpan">The text being scanned by the regular expression.</param>
             <returns>true if the regular expression matches at the current position; otherwise, false.</returns>

@@ -994,6 +994,12 @@ public partial class Clay
             return Activator.CreateInstance(_jsonResultType.Value, this);
         }
 
+        // 检查是否是 string 类型
+        if (resultType == typeof(string))
+        {
+            return ToJsonString(jsonSerializerOptions);
+        }
+
         // 将 JsonNode 转换为目标类型
         var result = Helpers.DeserializeNode(JsonCanvas, resultType,
             jsonSerializerOptions ?? Options.JsonSerializerOptions);

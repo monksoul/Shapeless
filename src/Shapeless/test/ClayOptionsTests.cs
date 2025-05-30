@@ -55,10 +55,10 @@ public class ClayOptionsTests
         Assert.Equal(5, clayOptions.JsonSerializerOptions.Converters.Count);
         Assert.True(clayOptions.JsonSerializerOptions.Converters[0] is ClayJsonConverter);
         Assert.True(clayOptions.JsonSerializerOptions.Converters[1] is ObjectToClayJsonConverter);
-        Assert.True(clayOptions.JsonSerializerOptions.Converters[2] is DateTimeConverterUsingDateTimeParseAsFallback);
+        Assert.True(clayOptions.JsonSerializerOptions.Converters[2] is FlexibleDateTimeConverter);
         Assert.True(
             clayOptions.JsonSerializerOptions.Converters[3] is
-                DateTimeOffsetConverterUsingDateTimeOffsetParseAsFallback);
+                FlexibleDateTimeOffsetConverter);
         Assert.True(clayOptions.JsonSerializerOptions.Converters[4] is StringJsonConverter);
     }
 
@@ -76,10 +76,10 @@ public class ClayOptionsTests
         Assert.Equal(5, clayOptions.JsonSerializerOptions.Converters.Count);
         Assert.True(clayOptions.JsonSerializerOptions.Converters[0] is ClayJsonConverter);
         Assert.True(clayOptions.JsonSerializerOptions.Converters[1] is ObjectToClayJsonConverter);
-        Assert.True(clayOptions.JsonSerializerOptions.Converters[2] is DateTimeConverterUsingDateTimeParseAsFallback);
+        Assert.True(clayOptions.JsonSerializerOptions.Converters[2] is FlexibleDateTimeConverter);
         Assert.True(
             clayOptions.JsonSerializerOptions.Converters[3] is
-                DateTimeOffsetConverterUsingDateTimeOffsetParseAsFallback);
+                FlexibleDateTimeOffsetConverter);
         Assert.True(clayOptions.JsonSerializerOptions.Converters[4] is StringJsonConverter);
 
         clayOptions.Configure(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));

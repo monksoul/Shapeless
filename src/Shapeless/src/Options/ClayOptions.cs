@@ -119,8 +119,8 @@ public sealed class ClayOptions
         {
             new ClayJsonConverter(),
             new ObjectToClayJsonConverter(),
-            new DateTimeConverterUsingDateTimeParseAsFallback(),
-            new DateTimeOffsetConverterUsingDateTimeOffsetParseAsFallback(),
+            new FlexibleDateTimeConverter(),
+            new FlexibleDateTimeOffsetConverter(),
             // 允许 Number 或 Boolean 转 String
             new StringJsonConverter()
         }

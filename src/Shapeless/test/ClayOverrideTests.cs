@@ -526,6 +526,9 @@ public class ClayOverrideTests
         var data2 = (List<dynamic>)result.data;
         var titles2 = data2.Select(u => u.title).ToList();
         Assert.Equal(["二手小米SU7 Ultra卖到65万", "加拿大省长模仿特朗普签令下架美国酒"], titles2);
+
+        string str = clay;
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", str);
     }
 
     [Fact]
