@@ -25,6 +25,23 @@ public sealed class ObjectToClayJsonConverter : JsonConverter<object>
     }
 
     /// <inheritdoc />
-    public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options) =>
-        JsonSerializer.Serialize(writer, value, value.GetType(), options);
+    public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
+    {
+        // 空检查
+        if ((object?)value is null)
+        {
+            writer.WriteNullValue();
+            return;
+        }
+
+        // 检查是否是流变对象
+        if (value is Clay clay)
+        {
+            writer.WriteRawValue(clay.ToJsonString(options));
+        }
+        else
+        {
+            JsonSerializer.Serialize(writer, value, value.GetType(), options);
+        }
+    }
 }
