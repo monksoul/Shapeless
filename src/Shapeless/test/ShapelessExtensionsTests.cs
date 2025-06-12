@@ -16,6 +16,19 @@ public class ShapelessExtensionsTests
         object[] obj2 = [1, 2, 3];
         var clay2 = obj2.ToClay(u => u.AllowIndexOutOfRange = true);
         Assert.Equal("[1,2,3]", clay2.ToJsonString());
+
+        dynamic clay3 = Clay.Parse(new { id = 1, name = "furion" });
+        var clay4 = clay3.ToClay();
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay4.ToJsonString());
+
+        var clay5 = clay3.ToClay(null);
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay5.ToJsonString());
+
+        var clay6 = clay3.ToClay(ClayOptions.Flexible);
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay6.ToJsonString());
+
+        var clay7 = clay3.ToClay(new Action<ClayOptions>(u => u.AllowIndexOutOfRange = true));
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay7.ToJsonString());
     }
 
     [Fact]

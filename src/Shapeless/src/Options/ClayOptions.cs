@@ -10,6 +10,29 @@ namespace Shapeless;
 public sealed class ClayOptions
 {
     /// <summary>
+    ///     <inheritdoc cref="ClayOptions" />
+    /// </summary>
+    public ClayOptions() =>
+        JsonSerializerOptions = new JsonSerializerOptions(JsonSerializerOptions.Default)
+        {
+            PropertyNameCaseInsensitive = true,
+            // 允许 String 转 Number
+            NumberHandling = JsonNumberHandling.AllowReadingFromString,
+            // 解决中文乱码问题
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            AllowTrailingCommas = true,
+            Converters =
+            {
+                new ClayJsonConverter { Options = this },
+                new ObjectToClayJsonConverter { Options = this },
+                new FlexibleDateTimeConverter(),
+                new FlexibleDateTimeOffsetConverter(),
+                // 允许 Number 或 Boolean 转 String
+                new StringJsonConverter()
+            }
+        };
+
+    /// <summary>
     ///     默认 <see cref="ClayOptions" /> 实例
     /// </summary>
     public static ClayOptions Default => new();
@@ -107,24 +130,7 @@ public sealed class ClayOptions
     /// <summary>
     ///     JSON 序列化配置
     /// </summary>
-    public JsonSerializerOptions JsonSerializerOptions { get; set; } = new(JsonSerializerOptions.Default)
-    {
-        PropertyNameCaseInsensitive = true,
-        // 允许 String 转 Number
-        NumberHandling = JsonNumberHandling.AllowReadingFromString,
-        // 解决中文乱码问题
-        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-        AllowTrailingCommas = true,
-        Converters =
-        {
-            new ClayJsonConverter(),
-            new ObjectToClayJsonConverter(),
-            new FlexibleDateTimeConverter(),
-            new FlexibleDateTimeOffsetConverter(),
-            // 允许 Number 或 Boolean 转 String
-            new StringJsonConverter()
-        }
-    };
+    public JsonSerializerOptions JsonSerializerOptions { get; set; }
 
     /// <summary>
     ///     自定义配置 <see cref="ClayOptions" /> 实例

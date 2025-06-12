@@ -661,6 +661,23 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void ParseAndNoMissClayOptions_ReturnOK()
+    {
+        dynamic clay = Clay.Parse(new object[] { new { id = 1, name = "furion" }, new { id = 2, name = "百小僧" } },
+            ClayOptions.Flexible);
+        var custom = new CustomClass<dynamic> { Success = true, Message = "操作成功", Items = clay };
+
+        var firstItem = custom.Items.FirstOrDefault();
+        Assert.NotNull(firstItem);
+        Assert.True(firstItem is Clay);
+        var itemClay = firstItem as Clay;
+        Assert.NotNull(itemClay);
+        Assert.True(itemClay.Options.AllowMissingProperty);
+        Assert.True(itemClay.Options.AllowIndexOutOfRange);
+        Assert.True(itemClay.Options.PropertyNameCaseInsensitive);
+    }
+
+    [Fact]
     public void ToString_ReturnOK()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
@@ -1948,4 +1965,12 @@ public class UnixEpochDateClass
 {
     public DateTime DateTime { get; set; }
     public DateTimeOffset DateTimeOffset { get; set; }
+}
+
+public class CustomClass<T>
+    where T : class, new()
+{
+    public bool Success { get; set; }
+    public string? Message { get; set; }
+    public IList<T>? Items { get; set; }
 }

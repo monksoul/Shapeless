@@ -467,7 +467,7 @@ public partial class Clay
 
         return IsClay(resultType)
             ? new Clay(jsonNode, Options)
-            : Helpers.DeserializeNode(jsonNode, resultType, jsonSerializerOptions ?? Options.JsonSerializerOptions);
+            : jsonNode.As(resultType, jsonSerializerOptions ?? Options.JsonSerializerOptions);
     }
 
     /// <summary>
@@ -554,7 +554,7 @@ public partial class Clay
 
         return IsClay(resultType)
             ? new Clay(currentNode, Options)
-            : Helpers.DeserializeNode(currentNode, resultType, jsonSerializerOptions ?? Options.JsonSerializerOptions);
+            : currentNode.As(resultType, jsonSerializerOptions ?? Options.JsonSerializerOptions);
     }
 
     /// <summary>
@@ -1001,8 +1001,7 @@ public partial class Clay
         }
 
         // 将 JsonNode 转换为目标类型
-        var result = Helpers.DeserializeNode(JsonCanvas, resultType,
-            jsonSerializerOptions ?? Options.JsonSerializerOptions);
+        var result = JsonCanvas.As(resultType, jsonSerializerOptions ?? Options.JsonSerializerOptions);
 
         // 检查是否启用转换后执行模型验证
         if (result is not null && Options.ValidateAfterConversion)

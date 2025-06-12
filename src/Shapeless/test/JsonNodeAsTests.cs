@@ -4,65 +4,65 @@
 
 namespace Shapeless.Tests;
 
-public class HelpersTests
+public class JsonNodeAsTests
 {
     [Fact]
-    public void DeserializeNode_Invalid_Parameter()
+    public void As_Invalid_Parameter()
     {
         var jsonObject = new JsonObject();
-        Assert.Throws<ArgumentNullException>(() => Helpers.DeserializeNode(jsonObject, null!));
+        Assert.Throws<ArgumentNullException>(() => jsonObject.As(null!));
     }
 
     [Fact]
-    public void DeserializeNode_ReturnOK()
+    public void As_ReturnOK()
     {
+        var options = ClayOptions.Default;
+
         JsonNode? jsonNode = null;
-        Assert.Null(Helpers.DeserializeNode(jsonNode, typeof(object)));
+        Assert.Null(jsonNode.As(typeof(object)));
 
         var jsonNode1 = JsonNode.Parse("""{"id":1,"name":"furion"}""");
-        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", Helpers.DeserializeNode(jsonNode1, typeof(string)));
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", jsonNode1.As(typeof(string)));
 
-        var jsonNode2 = Helpers.DeserializeNode(jsonNode1, typeof(JsonNode)) as JsonNode;
+        var jsonNode2 = jsonNode1.As(typeof(JsonNode)) as JsonNode;
         Assert.NotNull(jsonNode2);
         Assert.Equal(1, jsonNode2["id"]?.GetValue<int>());
         Assert.Equal("furion", jsonNode2["name"]?.GetValue<string>());
 
-        var jsonNode3 = Helpers.DeserializeNode(jsonNode1, typeof(JsonObject)) as JsonObject;
+        var jsonNode3 = jsonNode1.As(typeof(JsonObject)) as JsonObject;
         Assert.NotNull(jsonNode3);
         Assert.Equal(1, jsonNode3["id"]?.GetValue<int>());
         Assert.Equal("furion", jsonNode3["name"]?.GetValue<string>());
 
-        var jsonDocument = Helpers.DeserializeNode(jsonNode1, typeof(JsonDocument)) as JsonDocument;
+        var jsonDocument = jsonNode1.As(typeof(JsonDocument)) as JsonDocument;
         Assert.NotNull(jsonDocument);
         Assert.Equal("{\"id\":1,\"name\":\"furion\"}", jsonDocument.RootElement.GetRawText());
         jsonDocument.Dispose();
 
-        var xElement = Helpers.DeserializeNode(jsonNode1, typeof(XElement));
+        var xElement = jsonNode1.As(typeof(XElement));
         Assert.NotNull(xElement);
         Assert.Equal(
             "<root type=\"object\">\r\n  <id type=\"number\">1</id>\r\n  <name type=\"string\">furion</name>\r\n</root>",
             xElement.ToString());
 
         // 注意这里需要配置序列化
-        var objectModel =
-            Helpers.DeserializeNode(jsonNode1, typeof(ObjectModel),
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) as
-                ObjectModel;
+        var objectModel = jsonNode1.As(typeof(ObjectModel),
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) as ObjectModel;
         Assert.NotNull(objectModel);
         Assert.Equal(1, objectModel.Id);
         Assert.Equal("furion", objectModel.Name);
 
-        var object1 = Helpers.DeserializeNode(jsonNode1, typeof(object));
+        var object1 = jsonNode1.As(typeof(object), options.JsonSerializerOptions);
         Assert.NotNull(object1);
-        Assert.True(object1 is JsonElement);
-        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", ((JsonElement)object1).GetRawText());
+        Assert.True(object1 is Clay);
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", ((Clay)object1).ToJsonString());
 
-        var object2 = Helpers.DeserializeNode(jsonNode1, typeof(JsonElement));
+        var object2 = jsonNode1.As(typeof(JsonElement));
         Assert.NotNull(object2);
         Assert.True(object2 is JsonElement);
         Assert.Equal("{\"id\":1,\"name\":\"furion\"}", ((JsonElement)object2).GetRawText());
 
-        var dictionary = Helpers.DeserializeNode(jsonNode1, typeof(Dictionary<string, object>));
+        var dictionary = jsonNode1.As(typeof(Dictionary<string, object>));
         Assert.NotNull(dictionary);
         Assert.True(dictionary is Dictionary<string, object>);
         var dictionary2 = (Dictionary<string, object>)dictionary;
@@ -70,42 +70,41 @@ public class HelpersTests
         Assert.Equal("furion", dictionary2["name"].ToString());
 
         var jsonValue = JsonNode.Parse("10");
-        Assert.Equal(10, Helpers.DeserializeNode(jsonValue, typeof(int)));
-        Assert.Equal("10", Helpers.DeserializeNode(jsonValue, typeof(string)));
+        Assert.Equal(10, jsonValue.As(typeof(int)));
+        Assert.Equal("10", jsonValue.As(typeof(string)));
 
         var jsonValue2 = JsonNode.Parse("true");
-        Assert.Equal(true, Helpers.DeserializeNode(jsonValue2, typeof(bool)));
+        Assert.Equal(true, jsonValue2.As(typeof(bool)));
 
         var jsonValue3 = JsonNode.Parse("false");
-        Assert.Equal(false, Helpers.DeserializeNode(jsonValue3, typeof(bool)));
-        Assert.Equal("false", Helpers.DeserializeNode(jsonValue3, typeof(string)));
+        Assert.Equal(false, jsonValue3.As(typeof(bool)));
+        Assert.Equal("false", jsonValue3.As(typeof(string)));
 
         var jsonValue4 = JsonNode.Parse("10.1");
-        Assert.Equal(10.1, Helpers.DeserializeNode(jsonValue4, typeof(double)));
+        Assert.Equal(10.1, jsonValue4.As(typeof(double)));
 
         var jsonArray = JsonNode.Parse("""["monksoul","百小僧","furion"]""");
-        var stringArray = Helpers.DeserializeNode(jsonArray, typeof(string[])) as string[];
+        var stringArray = jsonArray.As(typeof(string[])) as string[];
         Assert.NotNull(stringArray);
         Assert.Equal(["monksoul", "百小僧", "furion"], stringArray);
 
-        var objectModel2 =
-            Helpers.DeserializeNode(jsonNode1, typeof(ObjectModel),
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) as ObjectModel;
+        var objectModel2 = jsonNode1.As(typeof(ObjectModel),
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) as ObjectModel;
         Assert.NotNull(objectModel2);
         Assert.Equal(1, objectModel2.Id);
         Assert.Equal("furion", objectModel2.Name);
 
-        var clay = Helpers.DeserializeNode(jsonNode1, typeof(Clay)) as Clay;
+        var clay = jsonNode1.As(typeof(Clay), options.JsonSerializerOptions) as Clay;
         Assert.NotNull(clay);
         Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay.ToJsonString());
 
         var jsonValue5 = JsonNode.Parse("\"True\"");
-        Assert.Equal(true, Helpers.DeserializeNode(jsonValue5, typeof(bool)));
+        Assert.Equal(true, jsonValue5.As(typeof(bool)));
         var jsonValue6 = JsonNode.Parse("\"False\"");
-        Assert.Equal(false, Helpers.DeserializeNode(jsonValue6, typeof(bool)));
+        Assert.Equal(false, jsonValue6.As(typeof(bool)));
 
         var jsonValue7 = JsonNode.Parse("\"2025-01-14T00:00:00\"");
-        Assert.Equal(2025, (Helpers.DeserializeNode(jsonValue7, typeof(DateTime)) as DateTime?)?.Year);
+        Assert.Equal(2025, (jsonValue7.As(typeof(DateTime)) as DateTime?)?.Year);
     }
 }
 

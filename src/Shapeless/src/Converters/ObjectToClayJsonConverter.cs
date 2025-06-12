@@ -9,6 +9,9 @@ namespace Shapeless;
 /// </summary>
 public sealed class ObjectToClayJsonConverter : JsonConverter<object>
 {
+    /// <inheritdoc cref="Options" />
+    public ClayOptions? Options { get; set; }
+
     /// <inheritdoc />
     public override object? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -16,12 +19,16 @@ public sealed class ObjectToClayJsonConverter : JsonConverter<object>
         var jsonElement = JsonElement.ParseValue(ref reader);
 
         // 检查 JSON 是否是对象或数组类型
-        if (jsonElement.ValueKind is JsonValueKind.Object or JsonValueKind.Array)
+        if (jsonElement.ValueKind is not (JsonValueKind.Object or JsonValueKind.Array))
         {
-            return Clay.Parse(jsonElement.ToString(), new ClayOptions { JsonSerializerOptions = options });
+            return jsonElement;
         }
 
-        return jsonElement;
+        // 初始化 ClayOptions 实例
+        var clayOptions = Options ?? ClayOptions.Default;
+        clayOptions.JsonSerializerOptions = options;
+
+        return Clay.Parse(jsonElement.ToString(), clayOptions);
     }
 
     /// <inheritdoc />

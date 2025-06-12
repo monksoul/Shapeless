@@ -7,6 +7,14 @@ namespace Shapeless.Tests;
 public class ObjectToClayJsonConverterTests
 {
     [Fact]
+    public void New_ReturnOK()
+    {
+        var converter = new ObjectToClayJsonConverter();
+        Assert.NotNull(converter);
+        Assert.Null(converter.Options);
+    }
+
+    [Fact]
     public void Read_ReturnOK()
     {
         const string json = "{\"id\":1,\"name\":\"furion\"}";
