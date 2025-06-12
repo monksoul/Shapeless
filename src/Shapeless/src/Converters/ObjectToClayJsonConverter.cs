@@ -38,10 +38,18 @@ public sealed class ObjectToClayJsonConverter : JsonConverter<object>
         if (value is Clay clay)
         {
             writer.WriteRawValue(clay.ToJsonString(options));
+            return;
         }
-        else
+
+        // 检查是否是 object 类型，解决 new object() 出现无限递归问题
+        if (value.GetType() == typeof(object))
         {
-            JsonSerializer.Serialize(writer, value, value.GetType(), options);
+            writer.WriteStartObject();
+            writer.WriteEndObject();
+            return;
         }
+
+        // 对于其他类型，正常序列化
+        JsonSerializer.Serialize(writer, value, value.GetType(), options);
     }
 }
