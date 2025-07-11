@@ -1940,6 +1940,249 @@ public class ClayExportsTests(ITestOutputHelper output)
         var (_, enumerable) = Clay.Parse(jsonString).PipeTry(u => u.data2).Pipe(u => u.data);
         Assert.Equal(["二手小米SU7 Ultra卖到65万", "加拿大省长模仿特朗普签令下架美国酒"], enumerable.Select(u => u!.title));
     }
+
+    [Fact]
+    public void UnicodeKey_ReturnOK()
+    {
+        dynamic clay = Clay.Parse("""
+                                  {
+                                      "sheets": {
+                                          "检验报告": {
+                                              "validations": "验证通过"
+                                          }
+                                      }
+                                  }
+                                  """);
+
+        Assert.Equal("验证通过", clay.sheets.检验报告.validations);
+        Assert.Equal("验证通过", clay.PathValue("sheets:检验报告:validations"));
+    }
+
+    [Fact]
+    public void RemovePathValue_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        Assert.Throws<ArgumentNullException>(() => clay.RemovePathValue(null!));
+        Assert.Throws<KeyNotFoundException>(() => clay.RemovePathValue("age"));
+        var exception = Assert.Throws<InvalidOperationException>(() => clay.RemovePathValue("name:firstName"));
+        Assert.Equal("The identifier `name` at path `name:firstName` does not support further lookup.",
+            exception.Message);
+
+        var clay2 = Clay.Parse("{\"id\":1,\"name\":\"furion\",\"children\":{\"id\":1,\"name\":\"furion\"}}");
+        var exception2 =
+            Assert.Throws<InvalidOperationException>(() => clay2.RemovePathValue("children:name:firstName"));
+        Assert.Equal("The identifier `name` at path `name:firstName` does not support further lookup.",
+            exception2.Message);
+    }
+
+    [Fact]
+    public void RemovePathValue_ReturnOK()
+    {
+        var clay = Clay.Parse("""
+                              {
+                                "AppInfo": {
+                                  "Name": "Furion",
+                                  "Version": "1.0.0",
+                                  "Company": {
+                                    "Name": "Baiqian",
+                                    "Address": {
+                                      "City": "中国",
+                                      "Province": "广东省",
+                                      "Detail": "中山市东区紫马公园西门"
+                                    },
+                                    "Telephones":["0760-88888888","0760-88888881"],
+                                    "Date":"2024-12-26T00:00:00"
+                                  }
+                                }
+                              }
+                              """);
+        Assert.True(clay.RemovePathValue("AppInfo:Name"));
+        Assert.Equal(
+            "{\"AppInfo\":{\"Version\":\"1.0.0\",\"Company\":{\"Name\":\"Baiqian\",\"Address\":{\"City\":\"中国\",\"Province\":\"广东省\",\"Detail\":\"中山市东区紫马公园西门\"},\"Telephones\":[\"0760-88888888\",\"0760-88888881\"],\"Date\":\"2024-12-26T00:00:00\"}}}",
+            clay.ToJsonString());
+
+        Assert.True(clay.RemovePathValue("AppInfo:Company:Address:City"));
+        Assert.Equal(
+            "{\"AppInfo\":{\"Version\":\"1.0.0\",\"Company\":{\"Name\":\"Baiqian\",\"Address\":{\"Province\":\"广东省\",\"Detail\":\"中山市东区紫马公园西门\"},\"Telephones\":[\"0760-88888888\",\"0760-88888881\"],\"Date\":\"2024-12-26T00:00:00\"}}}",
+            clay.ToJsonString());
+
+        Assert.True(clay.RemovePathValue("AppInfo:Company:Telephones:1"));
+        Assert.Equal(
+            "{\"AppInfo\":{\"Version\":\"1.0.0\",\"Company\":{\"Name\":\"Baiqian\",\"Address\":{\"Province\":\"广东省\",\"Detail\":\"中山市东区紫马公园西门\"},\"Telephones\":[\"0760-88888888\"],\"Date\":\"2024-12-26T00:00:00\"}}}",
+            clay.ToJsonString());
+
+        Assert.True(clay.RemovePathValue("AppInfo:Company:Date"));
+        Assert.Equal(
+            "{\"AppInfo\":{\"Version\":\"1.0.0\",\"Company\":{\"Name\":\"Baiqian\",\"Address\":{\"Province\":\"广东省\",\"Detail\":\"中山市东区紫马公园西门\"},\"Telephones\":[\"0760-88888888\"]}}}",
+            clay.ToJsonString());
+
+        clay.Rebuilt(ClayOptions.Flexible);
+        Assert.False(clay.RemovePathValue("AppInfo:Undefined"));
+
+        var array = Clay.Parse("""
+                               [0,
+                               {"id":1,"name":"Furion"},
+                               {
+                                 "AppInfo": {
+                                   "Name": "Furion",
+                                   "Version": "1.0.0",
+                                   "Company": {
+                                     "Name": "Baiqian",
+                                     "Address": {
+                                       "City": "中国",
+                                       "Province": "广东省",
+                                       "Detail": "中山市东区紫马公园西门"
+                                     },
+                                     "Telephones":["0760-88888888","0760-88888881"],
+                                     "Date":"2024-12-26T00:00:00"
+                                   }
+                                 }
+                               }]
+                               """);
+        Assert.True(array.RemovePathValue("1:name"));
+        Assert.True(array.RemovePathValue("2:AppInfo:Company:Address:City"));
+        Assert.Equal(
+            "[0,{\"id\":1},{\"AppInfo\":{\"Name\":\"Furion\",\"Version\":\"1.0.0\",\"Company\":{\"Name\":\"Baiqian\",\"Address\":{\"Province\":\"广东省\",\"Detail\":\"中山市东区紫马公园西门\"},\"Telephones\":[\"0760-88888888\",\"0760-88888881\"],\"Date\":\"2024-12-26T00:00:00\"}}}]",
+            array.ToJsonString());
+
+        var clay2 = Clay.Parse("""
+                               {
+                                 "AppInfo": {
+                                   "Name": "Furion",
+                                   "Version": "1.0.0",
+                                   "Company": {
+                                     "Name": "Baiqian",
+                                     "Address": {
+                                       "City": "中国",
+                                       "Province": "广东省",
+                                       "Detail": "中山市东区紫马公园西门"
+                                     },
+                                     "Telephones":["0760-88888888","0760-88888881"],
+                                     "Date":"2024-12-26T00:00:00"
+                                   }
+                                 }
+                               }
+                               """, new ClayOptions { PathSeparator = [":", "/"] });
+        Assert.True(clay2.RemovePathValue("AppInfo:Name"));
+        Assert.True(clay2.RemovePathValue("AppInfo:Company/Address:City"));
+        Assert.True(clay2.RemovePathValue("AppInfo/Company/Telephones/1"));
+        Assert.Equal(
+            "{\"AppInfo\":{\"Version\":\"1.0.0\",\"Company\":{\"Name\":\"Baiqian\",\"Address\":{\"Province\":\"广东省\",\"Detail\":\"中山市东区紫马公园西门\"},\"Telephones\":[\"0760-88888888\"],\"Date\":\"2024-12-26T00:00:00\"}}}",
+            clay2.ToJsonString());
+    }
+
+    [Fact]
+    public void DeletePathValue_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        Assert.Throws<ArgumentNullException>(() => clay.DeletePathValue(null!));
+        Assert.Throws<KeyNotFoundException>(() => clay.DeletePathValue("age"));
+        var exception = Assert.Throws<InvalidOperationException>(() => clay.DeletePathValue("name:firstName"));
+        Assert.Equal("The identifier `name` at path `name:firstName` does not support further lookup.",
+            exception.Message);
+
+        var clay2 = Clay.Parse("{\"id\":1,\"name\":\"furion\",\"children\":{\"id\":1,\"name\":\"furion\"}}");
+        var exception2 =
+            Assert.Throws<InvalidOperationException>(() => clay2.DeletePathValue("children:name:firstName"));
+        Assert.Equal("The identifier `name` at path `name:firstName` does not support further lookup.",
+            exception2.Message);
+    }
+
+    [Fact]
+    public void DeletePathValue_ReturnOK()
+    {
+        var clay = Clay.Parse("""
+                              {
+                                "AppInfo": {
+                                  "Name": "Furion",
+                                  "Version": "1.0.0",
+                                  "Company": {
+                                    "Name": "Baiqian",
+                                    "Address": {
+                                      "City": "中国",
+                                      "Province": "广东省",
+                                      "Detail": "中山市东区紫马公园西门"
+                                    },
+                                    "Telephones":["0760-88888888","0760-88888881"],
+                                    "Date":"2024-12-26T00:00:00"
+                                  }
+                                }
+                              }
+                              """);
+        Assert.True(clay.DeletePathValue("AppInfo:Name"));
+        Assert.Equal(
+            "{\"AppInfo\":{\"Version\":\"1.0.0\",\"Company\":{\"Name\":\"Baiqian\",\"Address\":{\"City\":\"中国\",\"Province\":\"广东省\",\"Detail\":\"中山市东区紫马公园西门\"},\"Telephones\":[\"0760-88888888\",\"0760-88888881\"],\"Date\":\"2024-12-26T00:00:00\"}}}",
+            clay.ToJsonString());
+
+        Assert.True(clay.DeletePathValue("AppInfo:Company:Address:City"));
+        Assert.Equal(
+            "{\"AppInfo\":{\"Version\":\"1.0.0\",\"Company\":{\"Name\":\"Baiqian\",\"Address\":{\"Province\":\"广东省\",\"Detail\":\"中山市东区紫马公园西门\"},\"Telephones\":[\"0760-88888888\",\"0760-88888881\"],\"Date\":\"2024-12-26T00:00:00\"}}}",
+            clay.ToJsonString());
+
+        Assert.True(clay.DeletePathValue("AppInfo:Company:Telephones:1"));
+        Assert.Equal(
+            "{\"AppInfo\":{\"Version\":\"1.0.0\",\"Company\":{\"Name\":\"Baiqian\",\"Address\":{\"Province\":\"广东省\",\"Detail\":\"中山市东区紫马公园西门\"},\"Telephones\":[\"0760-88888888\"],\"Date\":\"2024-12-26T00:00:00\"}}}",
+            clay.ToJsonString());
+
+        Assert.True(clay.DeletePathValue("AppInfo:Company:Date"));
+        Assert.Equal(
+            "{\"AppInfo\":{\"Version\":\"1.0.0\",\"Company\":{\"Name\":\"Baiqian\",\"Address\":{\"Province\":\"广东省\",\"Detail\":\"中山市东区紫马公园西门\"},\"Telephones\":[\"0760-88888888\"]}}}",
+            clay.ToJsonString());
+
+        clay.Rebuilt(ClayOptions.Flexible);
+        Assert.False(clay.DeletePathValue("AppInfo:Undefined"));
+
+        var array = Clay.Parse("""
+                               [0,
+                               {"id":1,"name":"Furion"},
+                               {
+                                 "AppInfo": {
+                                   "Name": "Furion",
+                                   "Version": "1.0.0",
+                                   "Company": {
+                                     "Name": "Baiqian",
+                                     "Address": {
+                                       "City": "中国",
+                                       "Province": "广东省",
+                                       "Detail": "中山市东区紫马公园西门"
+                                     },
+                                     "Telephones":["0760-88888888","0760-88888881"],
+                                     "Date":"2024-12-26T00:00:00"
+                                   }
+                                 }
+                               }]
+                               """);
+        Assert.True(array.DeletePathValue("1:name"));
+        Assert.True(array.DeletePathValue("2:AppInfo:Company:Address:City"));
+        Assert.Equal(
+            "[0,{\"id\":1},{\"AppInfo\":{\"Name\":\"Furion\",\"Version\":\"1.0.0\",\"Company\":{\"Name\":\"Baiqian\",\"Address\":{\"Province\":\"广东省\",\"Detail\":\"中山市东区紫马公园西门\"},\"Telephones\":[\"0760-88888888\",\"0760-88888881\"],\"Date\":\"2024-12-26T00:00:00\"}}}]",
+            array.ToJsonString());
+
+        var clay2 = Clay.Parse("""
+                               {
+                                 "AppInfo": {
+                                   "Name": "Furion",
+                                   "Version": "1.0.0",
+                                   "Company": {
+                                     "Name": "Baiqian",
+                                     "Address": {
+                                       "City": "中国",
+                                       "Province": "广东省",
+                                       "Detail": "中山市东区紫马公园西门"
+                                     },
+                                     "Telephones":["0760-88888888","0760-88888881"],
+                                     "Date":"2024-12-26T00:00:00"
+                                   }
+                                 }
+                               }
+                               """, new ClayOptions { PathSeparator = [":", "/"] });
+        Assert.True(clay2.DeletePathValue("AppInfo:Name"));
+        Assert.True(clay2.DeletePathValue("AppInfo:Company/Address:City"));
+        Assert.True(clay2.DeletePathValue("AppInfo/Company/Telephones/1"));
+        Assert.Equal(
+            "{\"AppInfo\":{\"Version\":\"1.0.0\",\"Company\":{\"Name\":\"Baiqian\",\"Address\":{\"Province\":\"广东省\",\"Detail\":\"中山市东区紫马公园西门\"},\"Telephones\":[\"0760-88888888\"],\"Date\":\"2024-12-26T00:00:00\"}}}",
+            clay2.ToJsonString());
+    }
 }
 
 public struct Point

@@ -969,6 +969,15 @@
             </returns>
             <exception cref="T:System.NotSupportedException"></exception>
         </member>
+        <member name="M:Shapeless.Clay.RemovePathValue(System.String)">
+            <summary>
+                根据路径删除值
+            </summary>
+            <param name="path">带路径的标识符</param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
         <member name="M:Shapeless.Clay.Delete(System.Object)">
             <summary>
                 根据标识符删除数据
@@ -989,6 +998,15 @@
                 <see cref="T:System.Boolean" />
             </returns>
             <exception cref="T:System.NotSupportedException"></exception>
+        </member>
+        <member name="M:Shapeless.Clay.DeletePathValue(System.String)">
+            <summary>
+                根据路径删除值
+            </summary>
+            <param name="path">带路径的标识符</param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
         </member>
         <member name="M:Shapeless.Clay.As(System.Type,System.Text.Json.JsonSerializerOptions)">
             <summary>

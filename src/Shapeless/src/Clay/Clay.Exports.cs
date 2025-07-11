@@ -539,7 +539,7 @@ public partial class Clay
             }
 
             // 进行下一级查找
-            currentNode = ((Clay?)currentValue)?.FindNode(identifiers[i]);
+            currentNode = ((Clay)currentValue).FindNode(identifiers[i]);
             if (currentNode is null)
             {
                 return null;
@@ -918,6 +918,57 @@ public partial class Clay
     }
 
     /// <summary>
+    ///     根据路径删除值
+    /// </summary>
+    /// <param name="path">带路径的标识符</param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
+    public bool RemovePathValue(string path)
+    {
+        // 空检查
+        ArgumentNullException.ThrowIfNull(path);
+
+        // 根据路径分隔符进行分割，并确保至少有一个标识符
+        var identifiers = path.Split(Options.PathSeparator, StringSplitOptions.RemoveEmptyEntries);
+        if (identifiers is { Length: 0 })
+        {
+            return false;
+        }
+
+        // 根据标识符查找 JsonNode 节点
+        var currentNode = FindNode(identifiers[0]);
+        if (currentNode is null)
+        {
+            return false;
+        }
+
+        // 遍历剩余的标识符
+        for (var i = 1; i < identifiers.Length; i++)
+        {
+            // 将 currentNode 转换为对象实例
+            var currentValue = DeserializeNode(currentNode, Options);
+
+            // 检查是否是 Clay 类型
+            if (!IsClay(currentValue))
+            {
+                throw new InvalidOperationException(
+                    $"The identifier `{identifiers[i - 1]}` at path `{identifiers[i - 1]}:{identifiers[i]}` does not support further lookup.");
+            }
+
+            // 进行下一级查找
+            currentNode = ((Clay)currentValue).FindNode(identifiers[i]);
+            if (currentNode is null)
+            {
+                return false;
+            }
+        }
+
+        // 从父节点删除
+        return ((Clay)DeserializeNode(currentNode.Parent, Options)!).Remove(identifiers[^1]);
+    }
+
+    /// <summary>
     ///     根据标识符删除数据
     /// </summary>
     /// <remarks>兼容旧版本粘土对象。</remarks>
@@ -943,6 +994,15 @@ public partial class Clay
 
         return Remove(start, end);
     }
+
+    /// <summary>
+    ///     根据路径删除值
+    /// </summary>
+    /// <param name="path">带路径的标识符</param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
+    public bool DeletePathValue(string path) => RemovePathValue(path);
 
     /// <summary>
     ///     将 <see cref="Clay" /> 转换为目标类型
