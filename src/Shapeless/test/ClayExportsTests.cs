@@ -1104,6 +1104,10 @@ public class ClayExportsTests(ITestOutputHelper output)
         var array3 = Clay.Parse("[1,2,3,4]");
         Assert.True(array3.Remove(1, 3));
         Assert.Equal("[1,4]", array3.ToJsonString());
+
+        var clay2 = Clay.Parse("{\"id\":1,\"name\":\"furion\",\"arr\":[1,2,3]}");
+        Assert.True(clay2.Remove("arr:1", true));
+        Assert.Equal("{\"id\":1,\"name\":\"furion\",\"arr\":[1,3]}", clay2.ToJsonString());
     }
 
     [Fact]
@@ -1134,6 +1138,10 @@ public class ClayExportsTests(ITestOutputHelper output)
         var array3 = Clay.Parse("[1,2,3,4]");
         Assert.True(array3.Delete(1, 3));
         Assert.Equal("[1,4]", array3.ToJsonString());
+
+        var clay2 = Clay.Parse("{\"id\":1,\"name\":\"furion\",\"arr\":[1,2,3]}");
+        Assert.True(clay2.Delete("arr:1", true));
+        Assert.Equal("{\"id\":1,\"name\":\"furion\",\"arr\":[1,3]}", clay2.ToJsonString());
     }
 
     [Fact]

@@ -969,6 +969,16 @@
             </returns>
             <exception cref="T:System.NotSupportedException"></exception>
         </member>
+        <member name="M:Shapeless.Clay.Remove(System.String,System.Boolean)">
+            <summary>
+                根据标识符（路径）删除数据
+            </summary>
+            <param name="identifier">带路径的标识符</param>
+            <param name="isPath">是否是带路径的标识符</param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+        </member>
         <member name="M:Shapeless.Clay.RemovePathValue(System.String)">
             <summary>
                 根据路径删除值
@@ -998,6 +1008,16 @@
                 <see cref="T:System.Boolean" />
             </returns>
             <exception cref="T:System.NotSupportedException"></exception>
+        </member>
+        <member name="M:Shapeless.Clay.Delete(System.String,System.Boolean)">
+            <summary>
+                根据标识符（路径）删除数据
+            </summary>
+            <param name="identifier">带路径的标识符</param>
+            <param name="isPath">是否是带路径的标识符</param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
         </member>
         <member name="M:Shapeless.Clay.DeletePathValue(System.String)">
             <summary>

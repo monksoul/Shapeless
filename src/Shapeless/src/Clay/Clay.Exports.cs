@@ -918,6 +918,16 @@ public partial class Clay
     }
 
     /// <summary>
+    ///     根据标识符（路径）删除数据
+    /// </summary>
+    /// <param name="identifier">带路径的标识符</param>
+    /// <param name="isPath">是否是带路径的标识符</param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
+    public bool Remove(string identifier, bool isPath) => isPath ? RemovePathValue(identifier) : Remove(identifier);
+
+    /// <summary>
     ///     根据路径删除值
     /// </summary>
     /// <param name="path">带路径的标识符</param>
@@ -994,6 +1004,16 @@ public partial class Clay
 
         return Remove(start, end);
     }
+
+    /// <summary>
+    ///     根据标识符（路径）删除数据
+    /// </summary>
+    /// <param name="identifier">带路径的标识符</param>
+    /// <param name="isPath">是否是带路径的标识符</param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
+    public bool Delete(string identifier, bool isPath) => isPath ? RemovePathValue(identifier) : Remove(identifier);
 
     /// <summary>
     ///     根据路径删除值
