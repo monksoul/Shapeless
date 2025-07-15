@@ -2191,6 +2191,25 @@ public class ClayExportsTests(ITestOutputHelper output)
             "{\"AppInfo\":{\"Version\":\"1.0.0\",\"Company\":{\"Name\":\"Baiqian\",\"Address\":{\"Province\":\"广东省\",\"Detail\":\"中山市东区紫马公园西门\"},\"Telephones\":[\"0760-88888888\"],\"Date\":\"2024-12-26T00:00:00\"}}}",
             clay2.ToJsonString());
     }
+
+    [Fact]
+    public void NestedDictionary_ReturnOK()
+    {
+        dynamic clay = new Clay();
+        clay.one = new Dictionary<string, object> { { "one1", "value" }, { "one2", "value2" } };
+        clay.two = new Dictionary<string, object> { { "two1", "value" }, { "two2", "value2" } };
+
+        Dictionary<string, Dictionary<string, object>> dic = clay;
+        Assert.Equal(2, dic.Count);
+
+        Assert.True(dic.ContainsKey("one"));
+        Assert.True(dic["one"].ContainsKey("one1"));
+        Assert.True(dic["one"].ContainsKey("one2"));
+
+        Assert.True(dic.ContainsKey("two"));
+        Assert.True(dic["two"].ContainsKey("two1"));
+        Assert.True(dic["two"].ContainsKey("two2"));
+    }
 }
 
 public struct Point
