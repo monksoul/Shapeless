@@ -10,6 +10,7 @@ global using System.Buffers;
 global using System.Collections;
 global using System.Collections.Specialized;
 global using System.ComponentModel.DataAnnotations;
+global using System.Diagnostics;
 global using System.Diagnostics.CodeAnalysis;
 global using System.Dynamic;
 global using System.Globalization;

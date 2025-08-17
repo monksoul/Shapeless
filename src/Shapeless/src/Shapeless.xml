@@ -302,6 +302,14 @@
             <param name="key">键</param>
             <exception cref="T:System.NotSupportedException"></exception>
         </member>
+        <member name="M:Shapeless.Clay.DebuggerToString">
+            <summary>
+                告知调试器如何显示内容
+            </summary>
+            <returns>
+                <see cref="T:System.String" />
+            </returns>
+        </member>
         <member name="P:Shapeless.Clay.Count">
             <summary>
                 获取键或元素的数量
