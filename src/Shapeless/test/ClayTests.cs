@@ -675,7 +675,7 @@ public class ClayTests(ITestOutputHelper output)
         Assert.True(clay.RemoveValue("name"));
         Assert.Equal("{\"arr\":[1,2,3]}", clay.ToJsonString());
 
-        dynamic array = clay["arr"]!;
+        var array = clay["arr"]!;
         Assert.True(array.RemoveValue(0));
         Assert.Equal("{\"arr\":[2,3]}", clay.ToJsonString());
 

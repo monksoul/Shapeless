@@ -678,6 +678,64 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void ParseJson_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        Assert.Throws<ArgumentNullException>(() => clay.ParseJson(null!));
+        Assert.Throws<KeyNotFoundException>(() => clay.ParseJson("age"));
+        var exception = Assert.Throws<InvalidOperationException>(() => clay.ParseJson("name:firstName"));
+        Assert.Equal("The identifier `name` at path `name:firstName` does not support further lookup.",
+            exception.Message);
+
+        var clay2 = Clay.Parse("{\"id\":1,\"name\":\"furion\",\"children\":{\"id\":1,\"name\":\"furion\"}}");
+        var exception2 = Assert.Throws<InvalidOperationException>(() => clay2.ParseJson("children:name:firstName"));
+        Assert.Equal("The identifier `name` at path `name:firstName` does not support further lookup.",
+            exception2.Message);
+    }
+
+    [Fact]
+    public void ParseJson_ReturnOK()
+    {
+        var clay = Clay.Parse("""
+                              {
+                                  "EntityNumber": 207053412,
+                                  "FullName": "TestDataEntity",
+                                  "EntityType": "Corporation",
+                                  "ReferCredOpers": "[{\"Did\":144362906,\"CredOperNumber\":200709397004,\"CredOperStep\":3,\"IntervType\":\"Co-Borrower\"},{\"Did\":144362906,\"CredOperNumber\":200709397004,\"CredOperStep\":3,\"IntervType\":\"Vehicle Owner\"}]",
+                                  "Data":"{\"Id\":1,\"Name\":\"Furion\"}"
+                              }
+                              """).ParseJson("ReferCredOpers").ParseJson("Data");
+
+        Assert.Equal(
+            "{\"EntityNumber\":207053412,\"FullName\":\"TestDataEntity\",\"EntityType\":\"Corporation\",\"ReferCredOpers\":[{\"Did\":144362906,\"CredOperNumber\":200709397004,\"CredOperStep\":3,\"IntervType\":\"Co-Borrower\"},{\"Did\":144362906,\"CredOperNumber\":200709397004,\"CredOperStep\":3,\"IntervType\":\"Vehicle Owner\"}],\"Data\":{\"Id\":1,\"Name\":\"Furion\"}}",
+            clay.ToJsonString());
+
+        var referCredOpers = clay["ReferCredOpers"];
+        Assert.NotNull(referCredOpers);
+
+        Assert.Equal(144362906, referCredOpers![0].Did);
+        Assert.Equal(200709397004, referCredOpers[0].CredOperNumber);
+        Assert.Equal(3, referCredOpers[0].CredOperStep);
+        Assert.Equal("Co-Borrower", referCredOpers[0].IntervType);
+
+        Assert.Equal(144362906, referCredOpers[1].Did);
+        Assert.Equal(200709397004, referCredOpers[1].CredOperNumber);
+        Assert.Equal(3, referCredOpers[1].CredOperStep);
+        Assert.Equal("Vehicle Owner", referCredOpers[1].IntervType);
+
+        var data = clay["Data"];
+        Assert.NotNull(data);
+        Assert.Equal(1, data!.Id);
+        Assert.Equal("Furion", data.Name);
+
+        var clay2 = Clay.Parse("""{"id":1,"name":"Furion"}""").ParseJson("name");
+        Assert.Equal("{\"id\":1,\"name\":\"Furion\"}", clay2.ToJsonString());
+
+        var clay3 = Clay.Parse("""{"id":1,"name":"\"Furion\""}""").ParseJson("name", false);
+        Assert.Equal("""{"id":1,"name":{"data":"Furion"}}""", clay3.ToJsonString());
+    }
+
+    [Fact]
     public void ToString_ReturnOK()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
@@ -1036,6 +1094,106 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void GetPathValue_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        Assert.Throws<ArgumentNullException>(() => clay.GetPathValue(null!));
+        Assert.Throws<KeyNotFoundException>(() => clay.GetPathValue("age"));
+        var exception = Assert.Throws<InvalidOperationException>(() => clay.GetPathValue("name:firstName"));
+        Assert.Equal("The identifier `name` at path `name:firstName` does not support further lookup.",
+            exception.Message);
+
+        var clay2 = Clay.Parse("{\"id\":1,\"name\":\"furion\",\"children\":{\"id\":1,\"name\":\"furion\"}}");
+        var exception2 = Assert.Throws<InvalidOperationException>(() => clay2.GetPathValue("children:name:firstName"));
+        Assert.Equal("The identifier `name` at path `name:firstName` does not support further lookup.",
+            exception2.Message);
+    }
+
+    [Fact]
+    public void GetPathValue_ReturnOK()
+    {
+        var clay = Clay.Parse("""
+                              {
+                                "AppInfo": {
+                                  "Name": "Furion",
+                                  "Version": "1.0.0",
+                                  "Company": {
+                                    "Name": "Baiqian",
+                                    "Address": {
+                                      "City": "中国",
+                                      "Province": "广东省",
+                                      "Detail": "中山市东区紫马公园西门"
+                                    },
+                                    "Telephones":["0760-88888888","0760-88888881"],
+                                    "Date":"2024-12-26T00:00:00"
+                                  }
+                                }
+                              }
+                              """);
+        var name = clay.GetPathValue("AppInfo:Name");
+        Assert.Equal("Furion", name);
+
+        var city = clay.GetPathValue("AppInfo:Company:Address:City");
+        Assert.Equal("中国", city);
+
+        var telephone = clay.GetPathValue("AppInfo:Company:Telephones:0");
+        Assert.Equal("0760-88888888", telephone);
+
+        var date1 = clay.GetPathValue("AppInfo:Company:Date");
+        Assert.Equal("2024-12-26T00:00:00", date1);
+        var date2 = clay.GetPathValue<DateTime>("AppInfo:Company:Date");
+        Assert.Equal("2024-12-26", date2.ToString("yyyy-MM-dd"));
+
+        clay.Rebuilt(ClayOptions.Flexible);
+        Assert.Null(clay.GetPathValue("AppInfo:Undefined"));
+
+        var array = Clay.Parse("""
+                               [0,
+                               {"id":1,"name":"Furion"},
+                               {
+                                 "AppInfo": {
+                                   "Name": "Furion",
+                                   "Version": "1.0.0",
+                                   "Company": {
+                                     "Name": "Baiqian",
+                                     "Address": {
+                                       "City": "中国",
+                                       "Province": "广东省",
+                                       "Detail": "中山市东区紫马公园西门"
+                                     },
+                                     "Telephones":["0760-88888888","0760-88888881"],
+                                     "Date":"2024-12-26T00:00:00"
+                                   }
+                                 }
+                               }]
+                               """);
+        Assert.Equal("Furion", array.GetPathValue("1:name"));
+        Assert.Equal("中国", array.GetPathValue("2:AppInfo:Company:Address:City"));
+
+        var clay2 = Clay.Parse("""
+                               {
+                                 "AppInfo": {
+                                   "Name": "Furion",
+                                   "Version": "1.0.0",
+                                   "Company": {
+                                     "Name": "Baiqian",
+                                     "Address": {
+                                       "City": "中国",
+                                       "Province": "广东省",
+                                       "Detail": "中山市东区紫马公园西门"
+                                     },
+                                     "Telephones":["0760-88888888","0760-88888881"],
+                                     "Date":"2024-12-26T00:00:00"
+                                   }
+                                 }
+                               }
+                               """, new ClayOptions { PathSeparator = [":", "/"] });
+        Assert.Equal("Furion", clay2.GetPathValue("AppInfo:Name"));
+        Assert.Equal("中国", clay2.GetPathValue("AppInfo:Company/Address:City"));
+        Assert.Equal("0760-88888888", clay2.GetPathValue("AppInfo/Company/Telephones/0"));
+    }
+
+    [Fact]
     public void FindNode_Invalid_Parameters()
     {
         var clay = new Clay();
@@ -1057,6 +1215,70 @@ public class ClayExportsTests(ITestOutputHelper output)
         var jsonNode2 = ((Clay)clay2).FindNode(0);
         Assert.NotNull(jsonNode2);
         Assert.Equal("Furion", jsonNode2.GetValue<string>());
+    }
+
+    [Fact]
+    public void FindNodeByPath_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        Assert.Throws<ArgumentNullException>(() => clay.FindNodeByPath(null!, out _, out _));
+        Assert.Throws<KeyNotFoundException>(() => clay.FindNodeByPath("age", out _, out _));
+        var exception = Assert.Throws<InvalidOperationException>(() => clay.PathValue("name:firstName"));
+        Assert.Equal("The identifier `name` at path `name:firstName` does not support further lookup.",
+            exception.Message);
+
+        var clay2 = Clay.Parse("{\"id\":1,\"name\":\"furion\",\"children\":{\"id\":1,\"name\":\"furion\"}}");
+        var exception2 =
+            Assert.Throws<InvalidOperationException>(() =>
+                clay2.FindNodeByPath("children:name:firstName", out _, out _));
+        Assert.Equal("The identifier `name` at path `name:firstName` does not support further lookup.",
+            exception2.Message);
+    }
+
+    [Fact]
+    public void FindNodeByPath_ReturnOK()
+    {
+        var clay = Clay.Parse("""
+                              {
+                                "AppInfo": {
+                                  "Name": "Furion",
+                                  "Version": "1.0.0",
+                                  "Company": {
+                                    "Name": "Baiqian",
+                                    "Address": {
+                                      "City": "中国",
+                                      "Province": "广东省",
+                                      "Detail": "中山市东区紫马公园西门"
+                                    },
+                                    "Telephones":["0760-88888888","0760-88888881"],
+                                    "Date":"2024-12-26T00:00:00"
+                                  }
+                                }
+                              }
+                              """);
+
+        Assert.True(clay.FindNodeByPath("AppInfo", out var jsonNode1, out var identifiers1));
+        Assert.NotNull(jsonNode1);
+        Assert.Equal(["AppInfo"], identifiers1);
+
+        Assert.True(clay.FindNodeByPath("AppInfo:Name", out var jsonNode2, out var identifiers2));
+        Assert.NotNull(jsonNode2);
+        Assert.Equal(["AppInfo", "Name"], identifiers2);
+
+        Assert.True(clay.FindNodeByPath("AppInfo:Company:Address", out var jsonNode3, out var identifiers3));
+        Assert.NotNull(jsonNode3);
+        Assert.Equal(["AppInfo", "Company", "Address"], identifiers3);
+
+        Assert.True(clay.FindNodeByPath("AppInfo:Company:Telephones:1", out var jsonNode4, out var identifiers4));
+        Assert.NotNull(jsonNode4);
+        Assert.Equal(["AppInfo", "Company", "Telephones", "1"], identifiers4);
+
+        clay.Rebuilt(o => { o.AllowIndexOutOfRange = true; });
+        Assert.False(clay.FindNodeByPath("AppInfo:Company:Telephones:2", out var jsonNode5, out var identifiers5));
+        Assert.Null(jsonNode5);
+        Assert.Equal(["AppInfo", "Company", "Telephones", "2"], identifiers5);
+
+        Assert.NotNull(clay.FindNodeByPath("AppInfo:Name"));
     }
 
     [Fact]
@@ -1093,7 +1315,7 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.True(clay.Remove("name"));
         Assert.Equal("{\"arr\":[1,2,3]}", clay.ToJsonString());
 
-        dynamic array = clay["arr"]!;
+        var array = clay["arr"]!;
         Assert.True(array.Remove(0));
         Assert.Equal("{\"arr\":[2,3]}", clay.ToJsonString());
 
@@ -1127,7 +1349,7 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.True(clay.Delete("name"));
         Assert.Equal("{\"arr\":[1,2,3]}", clay.ToJsonString());
 
-        dynamic array = clay["arr"]!;
+        var array = clay["arr"]!;
         Assert.True(array.Delete(0));
         Assert.Equal("{\"arr\":[2,3]}", clay.ToJsonString());
 
@@ -2190,6 +2412,108 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.Equal(
             "{\"AppInfo\":{\"Version\":\"1.0.0\",\"Company\":{\"Name\":\"Baiqian\",\"Address\":{\"Province\":\"广东省\",\"Detail\":\"中山市东区紫马公园西门\"},\"Telephones\":[\"0760-88888888\"],\"Date\":\"2024-12-26T00:00:00\"}}}",
             clay2.ToJsonString());
+    }
+
+    [Fact]
+    public void SetPathValue_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        Assert.Throws<ArgumentNullException>(() => clay.SetPathValue(null!, null));
+        Assert.Throws<KeyNotFoundException>(() => clay.SetPathValue("age", null));
+        var exception = Assert.Throws<InvalidOperationException>(() => clay.SetPathValue("name:firstName", null));
+        Assert.Equal("The identifier `name` at path `name:firstName` does not support further lookup.",
+            exception.Message);
+
+        var clay2 = Clay.Parse("{\"id\":1,\"name\":\"furion\",\"children\":{\"id\":1,\"name\":\"furion\"}}");
+        var exception2 =
+            Assert.Throws<InvalidOperationException>(() => clay2.SetPathValue("children:name:firstName", null));
+        Assert.Equal("The identifier `name` at path `name:firstName` does not support further lookup.",
+            exception2.Message);
+    }
+
+    [Fact]
+    public void SetPathValue_ReturnOK()
+    {
+        var clay = Clay.Parse("""
+                              {
+                                "AppInfo": {
+                                  "Name": "Furion",
+                                  "Version": "1.0.0",
+                                  "Company": {
+                                    "Name": "Baiqian",
+                                    "Address": {
+                                      "City": "中国",
+                                      "Province": "广东省",
+                                      "Detail": "中山市东区紫马公园西门"
+                                    },
+                                    "Telephones":["0760-88888888","0760-88888881"],
+                                    "Date":"2024-12-26T00:00:00"
+                                  }
+                                }
+                              }
+                              """);
+        clay.SetPathValue("AppInfo:Name", "百小僧");
+        Assert.Equal("百小僧", clay["AppInfo"]!["Name"]);
+
+        clay.SetPathValue("AppInfo:Company:Address:City", "中国中山市");
+        Assert.Equal("中国中山市", clay["AppInfo"]!["Company"]["Address"]["City"]);
+
+        clay.SetPathValue("AppInfo:Company:Telephones:0", "0760-88888882");
+        Assert.Equal("0760-88888882", clay["AppInfo"]!["Company"]["Telephones"][0]);
+
+        clay.Rebuilt(ClayOptions.Flexible);
+        clay.SetPathValue("AppInfo:Undefined", "Data");
+        Assert.Null(clay["AppInfo"]!["Undefined"]);
+
+        var array = Clay.Parse("""
+                               [0,
+                               {"id":1,"name":"Furion"},
+                               {
+                                 "AppInfo": {
+                                   "Name": "Furion",
+                                   "Version": "1.0.0",
+                                   "Company": {
+                                     "Name": "Baiqian",
+                                     "Address": {
+                                       "City": "中国",
+                                       "Province": "广东省",
+                                       "Detail": "中山市东区紫马公园西门"
+                                     },
+                                     "Telephones":["0760-88888888","0760-88888881"],
+                                     "Date":"2024-12-26T00:00:00"
+                                   }
+                                 }
+                               }]
+                               """);
+        array.SetPathValue("1:name", "百小僧");
+        Assert.Equal("百小僧", array[1]!["name"]);
+        array.SetPathValue("2:AppInfo:Company:Address:City", "中国中山市");
+        Assert.Equal("中国中山市", array[2]!["AppInfo"]["Company"]["Address"]["City"]);
+
+        var clay2 = Clay.Parse("""
+                               {
+                                 "AppInfo": {
+                                   "Name": "Furion",
+                                   "Version": "1.0.0",
+                                   "Company": {
+                                     "Name": "Baiqian",
+                                     "Address": {
+                                       "City": "中国",
+                                       "Province": "广东省",
+                                       "Detail": "中山市东区紫马公园西门"
+                                     },
+                                     "Telephones":["0760-88888888","0760-88888881"],
+                                     "Date":"2024-12-26T00:00:00"
+                                   }
+                                 }
+                               }
+                               """, new ClayOptions { PathSeparator = [":", "/"] });
+        clay2.SetPathValue("AppInfo:Name", "百小僧");
+        Assert.Equal("百小僧", clay2["AppInfo"]!["Name"]);
+        clay2.SetPathValue("AppInfo:Company/Address:City", "中国中山市");
+        Assert.Equal("中国中山市", clay2["AppInfo"]!["Company"]["Address"]["City"]);
+        clay2.SetPathValue("AppInfo/Company/Telephones/0", "0760-88888882");
+        Assert.Equal("0760-88888882", clay2["AppInfo"]!["Company"]["Telephones"][0]);
     }
 
     [Fact]

@@ -55,7 +55,7 @@ public partial class Clay
     ///     索引
     /// </summary>
     /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或索引运算符（Index）或范围运算符（Range）</param>
-    public object? this[object identifier]
+    public dynamic? this[object identifier]
     {
         get => GetValue(identifier);
         set => SetValue(identifier, value);
@@ -76,7 +76,7 @@ public partial class Clay
     /// <remarks>根据路径获取值。</remarks>
     /// <param name="identifier">带路径的标识符</param>
     /// <param name="isPath">是否是带路径的标识符</param>
-    public object? this[string identifier, bool isPath] => isPath ? PathValue(identifier) : GetValue(identifier);
+    public dynamic? this[string identifier, bool isPath] => isPath ? PathValue(identifier) : GetValue(identifier);
 
     /// <summary>
     ///     判断是否为单一对象
@@ -314,6 +314,39 @@ public partial class Clay
         ParseFromFile(path, ClayOptions.Default.Configure(configure));
 
     /// <summary>
+    ///     二次解析指定路径的 JSON 字符串
+    /// </summary>
+    /// <remarks>处理双重序列化问题。</remarks>
+    /// <param name="path">带路径的标识符</param>
+    /// <param name="requireJsonObjectOrArrayString">是否要求必须为字符串形式的 JSON 对象（{}）或数组（[]），默认值为：<c>true</c></param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    public Clay ParseJson(string path, bool requireJsonObjectOrArrayString = true)
+    {
+        // 根据路径查找原始值
+        var rawValue = PathValue(path);
+
+        // 检查是否要求必须为字符串形式的 JSON 对象（{}）或数组（[]）
+        if (requireJsonObjectOrArrayString)
+        {
+            // 仅当值为字符串且表示 JSON 对象（{}）或数组（[]）时才解析
+            if (rawValue is string jsonString && IsJsonObjectOrArray(jsonString))
+            {
+                // 执行解析并更新路径值
+                SetPathValue(path, Parse(rawValue, Options));
+            }
+        }
+        else
+        {
+            // 执行解析并更新路径值
+            SetPathValue(path, Parse(rawValue, Options));
+        }
+
+        return this;
+    }
+
+    /// <summary>
     ///     检查标识符是否定义
     /// </summary>
     /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或索引运算符（Index）或范围运算符（Range）</param>
@@ -508,53 +541,21 @@ public partial class Clay
     /// </returns>
     public object? PathValue(string path, Type resultType, JsonSerializerOptions? jsonSerializerOptions = null)
     {
-        // 空检查
-        ArgumentNullException.ThrowIfNull(path);
-
-        // 根据路径分隔符进行分割，并确保至少有一个标识符
-        var identifiers = path.Split(Options.PathSeparator, StringSplitOptions.RemoveEmptyEntries);
-        if (identifiers is { Length: 0 })
+        // 根据路径查找 JsonNode 节点
+        if (!FindNodeByPath(path, out var jsonNode, out _))
         {
             return null;
-        }
-
-        // 根据标识符查找 JsonNode 节点
-        var currentNode = FindNode(identifiers[0]);
-        if (currentNode is null)
-        {
-            return null;
-        }
-
-        // 遍历剩余的标识符
-        for (var i = 1; i < identifiers.Length; i++)
-        {
-            // 将 currentNode 转换为对象实例
-            var currentValue = DeserializeNode(currentNode, Options);
-
-            // 检查是否是 Clay 类型
-            if (!IsClay(currentValue))
-            {
-                throw new InvalidOperationException(
-                    $"The identifier `{identifiers[i - 1]}` at path `{identifiers[i - 1]}:{identifiers[i]}` does not support further lookup.");
-            }
-
-            // 进行下一级查找
-            currentNode = ((Clay)currentValue).FindNode(identifiers[i]);
-            if (currentNode is null)
-            {
-                return null;
-            }
         }
 
         // 处理 object 类型生成 JsonElement 问题
         if (resultType == typeof(object))
         {
-            return DeserializeNode(currentNode, Options);
+            return DeserializeNode(jsonNode, Options);
         }
 
         return IsClay(resultType)
-            ? new Clay(currentNode, Options)
-            : currentNode.As(resultType, jsonSerializerOptions ?? Options.JsonSerializerOptions);
+            ? new Clay(jsonNode, Options)
+            : jsonNode.As(resultType, jsonSerializerOptions ?? Options.JsonSerializerOptions);
     }
 
     /// <summary>
@@ -573,6 +574,46 @@ public partial class Clay
         (TResult?)PathValue(path, typeof(TResult), jsonSerializerOptions);
 
     /// <summary>
+    ///     根据路径获取值
+    /// </summary>
+    /// <remarks>不支持获取自定义委托。</remarks>
+    /// <param name="path">带路径的标识符</param>
+    /// <returns>
+    ///     <see cref="object" />
+    /// </returns>
+    public object? GetPathValue(string path) => PathValue<object>(path);
+
+    /// <summary>
+    ///     根据路径获取值
+    /// </summary>
+    /// <remarks>不支持获取自定义委托。</remarks>
+    /// <param name="path">带路径的标识符</param>
+    /// <param name="resultType">转换的目标类型</param>
+    /// <param name="jsonSerializerOptions">
+    ///     <see cref="JsonSerializerOptions" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="object" />
+    /// </returns>
+    public object? GetPathValue(string path, Type resultType, JsonSerializerOptions? jsonSerializerOptions = null) =>
+        PathValue(path, resultType, jsonSerializerOptions);
+
+    /// <summary>
+    ///     根据路径获取值
+    /// </summary>
+    /// <remarks>不支持获取自定义委托。</remarks>
+    /// <param name="path">带路径的标识符</param>
+    /// <param name="jsonSerializerOptions">
+    ///     <see cref="JsonSerializerOptions" />
+    /// </param>
+    /// <typeparam name="TResult">转换的目标类型</typeparam>
+    /// <returns>
+    ///     <typeparamref name="TResult" />
+    /// </returns>
+    public TResult? GetPathValue<TResult>(string path, JsonSerializerOptions? jsonSerializerOptions = null) =>
+        PathValue<TResult>(path, jsonSerializerOptions);
+
+    /// <summary>
     ///     根据标识符查找 <see cref="JsonNode" /> 节点
     /// </summary>
     /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或索引运算符（Index）或范围运算符（Range）</param>
@@ -585,6 +626,79 @@ public partial class Clay
         ArgumentNullException.ThrowIfNull(identifier);
 
         return IsObject ? GetNodeFromObject(identifier) : GetNodeFromArray(identifier);
+    }
+
+    /// <summary>
+    ///     根据路径查找 <see cref="JsonNode" /> 节点
+    /// </summary>
+    /// <param name="path">带路径的标识符</param>
+    /// <returns>
+    ///     <see cref="JsonNode" />
+    /// </returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    public JsonNode? FindNodeByPath(string path) => !FindNodeByPath(path, out var jsonNode, out _) ? null : jsonNode;
+
+    /// <summary>
+    ///     根据路径查找 <see cref="JsonNode" /> 节点
+    /// </summary>
+    /// <param name="path">带路径的标识符</param>
+    /// <param name="jsonNode">
+    ///     <see cref="JsonNode" />
+    /// </param>
+    /// <param name="identifiers">根据路径分隔符进行分割后的数组</param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    public bool FindNodeByPath(string path, [NotNullWhen(true)] out JsonNode? jsonNode, out string[] identifiers)
+    {
+        // 空检查
+        ArgumentNullException.ThrowIfNull(path);
+
+        // 根据路径分隔符进行分割，并确保至少有一个标识符
+        identifiers = path.Split(Options.PathSeparator, StringSplitOptions.RemoveEmptyEntries);
+        if (identifiers is { Length: 0 })
+        {
+            jsonNode = null;
+            return false;
+        }
+
+        // 根据标识符查找 JsonNode 节点
+        var currentNode = FindNode(identifiers[0]);
+        if (currentNode is null)
+        {
+            jsonNode = null;
+            return false;
+        }
+
+        // 遍历剩余的标识符
+        for (var i = 1; i < identifiers.Length; i++)
+        {
+            // 将 currentNode 转换为对象实例
+            var currentValue = DeserializeNode(currentNode, Options);
+
+            // 检查是否是 Clay 类型
+            if (!IsClay(currentValue))
+            {
+                throw new InvalidOperationException(
+                    $"The identifier `{identifiers[i - 1]}` at path `{identifiers[i - 1]}:{identifiers[i]}` does not support further lookup.");
+            }
+
+            // 进行下一级查找
+            currentNode = ((Clay)currentValue).FindNode(identifiers[i]);
+
+            // 空检查
+            if (currentNode is not null)
+            {
+                continue;
+            }
+
+            jsonNode = null;
+            return false;
+        }
+
+        jsonNode = currentNode;
+        return true;
     }
 
     /// <summary>
@@ -934,49 +1048,10 @@ public partial class Clay
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
-    public bool RemovePathValue(string path)
-    {
-        // 空检查
-        ArgumentNullException.ThrowIfNull(path);
-
-        // 根据路径分隔符进行分割，并确保至少有一个标识符
-        var identifiers = path.Split(Options.PathSeparator, StringSplitOptions.RemoveEmptyEntries);
-        if (identifiers is { Length: 0 })
-        {
-            return false;
-        }
-
-        // 根据标识符查找 JsonNode 节点
-        var currentNode = FindNode(identifiers[0]);
-        if (currentNode is null)
-        {
-            return false;
-        }
-
-        // 遍历剩余的标识符
-        for (var i = 1; i < identifiers.Length; i++)
-        {
-            // 将 currentNode 转换为对象实例
-            var currentValue = DeserializeNode(currentNode, Options);
-
-            // 检查是否是 Clay 类型
-            if (!IsClay(currentValue))
-            {
-                throw new InvalidOperationException(
-                    $"The identifier `{identifiers[i - 1]}` at path `{identifiers[i - 1]}:{identifiers[i]}` does not support further lookup.");
-            }
-
-            // 进行下一级查找
-            currentNode = ((Clay)currentValue).FindNode(identifiers[i]);
-            if (currentNode is null)
-            {
-                return false;
-            }
-        }
-
+    public bool RemovePathValue(string path) =>
+        FindNodeByPath(path, out var jsonNode, out var identifiers) &&
         // 从父节点删除
-        return ((Clay)DeserializeNode(currentNode.Parent, Options)!).Remove(identifiers[^1]);
-    }
+        ((Clay)DeserializeNode(jsonNode.Parent, Options)!).Remove(identifiers[^1]);
 
     /// <summary>
     ///     根据标识符删除数据
@@ -1023,6 +1098,21 @@ public partial class Clay
     ///     <see cref="bool" />
     /// </returns>
     public bool DeletePathValue(string path) => RemovePathValue(path);
+
+    /// <summary>
+    ///     根据路径设置值
+    /// </summary>
+    /// <param name="path">带路径的标识符</param>
+    /// <param name="value">值</param>
+    public void SetPathValue(string path, object? value)
+    {
+        // 根据路径查找 JsonNode 节点
+        if (FindNodeByPath(path, out var jsonNode, out var identifiers))
+        {
+            // 从父节点更新值
+            ((Clay)DeserializeNode(jsonNode.Parent, Options)!).Set(identifiers[^1], value);
+        }
+    }
 
     /// <summary>
     ///     将 <see cref="Clay" /> 转换为目标类型

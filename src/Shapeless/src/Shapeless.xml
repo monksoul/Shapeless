@@ -686,6 +686,17 @@
                 <see cref="T:Shapeless.Clay" />
             </returns>
         </member>
+        <member name="M:Shapeless.Clay.ParseJson(System.String,System.Boolean)">
+            <summary>
+                二次解析指定路径的 JSON 字符串
+            </summary>
+            <remarks>处理双重序列化问题。</remarks>
+            <param name="path">带路径的标识符</param>
+            <param name="requireJsonObjectOrArrayString">是否要求必须为字符串形式的 JSON 对象（{}）或数组（[]），默认值为：<c>true</c></param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
         <member name="M:Shapeless.Clay.Contains(System.Object)">
             <summary>
                 检查标识符是否定义
@@ -809,6 +820,44 @@
                 <typeparamref name="TResult" />
             </returns>
         </member>
+        <member name="M:Shapeless.Clay.GetPathValue(System.String)">
+            <summary>
+                根据路径获取值
+            </summary>
+            <remarks>不支持获取自定义委托。</remarks>
+            <param name="path">带路径的标识符</param>
+            <returns>
+                <see cref="T:System.Object" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.GetPathValue(System.String,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+                根据路径获取值
+            </summary>
+            <remarks>不支持获取自定义委托。</remarks>
+            <param name="path">带路径的标识符</param>
+            <param name="resultType">转换的目标类型</param>
+            <param name="jsonSerializerOptions">
+                <see cref="T:System.Text.Json.JsonSerializerOptions" />
+            </param>
+            <returns>
+                <see cref="T:System.Object" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.GetPathValue``1(System.String,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+                根据路径获取值
+            </summary>
+            <remarks>不支持获取自定义委托。</remarks>
+            <param name="path">带路径的标识符</param>
+            <param name="jsonSerializerOptions">
+                <see cref="T:System.Text.Json.JsonSerializerOptions" />
+            </param>
+            <typeparam name="TResult">转换的目标类型</typeparam>
+            <returns>
+                <typeparamref name="TResult" />
+            </returns>
+        </member>
         <member name="M:Shapeless.Clay.FindNode(System.Object)">
             <summary>
                 根据标识符查找 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 节点
@@ -817,6 +866,30 @@
             <returns>
                 <see cref="T:System.Text.Json.Nodes.JsonNode" />
             </returns>
+        </member>
+        <member name="M:Shapeless.Clay.FindNodeByPath(System.String)">
+            <summary>
+                根据路径查找 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 节点
+            </summary>
+            <param name="path">带路径的标识符</param>
+            <returns>
+                <see cref="T:System.Text.Json.Nodes.JsonNode" />
+            </returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:Shapeless.Clay.FindNodeByPath(System.String,System.Text.Json.Nodes.JsonNode@,System.String[]@)">
+            <summary>
+                根据路径查找 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 节点
+            </summary>
+            <param name="path">带路径的标识符</param>
+            <param name="jsonNode">
+                <see cref="T:System.Text.Json.Nodes.JsonNode" />
+            </param>
+            <param name="identifiers">根据路径分隔符进行分割后的数组</param>
+            <returns>
+                <see cref="T:System.Boolean" />
+            </returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
         </member>
         <member name="M:Shapeless.Clay.Set(System.Object,System.Object)">
             <summary>
@@ -1035,6 +1108,13 @@
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
+        </member>
+        <member name="M:Shapeless.Clay.SetPathValue(System.String,System.Object)">
+            <summary>
+                根据路径设置值
+            </summary>
+            <param name="path">带路径的标识符</param>
+            <param name="value">值</param>
         </member>
         <member name="M:Shapeless.Clay.As(System.Type,System.Text.Json.JsonSerializerOptions)">
             <summary>
