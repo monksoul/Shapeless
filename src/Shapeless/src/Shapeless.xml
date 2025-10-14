@@ -1991,7 +1991,7 @@
             <summary>
                 配置用于包裹非对象和非数组类型的键名
             </summary>
-        </member>
+        </member>er>
         <member name="P:Shapeless.ClayOptions.AllowMissingProperty">
             <summary>
                 是否允许访问不存在的属性
@@ -2111,9 +2111,9 @@
                         ○ Match a character in the set [A-Z].<br/>
                 ○ Match a sequence of expressions.<br/>
                     ○ Zero-width positive lookbehind.<br/>
-                        ○ Match a character in the set [A-Za-z] right-to-left.<br/>
+                        ○ Match an ASCII letter right-to-left.<br/>
                     ○ Zero-width positive lookahead.<br/>
-                        ○ Match a character in the set [^A-Za-z].<br/>
+                        ○ Match any character other than an ASCII letter.<br/>
                 ○ Match a sequence of expressions.<br/>
                     ○ Zero-width positive lookbehind.<br/>
                         ○ Match a Unicode digit right-to-left.<br/>
@@ -2245,3 +2245,4 @@
         </member>
     </members>
 </doc>
+c>
