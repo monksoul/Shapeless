@@ -1534,7 +1534,7 @@
             ○ Match if at the beginning of the string.<br/>
             ○ Match the string "/Date(".<br/>
             ○ 1st capture group.<br/>
-                ○ Match a character in the set [+-] atomically any number of times.<br/>
+                ○ Match a character in the set [+\-] atomically any number of times.<br/>
                 ○ Match a Unicode digit atomically at least once.<br/>
             ○ Match the string ")/".<br/>
             ○ Match if at the end of the string or if before an ending newline.<br/>
@@ -1563,10 +1563,10 @@
             ○ Match if at the beginning of the string.<br/>
             ○ Match the string "/Date(".<br/>
             ○ 1st capture group.<br/>
-                ○ Match a character in the set [+-] atomically any number of times.<br/>
+                ○ Match a character in the set [+\-] atomically any number of times.<br/>
                 ○ Match a Unicode digit atomically at least once.<br/>
             ○ 2nd capture group.<br/>
-                ○ Match a character in the set [+-].<br/>
+                ○ Match a character in the set [+\-].<br/>
             ○ 3rd capture group.<br/>
                 ○ Match a Unicode digit exactly 2 times.<br/>
             ○ 4th capture group.<br/>
@@ -1691,7 +1691,7 @@
             ○ Match if at the beginning of the string.<br/>
             ○ Match the string "/Date(".<br/>
             ○ 1st capture group.<br/>
-                ○ Match a character in the set [+-] atomically any number of times.<br/>
+                ○ Match a character in the set [+\-] atomically any number of times.<br/>
                 ○ Match a Unicode digit atomically at least once.<br/>
             ○ Match the string ")/".<br/>
             ○ Match if at the end of the string or if before an ending newline.<br/>
@@ -1991,7 +1991,7 @@
             <summary>
                 配置用于包裹非对象和非数组类型的键名
             </summary>
-        </member>er>
+        </member>
         <member name="P:Shapeless.ClayOptions.AllowMissingProperty">
             <summary>
                 是否允许访问不存在的属性
