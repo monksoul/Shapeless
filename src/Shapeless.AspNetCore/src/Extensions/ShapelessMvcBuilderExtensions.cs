@@ -35,12 +35,19 @@ public static class ShapelessMvcBuilderExtensions
         // 空检查
         ArgumentNullException.ThrowIfNull(configure);
 
-        // 配置 JsonOptions 选项，添加 ClayJsonConverter 转换器
+        // 配置 JsonOptions 选项，添加 ClayJsonConverter 和 ObjectToClayJsonConverter 转换器
         builder.Services.Configure<JsonOptions>(options =>
         {
+            // 处理对象序列化为 Clay 的问题
             if (!options.JsonSerializerOptions.Converters.OfType<ClayJsonConverter>().Any())
             {
                 options.JsonSerializerOptions.Converters.Add(new ClayJsonConverter());
+            }
+
+            // 处理 object/dynamic 类型对象序列化为 Clay 的问题
+            if (!options.JsonSerializerOptions.Converters.OfType<ObjectToClayJsonConverter>().Any())
+            {
+                options.JsonSerializerOptions.Converters.Add(new ObjectToClayJsonConverter());
             }
         });
 

@@ -29,6 +29,7 @@ public class ShapelessMvcBuilderExtensionsTests
         var jsonOptions = app.Services.GetRequiredService<IOptions<JsonOptions>>().Value;
         Assert.NotNull(jsonOptions.JsonSerializerOptions.Converters);
         Assert.Single(jsonOptions.JsonSerializerOptions.Converters.OfType<ClayJsonConverter>());
+        Assert.Single(jsonOptions.JsonSerializerOptions.Converters.OfType<ObjectToClayJsonConverter>());
 
         var clayOptions = app.Services.GetRequiredService<IOptions<ClayOptions>>().Value;
         Assert.True(clayOptions.KeyValueJsonToObject);
