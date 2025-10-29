@@ -11,6 +11,7 @@ global using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Options;
 global using Shapeless.Core.Extensions;
+global using Shapeless.Extensions;
 global using System.Diagnostics.CodeAnalysis;
 global using System.Net.Http.Headers;
 global using System.Net.Mime;

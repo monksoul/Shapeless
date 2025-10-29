@@ -1534,7 +1534,7 @@
             ○ Match if at the beginning of the string.<br/>
             ○ Match the string "/Date(".<br/>
             ○ 1st capture group.<br/>
-                ○ Match a character in the set [+\-] atomically any number of times.<br/>
+                ○ Match a character in the set [+-] atomically any number of times.<br/>
                 ○ Match a Unicode digit atomically at least once.<br/>
             ○ Match the string ")/".<br/>
             ○ Match if at the end of the string or if before an ending newline.<br/>
@@ -1563,10 +1563,10 @@
             ○ Match if at the beginning of the string.<br/>
             ○ Match the string "/Date(".<br/>
             ○ 1st capture group.<br/>
-                ○ Match a character in the set [+\-] atomically any number of times.<br/>
+                ○ Match a character in the set [+-] atomically any number of times.<br/>
                 ○ Match a Unicode digit atomically at least once.<br/>
             ○ 2nd capture group.<br/>
-                ○ Match a character in the set [+\-].<br/>
+                ○ Match a character in the set [+-].<br/>
             ○ 3rd capture group.<br/>
                 ○ Match a Unicode digit exactly 2 times.<br/>
             ○ 4th capture group.<br/>
@@ -1691,7 +1691,7 @@
             ○ Match if at the beginning of the string.<br/>
             ○ Match the string "/Date(".<br/>
             ○ 1st capture group.<br/>
-                ○ Match a character in the set [+\-] atomically any number of times.<br/>
+                ○ Match a character in the set [+-] atomically any number of times.<br/>
                 ○ Match a Unicode digit atomically at least once.<br/>
             ○ Match the string ")/".<br/>
             ○ Match if at the end of the string or if before an ending newline.<br/>
@@ -1863,6 +1863,19 @@
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
+        </member>
+        <member name="T:Shapeless.Extensions.JsonSerializerOptionsExtensions">
+            <summary>
+                <see cref="T:System.Text.Json.JsonSerializerOptions" /> 拓展类
+            </summary>
+        </member>
+        <member name="M:Shapeless.Extensions.JsonSerializerOptionsExtensions.AddClayConverters(System.Text.Json.JsonSerializerOptions)">
+            <summary>
+                添加 <see cref="T:Shapeless.Clay" /> JSON 序列化配置
+            </summary>
+            <param name="jsonSerializerOptions">
+                <see cref="T:System.Text.Json.JsonSerializerOptions" />
+            </param>
         </member>
         <member name="T:Shapeless.Extensions.ShapelessExtensions">
             <summary>
@@ -2111,9 +2124,9 @@
                         ○ Match a character in the set [A-Z].<br/>
                 ○ Match a sequence of expressions.<br/>
                     ○ Zero-width positive lookbehind.<br/>
-                        ○ Match an ASCII letter right-to-left.<br/>
+                        ○ Match a character in the set [A-Za-z] right-to-left.<br/>
                     ○ Zero-width positive lookahead.<br/>
-                        ○ Match any character other than an ASCII letter.<br/>
+                        ○ Match a character in the set [^A-Za-z].<br/>
                 ○ Match a sequence of expressions.<br/>
                     ○ Zero-width positive lookbehind.<br/>
                         ○ Match a Unicode digit right-to-left.<br/>
@@ -2245,4 +2258,3 @@
         </member>
     </members>
 </doc>
-c>
