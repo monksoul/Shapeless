@@ -104,6 +104,7 @@ public sealed class ClayOptions
     /// <summary>
     ///     控制是否将键值对格式的 JSON 转换为单一对象
     /// </summary>
+    /// <remarks>默认值为：<c>false</c>。</remarks>
     public bool KeyValueJsonToObject { get; set; }
 
     /// <summary>

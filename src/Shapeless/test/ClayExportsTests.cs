@@ -736,6 +736,50 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void ParseJson_WithoutParameters_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("""
+                              {
+                                  "EntityNumber": 207053412,
+                                  "FullName": "TestDataEntity",
+                                  "EntityType": "Corporation",
+                                  "ReferCredOpers": "[{\"Did\":144362906,\"CredOperNumber\":200709397004,\"CredOperStep\":3,\"IntervType\":\"Co-Borrower\"},{\"Did\":144362906,\"CredOperNumber\":200709397004,\"CredOperStep\":3,\"IntervType\":\"Vehicle Owner\"}]",
+                                  "Data":"{\"Id\":1,\"Name\":\"Furion\"}"
+                              }
+                              """);
+
+        var exception = Assert.Throws<ArgumentOutOfRangeException>(() => clay.ParseJson(0));
+        Assert.Equal("Max depth must be greater than zero. (Parameter 'maxDepth')", exception.Message);
+        Assert.Throws<ArgumentOutOfRangeException>(() => clay.ParseJson(-1));
+    }
+
+    [Fact]
+    public void ParseJson_WithoutParameters_ReturnOK()
+    {
+        var clay = Clay.Parse("""
+                              {
+                                  "EntityNumber": 207053412,
+                                  "FullName": "TestDataEntity",
+                                  "EntityType": "Corporation",
+                                  "ReferCredOpers": "[{\"Did\":144362906,\"CredOperNumber\":200709397004,\"CredOperStep\":3,\"IntervType\":\"Co-Borrower\"},{\"Did\":144362906,\"CredOperNumber\":200709397004,\"CredOperStep\":3,\"IntervType\":\"Vehicle Owner\"}]",
+                                  "Data":"{\"Id\":1,\"Name\":\"Furion\"}"
+                              }
+                              """).ParseJson();
+
+        Assert.Equal(
+            "{\"EntityNumber\":207053412,\"FullName\":\"TestDataEntity\",\"EntityType\":\"Corporation\",\"ReferCredOpers\":[{\"Did\":144362906,\"CredOperNumber\":200709397004,\"CredOperStep\":3,\"IntervType\":\"Co-Borrower\"},{\"Did\":144362906,\"CredOperNumber\":200709397004,\"CredOperStep\":3,\"IntervType\":\"Vehicle Owner\"}],\"Data\":{\"Id\":1,\"Name\":\"Furion\"}}",
+            clay.ToJsonString());
+
+        var clay2 = Clay.Parse(BuildNestedJson(2)).ParseJson();
+        Assert.Equal("{\"level1\":{\"level2\":{\"value\":\"final\"}}}", clay2.ToJsonString());
+
+        var clay3 = Clay.Parse(BuildNestedJson(10)).ParseJson(10);
+        Assert.Equal(
+            "{\"level1\":{\"level2\":{\"level3\":{\"level4\":{\"level5\":{\"level6\":{\"level7\":{\"level8\":{\"level9\":{\"level10\":{\"value\":\"final\"}}}}}}}}}}}",
+            clay3.ToJsonString());
+    }
+
+    [Fact]
     public void ToString_ReturnOK()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
@@ -1043,6 +1087,8 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.Equal("2024-12-26T00:00:00", date1);
         var date2 = clay.PathValue<DateTime>("AppInfo:Company:Date");
         Assert.Equal("2024-12-26", date2.ToString("yyyy-MM-dd"));
+        var date3 = clay.PathValue("AppInfo:Company:Date", typeof(DateTime));
+        Assert.Equal("2024/12/26 0:00:00", date3?.ToString());
 
         clay.Rebuilt(ClayOptions.Flexible);
         Assert.Null(clay.PathValue("AppInfo:Undefined"));
@@ -1090,6 +1136,7 @@ public class ClayExportsTests(ITestOutputHelper output)
                                """, new ClayOptions { PathSeparator = [":", "/"] });
         Assert.Equal("Furion", clay2.PathValue("AppInfo:Name"));
         Assert.Equal("中国", clay2.PathValue("AppInfo:Company/Address:City"));
+        Assert.Equal("0760-88888888", clay2.PathValue("AppInfo/Company/Telephones/0"));
         Assert.Equal("0760-88888888", clay2.PathValue("AppInfo/Company/Telephones/0"));
     }
 
@@ -1143,6 +1190,8 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.Equal("2024-12-26T00:00:00", date1);
         var date2 = clay.GetPathValue<DateTime>("AppInfo:Company:Date");
         Assert.Equal("2024-12-26", date2.ToString("yyyy-MM-dd"));
+        var date3 = clay.GetPathValue("AppInfo:Company:Date", typeof(DateTime));
+        Assert.Equal("2024/12/26 0:00:00", date3?.ToString());
 
         clay.Rebuilt(ClayOptions.Flexible);
         Assert.Null(clay.GetPathValue("AppInfo:Undefined"));
@@ -1257,28 +1306,74 @@ public class ClayExportsTests(ITestOutputHelper output)
                               }
                               """);
 
-        Assert.True(clay.FindNodeByPath("AppInfo", out var jsonNode1, out var identifiers1));
+        Assert.True(clay.FindNodeByPath("AppInfo", out var jsonNode1, out var pathSegments1));
         Assert.NotNull(jsonNode1);
-        Assert.Equal(["AppInfo"], identifiers1);
+        Assert.Equal(["AppInfo"], pathSegments1);
 
-        Assert.True(clay.FindNodeByPath("AppInfo:Name", out var jsonNode2, out var identifiers2));
+        Assert.True(clay.FindNodeByPath("AppInfo:Name", out var jsonNode2, out var pathSegments2));
         Assert.NotNull(jsonNode2);
-        Assert.Equal(["AppInfo", "Name"], identifiers2);
+        Assert.Equal(["AppInfo", "Name"], pathSegments2);
 
-        Assert.True(clay.FindNodeByPath("AppInfo:Company:Address", out var jsonNode3, out var identifiers3));
+        Assert.True(clay.FindNodeByPath("AppInfo:Company:Address", out var jsonNode3, out var pathSegments3));
         Assert.NotNull(jsonNode3);
-        Assert.Equal(["AppInfo", "Company", "Address"], identifiers3);
+        Assert.Equal(["AppInfo", "Company", "Address"], pathSegments3);
 
-        Assert.True(clay.FindNodeByPath("AppInfo:Company:Telephones:1", out var jsonNode4, out var identifiers4));
+        Assert.True(clay.FindNodeByPath("AppInfo:Company:Telephones:1", out var jsonNode4, out var pathSegments4));
         Assert.NotNull(jsonNode4);
-        Assert.Equal(["AppInfo", "Company", "Telephones", "1"], identifiers4);
+        Assert.Equal(["AppInfo", "Company", "Telephones", "1"], pathSegments4);
 
         clay.Rebuilt(o => { o.AllowIndexOutOfRange = true; });
-        Assert.False(clay.FindNodeByPath("AppInfo:Company:Telephones:2", out var jsonNode5, out var identifiers5));
+        Assert.False(clay.FindNodeByPath("AppInfo:Company:Telephones:2", out var jsonNode5, out var pathSegments5));
         Assert.Null(jsonNode5);
-        Assert.Equal(["AppInfo", "Company", "Telephones", "2"], identifiers5);
+        Assert.Equal(["AppInfo", "Company", "Telephones", "2"], pathSegments5);
 
         Assert.NotNull(clay.FindNodeByPath("AppInfo:Name"));
+    }
+
+    [Fact]
+    public void FindNodeByPath_JsonPath_ReturnOK()
+    {
+        var clay = Clay.Parse("""
+                              {
+                                "AppInfo": {
+                                  "Name": "Furion",
+                                  "Version": "1.0.0",
+                                  "Company": {
+                                    "Name": "Baiqian",
+                                    "Address": {
+                                      "City": "中国",
+                                      "Province": "广东省",
+                                      "Detail": "中山市东区紫马公园西门"
+                                    },
+                                    "Telephones":["0760-88888888","0760-88888881"],
+                                    "Date":"2024-12-26T00:00:00"
+                                  }
+                                }
+                              }
+                              """);
+
+        Assert.True(clay.FindNodeByPath("$.AppInfo", out var jsonNode1, out var pathSegments1));
+        Assert.NotNull(jsonNode1);
+        Assert.Equal(["AppInfo"], pathSegments1);
+
+        Assert.True(clay.FindNodeByPath("$.AppInfo.Name", out var jsonNode2, out var pathSegments2));
+        Assert.NotNull(jsonNode2);
+        Assert.Equal(["AppInfo", "Name"], pathSegments2);
+
+        Assert.True(clay.FindNodeByPath("$.AppInfo.Company.Address", out var jsonNode3, out var pathSegments3));
+        Assert.NotNull(jsonNode3);
+        Assert.Equal(["AppInfo", "Company", "Address"], pathSegments3);
+
+        Assert.True(clay.FindNodeByPath("$.AppInfo.Company.Telephones[1]", out var jsonNode4, out var pathSegments4));
+        Assert.NotNull(jsonNode4);
+        Assert.Equal(["AppInfo", "Company", "Telephones", "1"], pathSegments4);
+
+        clay.Rebuilt(o => { o.AllowIndexOutOfRange = true; });
+        Assert.False(clay.FindNodeByPath("$.AppInfo.Company.Telephones[2]", out var jsonNode5, out var pathSegments5));
+        Assert.Null(jsonNode5);
+        Assert.Equal(["AppInfo", "Company", "Telephones", "2"], pathSegments5);
+
+        Assert.NotNull(clay.FindNodeByPath("$.AppInfo.Name"));
     }
 
     [Fact]
@@ -2533,6 +2628,25 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.True(dic.ContainsKey("two"));
         Assert.True(dic["two"].ContainsKey("two1"));
         Assert.True(dic["two"].ContainsKey("two2"));
+    }
+
+    /// <summary>
+    ///     生成嵌套 JSON 字符串
+    /// </summary>
+    /// <param name="depth">嵌套层级</param>
+    /// <returns>
+    ///     <see cref="string" />
+    /// </returns>
+    private static string BuildNestedJson(int depth)
+    {
+        var current = """{"value": "final"}""";
+        for (var i = depth; i >= 1; i--)
+        {
+            var escaped = current.Replace("\\", @"\\").Replace("\"", "\\\"");
+            current = $"{{\"level{i}\": \"{escaped}\"}}";
+        }
+
+        return current;
     }
 }
 

@@ -314,7 +314,7 @@ public partial class Clay
         ParseFromFile(path, ClayOptions.Default.Configure(configure));
 
     /// <summary>
-    ///     二次解析指定路径的 JSON 字符串
+    ///     二次解析指定路径的双重 JSON 序列化字符串
     /// </summary>
     /// <remarks>处理双重序列化问题。</remarks>
     /// <param name="path">带路径的标识符</param>
@@ -344,6 +344,56 @@ public partial class Clay
         }
 
         return this;
+    }
+
+    /// <summary>
+    ///     二次解析双重 JSON 序列化字符串
+    /// </summary>
+    /// <param name="maxDepth">最大递归解析深度。默认值为：3</param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    public Clay ParseJson(int maxDepth = 3)
+    {
+        // 小于或等于 0 检查
+        if (maxDepth <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(maxDepth),
+                "Max depth must be greater than zero.");
+        }
+
+        return ParseRecursive(this, maxDepth);
+
+        // 局部函数，用于执行带深度限制的解析逻辑
+        Clay ParseRecursive(Clay current, int depth)
+        {
+            // 检查是否达到最大递归深度
+            if (depth <= 0)
+            {
+                return current;
+            }
+
+            // 创建快照用来避免枚举修改异常问题（Collection was modified; enumeration operation may not execute.）
+            // 此操作会有一点性能损耗
+            var snapshot = current.AsEnumerable().ToList();
+            foreach (var (key, value) in snapshot)
+            {
+                // 仅当值为字符串且表示 JSON 对象（{}）或数组（[]）时才解析
+                if (value is not string jsonString || !IsJsonObjectOrArray(jsonString))
+                {
+                    continue;
+                }
+
+                // 执行解析并更新当前键值
+                current.Set(key, Parse(jsonString, current.Options));
+
+                // 递归处理（包括刚解析出来的），由于 Parse 返回的是包含 JsonNode 克隆副本的新流变对象，因此需要重新查询
+                ParseRecursive((Clay)DeserializeNode(current.FindNode(key), current.Options)!, depth - 1);
+            }
+
+            return current;
+        }
     }
 
     /// <summary>
@@ -645,26 +695,34 @@ public partial class Clay
     /// <param name="jsonNode">
     ///     <see cref="JsonNode" />
     /// </param>
-    /// <param name="identifiers">根据路径分隔符进行分割后的数组</param>
+    /// <param name="pathSegments">根据路径分隔符进行分割后的数组</param>
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public bool FindNodeByPath(string path, [NotNullWhen(true)] out JsonNode? jsonNode, out string[] identifiers)
+    public bool FindNodeByPath(string path, [NotNullWhen(true)] out JsonNode? jsonNode, out string[] pathSegments)
     {
         // 空检查
         ArgumentNullException.ThrowIfNull(path);
 
+        // 检查是否是 JSON Path 路径
+        const string jsonPathPrefix = "$.";
+        var isJsonPath = path.StartsWith(jsonPathPrefix, StringComparison.Ordinal);
+
+        // 路径标准化（仅支持简单的 JSON Path 语法）
+        var normalizedPath = isJsonPath ? ArrayIndexPatternRegex().Replace(path[jsonPathPrefix.Length..], ".$1") : path;
+        var pathSeparator = isJsonPath ? ["."] : Options.PathSeparator;
+
         // 根据路径分隔符进行分割，并确保至少有一个标识符
-        identifiers = path.Split(Options.PathSeparator, StringSplitOptions.RemoveEmptyEntries);
-        if (identifiers is { Length: 0 })
+        pathSegments = normalizedPath.Split(pathSeparator, StringSplitOptions.RemoveEmptyEntries);
+        if (pathSegments is { Length: 0 })
         {
             jsonNode = null;
             return false;
         }
 
         // 根据标识符查找 JsonNode 节点
-        var currentNode = FindNode(identifiers[0]);
+        var currentNode = FindNode(pathSegments[0]);
         if (currentNode is null)
         {
             jsonNode = null;
@@ -672,7 +730,7 @@ public partial class Clay
         }
 
         // 遍历剩余的标识符
-        for (var i = 1; i < identifiers.Length; i++)
+        for (var i = 1; i < pathSegments.Length; i++)
         {
             // 将 currentNode 转换为对象实例
             var currentValue = DeserializeNode(currentNode, Options);
@@ -681,11 +739,11 @@ public partial class Clay
             if (!IsClay(currentValue))
             {
                 throw new InvalidOperationException(
-                    $"The identifier `{identifiers[i - 1]}` at path `{identifiers[i - 1]}:{identifiers[i]}` does not support further lookup.");
+                    $"The identifier `{pathSegments[i - 1]}` at path `{pathSegments[i - 1]}:{pathSegments[i]}` does not support further lookup.");
             }
 
             // 进行下一级查找
-            currentNode = ((Clay)currentValue).FindNode(identifiers[i]);
+            currentNode = ((Clay)currentValue).FindNode(pathSegments[i]);
 
             // 空检查
             if (currentNode is not null)
@@ -1049,9 +1107,9 @@ public partial class Clay
     ///     <see cref="bool" />
     /// </returns>
     public bool RemovePathValue(string path) =>
-        FindNodeByPath(path, out var jsonNode, out var identifiers) &&
+        FindNodeByPath(path, out var jsonNode, out var pathSegments) &&
         // 从父节点删除
-        ((Clay)DeserializeNode(jsonNode.Parent, Options)!).Remove(identifiers[^1]);
+        ((Clay)DeserializeNode(jsonNode.Parent, Options)!).Remove(pathSegments[^1]);
 
     /// <summary>
     ///     根据标识符删除数据
@@ -1107,10 +1165,10 @@ public partial class Clay
     public void SetPathValue(string path, object? value)
     {
         // 根据路径查找 JsonNode 节点
-        if (FindNodeByPath(path, out var jsonNode, out var identifiers))
+        if (FindNodeByPath(path, out var jsonNode, out var pathSegments))
         {
             // 从父节点更新值
-            ((Clay)DeserializeNode(jsonNode.Parent, Options)!).Set(identifiers[^1], value);
+            ((Clay)DeserializeNode(jsonNode.Parent, Options)!).Set(pathSegments[^1], value);
         }
     }
 
@@ -1495,6 +1553,15 @@ public partial class Clay
     ///     <see cref="Clay" />
     /// </returns>
     public Clay PipeTry(Func<dynamic, dynamic?> transformer) => ExecuteTransformation(transformer, false);
+
+    /// <summary>
+    ///     数组索引正则表达式
+    /// </summary>
+    /// <returns>
+    ///     <see cref="Regex" />
+    /// </returns>
+    [GeneratedRegex(@"\[(\d+)\]")]
+    private static partial Regex ArrayIndexPatternRegex();
 
     /// <summary>
     ///     单一对象

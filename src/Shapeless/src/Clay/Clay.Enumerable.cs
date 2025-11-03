@@ -193,8 +193,6 @@ public partial class Clay
         // 根据条件过滤
         var keyValuePairs = this.Where((dynamic? u) => predicate(u));
 
-        return Parse(IsObject
-            ? keyValuePairs.ToDictionary(u => u!.Key, u => u?.Value)
-            : keyValuePairs.Select(u => u), Options);
+        return Parse(IsObject ? keyValuePairs.ToDictionary(u => u!.Key, u => u?.Value) : keyValuePairs, Options);
     }
 }
