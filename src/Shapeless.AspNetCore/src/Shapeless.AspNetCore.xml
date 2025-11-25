@@ -29,7 +29,7 @@
         <member name="M:Shapeless.ClayBinder.BindModelAsync(Microsoft.AspNetCore.Mvc.ModelBinding.ModelBindingContext)">
             <inheritdoc />
         </member>
-        <member name="M:Shapeless.ClayBinder.TryReadAndConvertBodyToClayAsync(System.IO.Stream,Shapeless.ClayOptions,System.Boolean,System.Threading.CancellationToken)">
+        <member name="M:Shapeless.ClayBinder.TryReadAndConvertBodyToClayAsync(System.IO.Stream,Shapeless.ClayOptions,System.Threading.CancellationToken)">
             <summary>
                 尝试从请求体中读取数据，并将其转换为 <see cref="T:Shapeless.Clay" /> 实例
             </summary>
@@ -37,7 +37,6 @@
             <param name="options">
                 <see cref="T:Shapeless.ClayOptions" />
             </param>
-            <param name="isFormUrlEncoded">是否是 <c>application/x-www-form-urlencoded</c> 表单</param>
             <param name="cancellationToken">
                 <see cref="T:System.Threading.CancellationToken" />
             </param>

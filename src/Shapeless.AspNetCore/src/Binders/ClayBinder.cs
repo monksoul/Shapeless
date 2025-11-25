@@ -21,15 +21,11 @@ internal sealed class ClayBinder(IOptions<ClayOptions> options) : IModelBinder
         // 获取 HttpContext 实例
         var httpContext = bindingContext.HttpContext;
 
-        // 检查是否是 URL 表单（application/x-www-form-urlencoded）内容
-        var isFormUrlEncoded = MediaTypeHeaderValue.Parse(httpContext.Request.ContentType!).MediaType ==
-                               MediaTypeNames.Application.FormUrlEncoded;
-
         // 尝试从请求体中读取数据，并将其转换为 Clay 实例
-        var (canParse, model) = await TryReadAndConvertBodyToClayAsync(httpContext.Request.Body, options.Value,
-            isFormUrlEncoded, httpContext.RequestAborted);
+        var (canParse, clay) =
+            await TryReadAndConvertBodyToClayAsync(httpContext.Request.Body, options.Value, httpContext.RequestAborted);
 
-        bindingContext.Result = !canParse ? ModelBindingResult.Failed() : ModelBindingResult.Success(model);
+        bindingContext.Result = !canParse ? ModelBindingResult.Failed() : ModelBindingResult.Success(clay);
     }
 
     /// <summary>
@@ -39,15 +35,14 @@ internal sealed class ClayBinder(IOptions<ClayOptions> options) : IModelBinder
     /// <param name="options">
     ///     <see cref="ClayOptions" />
     /// </param>
-    /// <param name="isFormUrlEncoded">是否是 <c>application/x-www-form-urlencoded</c> 表单</param>
     /// <param name="cancellationToken">
     ///     <see cref="CancellationToken" />
     /// </param>
     /// <returns>
     ///     <see cref="Tuple{T1,T2}" />
     /// </returns>
-    internal static async Task<(bool canParse, Clay? model)> TryReadAndConvertBodyToClayAsync(Stream stream,
-        ClayOptions options, bool isFormUrlEncoded, CancellationToken cancellationToken)
+    internal static async Task<(bool CanParse, Clay? Clay)> TryReadAndConvertBodyToClayAsync(Stream stream,
+        ClayOptions options, CancellationToken cancellationToken)
     {
         // 空检查
         ArgumentNullException.ThrowIfNull(stream);
@@ -56,9 +51,7 @@ internal sealed class ClayBinder(IOptions<ClayOptions> options) : IModelBinder
         using var streamReader = new StreamReader(stream);
         var json = await streamReader.ReadToEndAsync(cancellationToken);
 
-        return string.IsNullOrEmpty(json)
-            ? (false, null)
-            : (true, Clay.Parse(json, options));
+        return string.IsNullOrEmpty(json) ? (false, null) : (true, Clay.Parse(json, options));
     }
 
     /// <summary>
@@ -82,14 +75,10 @@ internal sealed class ClayBinder(IOptions<ClayOptions> options) : IModelBinder
         // 解析 ClayOptions 选项
         var options = httpContext.RequestServices.GetRequiredService<IOptions<ClayOptions>>().Value;
 
-        // 检查是否是 URL 表单（application/x-www-form-urlencoded）内容
-        var isFormUrlEncoded = MediaTypeHeaderValue.Parse(httpContext.Request.ContentType!).MediaType ==
-                               MediaTypeNames.Application.FormUrlEncoded;
-
         // 尝试从请求体流中读取数据，并将其转换为 Clay 实例
-        var (_, model) = await TryReadAndConvertBodyToClayAsync(httpContext.Request.Body, options, isFormUrlEncoded,
-            httpContext.RequestAborted);
+        var (_, clay) =
+            await TryReadAndConvertBodyToClayAsync(httpContext.Request.Body, options, httpContext.RequestAborted);
 
-        return model;
+        return clay;
     }
 }
