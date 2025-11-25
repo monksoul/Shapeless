@@ -224,6 +224,8 @@ public partial class Clay
         // 将对象转换为 JsonNode 实例
         var jsonNode = obj switch
         {
+            // 处理 application/x-www-form-urlencoded 格式数据
+            string formData when formData.IsUrlEncodedFormFormat() => formData.ParseUrlEncodedFormToJsonObject(),
             string rawJson => JsonNode.Parse(rawJson, jsonNodeOptions, jsonDocumentOptions),
             Stream utf8Json => JsonNode.Parse(utf8Json, jsonNodeOptions, jsonDocumentOptions),
             byte[] utf8JsonBytes => JsonNode.Parse(utf8JsonBytes, jsonNodeOptions, jsonDocumentOptions),

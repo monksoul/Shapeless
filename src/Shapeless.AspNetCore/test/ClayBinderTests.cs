@@ -73,5 +73,17 @@ public class ClayBinderTests
         Assert.Equal(
             "{\"Id\":\"222824160\",\"GroupId\":\"524328523\",\"Address\":\"北京永兴花园御瑞酒店管理有限公司能源管理平台/永兴花园御朗酒店/用水计量/外租区域/热水/2层/2层茶楼用水量\",\"HouseholderName\":\"夏利芳\",\"HouseholderNo\":\"松月茶楼/热水/1183\",\"HouseholderType\":\"20063\",\"Telephone\":\"13800138000,13800138000\",\"MethodId\":\"568747067\",\"CreateActor\":\"系统管理员\",\"CreateTime\":\"2025-01-02 15:11:07\",\"IsRemainingSMSSend\":\"1\"}",
             model4.ToJsonString());
+
+        using var memoryStream5 = new MemoryStream(
+            "datalist%5B0%5D%5BNumber%5D=1&datalist%5B0%5D%5BF_AvgEnergy%5D=2025&datalist%5B0%5D%5BF_TotalNumber%5D=1&datalist%5B0%5D%5BF_TotalEnergy%5D=7.63&datalist%5B1%5D%5BNumber%5D=2&datalist%5B1%5D%5BF_AvgEnergy%5D=2025&datalist%5B1%5D%5BF_TotalNumber%5D=2&datalist%5B1%5D%5BF_TotalEnergy%5D=7.63"u8
+                .ToArray());
+        var (canParse5, model5) =
+            await ClayBinder.TryReadAndConvertBodyToClayAsync(memoryStream5, clayOptions, true,
+                CancellationToken.None);
+        Assert.True(canParse5);
+        Assert.NotNull(model5);
+        Assert.Equal(
+            "{\"datalist\":[{\"Number\":\"1\",\"F_AvgEnergy\":\"2025\",\"F_TotalNumber\":\"1\",\"F_TotalEnergy\":\"7.63\"},{\"Number\":\"2\",\"F_AvgEnergy\":\"2025\",\"F_TotalNumber\":\"2\",\"F_TotalEnergy\":\"7.63\"}]}",
+            model5.ToJsonString());
     }
 }

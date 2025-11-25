@@ -334,6 +334,28 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void ParseFromUrlEncodedFormFormat_ReturnOK()
+    {
+        Assert.Equal(
+            "{\"IsDeviceEnable\":\"0\",\"Thresholdvalue\":\"1\",\"DeviceState\":\"0\",\"SurplusParams\":\"\",\"DeviceName\":\"2层茶楼热水用水量6789\",\"Concentrator\":\"476103385\",\"ProtocolId\":\"888085307\",\"BuildId\":\"524328523\",\"DeviceId\":\"489414407\",\"DeviceCode\":\"6789\"}",
+            Clay.Parse(
+                    "IsDeviceEnable=0&Thresholdvalue=1&DeviceState=0&SurplusParams=&DeviceName=2%E5%B1%82%E8%8C%B6%E6%A5%BC%E7%83%AD%E6%B0%B4%E7%94%A8%E6%B0%B4%E9%87%8F6789&Concentrator=476103385&ProtocolId=888085307&BuildId=524328523&DeviceId=489414407&DeviceCode=6789")
+                .ToJsonString());
+
+        Assert.Equal(
+            "{\"Id\":\"222824160\",\"GroupId\":\"524328523\",\"Address\":\"北京永兴花园御瑞酒店管理有限公司能源管理平台/永兴花园御朗酒店/用水计量/外租区域/热水/2层/2层茶楼用水量\",\"HouseholderName\":\"夏利芳\",\"HouseholderNo\":\"松月茶楼/热水/1183\",\"HouseholderType\":\"20063\",\"Telephone\":\"13800138000,13800138000\",\"MethodId\":\"568747067\",\"CreateActor\":\"系统管理员\",\"CreateTime\":\"2025-01-02 15:11:07\",\"IsRemainingSMSSend\":\"1\"}",
+            Clay.Parse(
+                    "Id=222824160&GroupId=524328523&Address=%E5%8C%97%E4%BA%AC%E6%B0%B8%E5%85%B4%E8%8A%B1%E5%9B%AD%E5%BE%A1%E7%91%9E%E9%85%92%E5%BA%97%E7%AE%A1%E7%90%86%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E8%83%BD%E6%BA%90%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0%2F%E6%B0%B8%E5%85%B4%E8%8A%B1%E5%9B%AD%E5%BE%A1%E6%9C%97%E9%85%92%E5%BA%97%2F%E7%94%A8%E6%B0%B4%E8%AE%A1%E9%87%8F%2F%E5%A4%96%E7%A7%9F%E5%8C%BA%E5%9F%9F%2F%E7%83%AD%E6%B0%B4%2F2%E5%B1%82%2F2%E5%B1%82%E8%8C%B6%E6%A5%BC%E7%94%A8%E6%B0%B4%E9%87%8F&HouseholderName=%E5%A4%8F%E5%88%A9%E8%8A%B3&HouseholderNo=%E6%9D%BE%E6%9C%88%E8%8C%B6%E6%A5%BC%2F%E7%83%AD%E6%B0%B4%2F1183&HouseholderType=20063&Telephone=13800138000%2C13800138000&MethodId=568747067&CreateActor=%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%91%98&CreateTime=2025-01-02+15%3A11%3A07&IsRemainingSMSSend=1")
+                .ToJsonString());
+
+        Assert.Equal(
+            "{\"datalist\":[{\"Number\":\"1\",\"F_AvgEnergy\":\"2025\",\"F_TotalNumber\":\"1\",\"F_TotalEnergy\":\"7.63\"},{\"Number\":\"2\",\"F_AvgEnergy\":\"2025\",\"F_TotalNumber\":\"2\",\"F_TotalEnergy\":\"7.63\"}]}",
+            Clay.Parse(
+                    "datalist%5B0%5D%5BNumber%5D=1&datalist%5B0%5D%5BF_AvgEnergy%5D=2025&datalist%5B0%5D%5BF_TotalNumber%5D=1&datalist%5B0%5D%5BF_TotalEnergy%5D=7.63&datalist%5B1%5D%5BNumber%5D=2&datalist%5B1%5D%5BF_AvgEnergy%5D=2025&datalist%5B1%5D%5BF_TotalNumber%5D=2&datalist%5B1%5D%5BF_TotalEnergy%5D=7.63")
+                .ToJsonString());
+    }
+
+    [Fact]
     public void ParseFromFile_Invalid_Parameters()
     {
         Assert.Throws<ArgumentNullException>(() => Clay.ParseFromFile(null!));

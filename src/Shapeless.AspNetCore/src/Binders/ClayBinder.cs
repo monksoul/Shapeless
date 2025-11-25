@@ -58,9 +58,7 @@ internal sealed class ClayBinder(IOptions<ClayOptions> options) : IModelBinder
 
         return string.IsNullOrEmpty(json)
             ? (false, null)
-            : (true,
-                Clay.Parse(isFormUrlEncoded ? HttpUtility.UrlDecode(json).ParseFormatKeyValueString(['&'], '?') : json,
-                    options));
+            : (true, Clay.Parse(json, options));
     }
 
     /// <summary>
