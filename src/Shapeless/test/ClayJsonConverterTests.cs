@@ -36,7 +36,7 @@ public class ClayJsonConverterTests
         const string json2 = "\"furion\"";
         dynamic clay2 = JsonSerializer.Deserialize<Clay>(json2, jsonSerializerOptions)!;
         Assert.NotNull(clay2);
-        Assert.Equal("furion", clay2.data);
+        Assert.Equal("furion", clay2.value);
     }
 
     [Fact]

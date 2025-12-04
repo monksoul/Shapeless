@@ -218,16 +218,16 @@ public class ClayExportsTests(ITestOutputHelper output)
 
         var clay3 = Clay.Parse("true");
         Assert.NotNull(clay3.JsonCanvas);
-        Assert.Equal("{\"data\":true}", clay3.JsonCanvas.ToJsonString());
+        Assert.Equal("{\"value\":true}", clay3.JsonCanvas.ToJsonString());
 
         var clay4 = Clay.Parse("\"furion\"", new ClayOptions { PropertyNameCaseInsensitive = true });
         Assert.NotNull(clay4.JsonCanvas);
-        Assert.Equal("{\"data\":\"furion\"}", clay4.JsonCanvas.ToJsonString());
-        Assert.Equal("furion", clay4["Data"]);
+        Assert.Equal("{\"value\":\"furion\"}", clay4.JsonCanvas.ToJsonString());
+        Assert.Equal("furion", clay4["Value"]);
 
         var clay5 = Clay.Parse(true);
         Assert.NotNull(clay5.JsonCanvas);
-        Assert.Equal("{\"data\":true}", clay5.JsonCanvas.ToJsonString());
+        Assert.Equal("{\"value\":true}", clay5.JsonCanvas.ToJsonString());
 
         var utf8Bytes = "{\"id\":1,\"name\":\"furion\"}"u8.ToArray();
         var utf8JsonReader = new Utf8JsonReader(utf8Bytes, true, default);
@@ -754,7 +754,7 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.Equal("{\"id\":1,\"name\":\"Furion\"}", clay2.ToJsonString());
 
         var clay3 = Clay.Parse("""{"id":1,"name":"\"Furion\""}""").ParseJson("name", false);
-        Assert.Equal("""{"id":1,"name":{"data":"Furion"}}""", clay3.ToJsonString());
+        Assert.Equal("""{"id":1,"name":{"value":"Furion"}}""", clay3.ToJsonString());
     }
 
     [Fact]
@@ -1012,14 +1012,14 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.Equal("furion",
             clay.Get("name", typeof(string), new JsonSerializerOptions { PropertyNamingPolicy = null }));
         dynamic clay2 = clay.Get("id", typeof(Clay))!;
-        Assert.Equal(1, clay2.data);
+        Assert.Equal(1, clay2.value);
 
         Assert.Equal(1, clay.Get<int>("id"));
         Assert.Equal("furion", clay.Get<string>("name"));
         Assert.Equal(1, clay.Get<int>("id", new JsonSerializerOptions { PropertyNamingPolicy = null }));
         Assert.Equal("furion", clay.Get<string>("name", new JsonSerializerOptions { PropertyNamingPolicy = null }));
         dynamic clay3 = clay.Get<Clay>("id")!;
-        Assert.Equal(1, clay3.data);
+        Assert.Equal(1, clay3.value);
 
         var array = Clay.Parse("[1,2,3]");
         Assert.Equal(1, array.Get(0));

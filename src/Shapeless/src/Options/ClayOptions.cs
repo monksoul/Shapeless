@@ -48,7 +48,8 @@ public sealed class ClayOptions
     /// <summary>
     ///     配置用于包裹非对象和非数组类型的键名
     /// </summary>
-    public string ScalarValueKey { get; set; } = "data";
+    /// <remarks>默认值为：<c>value</c>。</remarks>
+    public string ScalarValueKey { get; set; } = "value";
 
     /// <summary>
     ///     是否允许访问不存在的属性

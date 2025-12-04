@@ -34,7 +34,7 @@ public class ClayOptionsTests
     public void New_ReturnOK()
     {
         var clayOptions = new ClayOptions();
-        Assert.Equal("data", clayOptions.ScalarValueKey);
+        Assert.Equal("value", clayOptions.ScalarValueKey);
         Assert.False(clayOptions.AllowMissingProperty);
         Assert.False(clayOptions.AllowIndexOutOfRange);
         Assert.False(clayOptions.AutoCreateNestedObjects);

@@ -33,12 +33,12 @@ public class ClayTests(ITestOutputHelper output)
 
         var clay3 = new Clay(JsonValue.Create(true));
         Assert.NotNull(clay3.JsonCanvas);
-        Assert.Equal("{\"data\":true}", clay3.JsonCanvas.ToJsonString());
+        Assert.Equal("{\"value\":true}", clay3.JsonCanvas.ToJsonString());
 
         var clay4 = new Clay(JsonValue.Create("furion"), new ClayOptions { PropertyNameCaseInsensitive = true });
         Assert.NotNull(clay4.JsonCanvas);
-        Assert.Equal("{\"data\":\"furion\"}", clay4.JsonCanvas.ToJsonString());
-        Assert.Equal("furion", clay4["Data"]);
+        Assert.Equal("{\"value\":\"furion\"}", clay4.JsonCanvas.ToJsonString());
+        Assert.Equal("furion", clay4["Value"]);
     }
 
     [Fact]
