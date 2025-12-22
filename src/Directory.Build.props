@@ -29,6 +29,7 @@
 
     <ItemGroup>
         <None Include="$(ProjectDir)..\..\..\README.md" Pack="true" PackagePath="\"/>
+        <None Include="$(ProjectDir)..\..\..\README.zh.md" Pack="true" PackagePath="\"/>
         <None Include="$(ProjectDir)..\..\..\LICENSE" Pack="true" PackagePath="\"/>
         <None Include="$(ProjectDir)..\..\icon.png" Pack="true" PackagePath="\"/>
         <None Include="$(ProjectDir)..\..\Directory.Build.props" Pack="true" PackagePath="\"/>
