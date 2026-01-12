@@ -399,6 +399,16 @@ public partial class Clay
     }
 
     /// <summary>
+    ///     检查标识符（路径）是否定义
+    /// </summary>
+    /// <param name="identifier">带路径的标识符</param>
+    /// <param name="isPath">是否是带路径的标识符</param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
+    public bool Contains(string identifier, bool isPath) => isPath ? ContainsByPath(identifier) : Contains(identifier);
+
+    /// <summary>
     ///     检查标识符是否定义
     /// </summary>
     /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或索引运算符（Index）或范围运算符（Range）</param>
@@ -447,6 +457,65 @@ public partial class Clay
     }
 
     /// <summary>
+    ///     根据路径检查标识符是否定义
+    /// </summary>
+    /// <remarks>支持简单的 JSON Path 语法。</remarks>
+    /// <param name="path">带路径的标识符</param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
+    public bool ContainsByPath(string path)
+    {
+        // 空检查
+        ArgumentNullException.ThrowIfNull(path);
+
+        // 检查是否是 JSON Path 路径
+        const string jsonPathPrefix = "$.";
+        var isJsonPath = path.StartsWith(jsonPathPrefix, StringComparison.Ordinal);
+
+        // 路径标准化（仅支持简单的 JSON Path 语法）
+        var normalizedPath = isJsonPath ? ArrayIndexPatternRegex().Replace(path[jsonPathPrefix.Length..], ".$1") : path;
+        var pathSeparator = isJsonPath ? ["."] : Options.PathSeparator;
+
+        // 根据路径分隔符进行分割，并确保至少有一个标识符
+        var pathSegments = normalizedPath.Split(pathSeparator, StringSplitOptions.RemoveEmptyEntries);
+        if (pathSegments is { Length: 0 })
+        {
+            return false;
+        }
+
+        var current = this;
+
+        // 遍历所有的标识符
+        for (var i = 0; i < pathSegments.Length; i++)
+        {
+            var segment = pathSegments[i];
+
+            // 检查当前标识符是否定义
+            if (!current.Contains(segment))
+            {
+                return false;
+            }
+
+            // 检查是否存在下一级
+            if (i + 1 >= pathSegments.Length)
+            {
+                continue;
+            }
+
+            // 检查下一级是否是 Clay 类型
+            if (current[segment] is not Clay clay)
+            {
+                return false;
+            }
+
+            current = clay;
+        }
+
+        return true;
+    }
+
+    /// <summary>
     ///     检查标识符是否定义
     /// </summary>
     /// <remarks>兼容旧版本粘土对象。</remarks>
@@ -455,6 +524,16 @@ public partial class Clay
     ///     <see cref="bool" />
     /// </returns>
     public bool IsDefined(object identifier) => Contains(identifier);
+
+    /// <summary>
+    ///     检查标识符（路径）是否定义
+    /// </summary>
+    /// <param name="identifier">带路径的标识符</param>
+    /// <param name="isPath">是否是带路径的标识符</param>
+    /// <returns>
+    ///     <see cref="bool" />
+    /// </returns>
+    public bool IsDefined(string identifier, bool isPath) => Contains(identifier, isPath);
 
     /// <summary>
     ///     检查属性（键）是否定义
@@ -683,6 +762,7 @@ public partial class Clay
     /// <summary>
     ///     根据路径查找 <see cref="JsonNode" /> 节点
     /// </summary>
+    /// <remarks>支持简单的 JSON Path 语法。</remarks>
     /// <param name="path">带路径的标识符</param>
     /// <returns>
     ///     <see cref="JsonNode" />
@@ -693,6 +773,7 @@ public partial class Clay
     /// <summary>
     ///     根据路径查找 <see cref="JsonNode" /> 节点
     /// </summary>
+    /// <remarks>支持简单的 JSON Path 语法。</remarks>
     /// <param name="path">带路径的标识符</param>
     /// <param name="jsonNode">
     ///     <see cref="JsonNode" />

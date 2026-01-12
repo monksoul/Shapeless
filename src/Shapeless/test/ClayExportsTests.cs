@@ -927,6 +927,129 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.False(clay2.Contains(3));
         Assert.True(clay2.Contains(^1));
         Assert.True(clay2.Contains("1"));
+
+        var clay3 = Clay.Parse("""
+                               {
+                                 "AppInfo": {
+                                   "Name": "Furion",
+                                   "Version": "1.0.0",
+                                   "Company": {
+                                     "Name": "Baiqian",
+                                     "Address": {
+                                       "City": "中国",
+                                       "Province": "广东省",
+                                       "Detail": "中山市东区紫马公园西门"
+                                     },
+                                     "Telephones":["0760-88888888","0760-88888881"],
+                                     "Date":"2024-12-26T00:00:00"
+                                   }
+                                 }
+                               }
+                               """);
+        Assert.True(clay3.Contains("AppInfo:Name", true));
+        Assert.True(clay3.Contains("AppInfo:Company:Address:City", true));
+        Assert.True(clay3.Contains("AppInfo:Company:Telephones:0", true));
+        Assert.True(clay3.Contains("AppInfo:Company:Date", true));
+        Assert.False(clay3.Contains("AppInfo:Undefined", true));
+    }
+
+    [Fact]
+    public void ContainsByPath_Invalid_Parameters()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        Assert.Throws<ArgumentNullException>(() => clay.ContainsByPath(null!));
+    }
+
+    [Fact]
+    public void ContainsByPath_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        Assert.False(clay.ContainsByPath("Id"));
+        Assert.True(clay.ContainsByPath("id"));
+        Assert.True(clay.ContainsByPath("name"));
+        Assert.False(clay.ContainsByPath("0"));
+
+        var clay2 = Clay.Parse("[1,2,3]");
+        Assert.False(clay2.ContainsByPath("Id"));
+        Assert.False(clay2.ContainsByPath("name"));
+        Assert.True(clay2.ContainsByPath("0"));
+        Assert.True(clay2.ContainsByPath("1"));
+        Assert.True(clay2.ContainsByPath("2"));
+        Assert.False(clay2.ContainsByPath("-1"));
+        Assert.False(clay2.ContainsByPath("3"));
+
+        var clay3 = Clay.Parse("""
+                               {
+                                 "AppInfo": {
+                                   "Name": "Furion",
+                                   "Version": "1.0.0",
+                                   "Company": {
+                                     "Name": "Baiqian",
+                                     "Address": {
+                                       "City": "中国",
+                                       "Province": "广东省",
+                                       "Detail": "中山市东区紫马公园西门"
+                                     },
+                                     "Telephones":["0760-88888888","0760-88888881"],
+                                     "Date":"2024-12-26T00:00:00"
+                                   }
+                                 }
+                               }
+                               """);
+        Assert.True(clay3.ContainsByPath("AppInfo:Name"));
+        Assert.True(clay3.ContainsByPath("AppInfo:Company:Address:City"));
+        Assert.True(clay3.ContainsByPath("AppInfo:Company:Telephones:0"));
+        Assert.True(clay3.ContainsByPath("AppInfo:Company:Date"));
+        Assert.False(clay3.ContainsByPath("AppInfo:Undefined"));
+
+        Assert.False(clay3.ContainsByPath("appinfo:name"));
+        clay3.Rebuilt(ClayOptions.Flexible);
+        Assert.True(clay3.ContainsByPath("appinfo:name"));
+
+        var array = Clay.Parse("""
+                               [0,
+                               {"id":1,"name":"Furion"},
+                               {
+                                 "AppInfo": {
+                                   "Name": "Furion",
+                                   "Version": "1.0.0",
+                                   "Company": {
+                                     "Name": "Baiqian",
+                                     "Address": {
+                                       "City": "中国",
+                                       "Province": "广东省",
+                                       "Detail": "中山市东区紫马公园西门"
+                                     },
+                                     "Telephones":["0760-88888888","0760-88888881"],
+                                     "Date":"2024-12-26T00:00:00"
+                                   }
+                                 }
+                               }]
+                               """);
+        Assert.True(array.ContainsByPath("1:name"));
+        Assert.True(array.ContainsByPath("2:AppInfo:Company:Address:City"));
+
+        var clay4 = Clay.Parse("""
+                               {
+                                 "AppInfo": {
+                                   "Name": "Furion",
+                                   "Version": "1.0.0",
+                                   "Company": {
+                                     "Name": "Baiqian",
+                                     "Address": {
+                                       "City": "中国",
+                                       "Province": "广东省",
+                                       "Detail": "中山市东区紫马公园西门"
+                                     },
+                                     "Telephones":["0760-88888888","0760-88888881"],
+                                     "Date":"2024-12-26T00:00:00"
+                                   }
+                                 }
+                               }
+                               """, new ClayOptions { PathSeparator = [":", "/"] });
+        Assert.True(clay4.ContainsByPath("AppInfo:Name"));
+        Assert.True(clay4.ContainsByPath("AppInfo:Company/Address:City"));
+        Assert.True(clay4.ContainsByPath("AppInfo/Company/Telephones/0"));
     }
 
     [Fact]
@@ -946,6 +1069,30 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.True(clay2.IsDefined(2));
         Assert.False(clay2.IsDefined(-1));
         Assert.False(clay2.IsDefined(3));
+
+        var clay3 = Clay.Parse("""
+                               {
+                                 "AppInfo": {
+                                   "Name": "Furion",
+                                   "Version": "1.0.0",
+                                   "Company": {
+                                     "Name": "Baiqian",
+                                     "Address": {
+                                       "City": "中国",
+                                       "Province": "广东省",
+                                       "Detail": "中山市东区紫马公园西门"
+                                     },
+                                     "Telephones":["0760-88888888","0760-88888881"],
+                                     "Date":"2024-12-26T00:00:00"
+                                   }
+                                 }
+                               }
+                               """);
+        Assert.True(clay3.IsDefined("AppInfo:Name", true));
+        Assert.True(clay3.IsDefined("AppInfo:Company:Address:City", true));
+        Assert.True(clay3.IsDefined("AppInfo:Company:Telephones:0", true));
+        Assert.True(clay3.IsDefined("AppInfo:Company:Date", true));
+        Assert.False(clay3.IsDefined("AppInfo:Undefined", true));
     }
 
     [Fact]
