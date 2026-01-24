@@ -1102,7 +1102,7 @@ public partial class Clay
     }
 
     /// <summary>
-    ///     拓展属性或项
+    ///     扩展属性或项
     /// </summary>
     /// <param name="values">值集合</param>
     /// <returns>

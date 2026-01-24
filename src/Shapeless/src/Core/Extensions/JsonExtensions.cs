@@ -5,7 +5,7 @@
 namespace Shapeless.Core.Extensions;
 
 /// <summary>
-///     System.Text.Json 拓展类
+///     System.Text.Json 扩展类
 /// </summary>
 internal static partial class JsonExtensions
 {

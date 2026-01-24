@@ -5,7 +5,7 @@
 namespace Shapeless.Extensions;
 
 /// <summary>
-///     流变对象模块拓展类
+///     流变对象模块扩展类
 /// </summary>
 public static class ShapelessExtensions
 {

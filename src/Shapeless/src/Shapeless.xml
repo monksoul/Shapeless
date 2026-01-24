@@ -1064,7 +1064,7 @@
         </member>
         <member name="M:Shapeless.Clay.Extend(System.Object[])">
             <summary>
-                拓展属性或项
+                扩展属性或项
             </summary>
             <param name="values">值集合</param>
             <returns>
@@ -1589,7 +1589,7 @@
             ○ Match if at the beginning of the string.<br/>
             ○ Match the string "/Date(".<br/>
             ○ 1st capture group.<br/>
-                ○ Match a character in the set [+\-] atomically any number of times.<br/>
+                ○ Match a character in the set [+-] atomically any number of times.<br/>
                 ○ Match a Unicode digit atomically at least once.<br/>
             ○ Match the string ")/".<br/>
             ○ Match if at the end of the string or if before an ending newline.<br/>
@@ -1618,10 +1618,10 @@
             ○ Match if at the beginning of the string.<br/>
             ○ Match the string "/Date(".<br/>
             ○ 1st capture group.<br/>
-                ○ Match a character in the set [+\-] atomically any number of times.<br/>
+                ○ Match a character in the set [+-] atomically any number of times.<br/>
                 ○ Match a Unicode digit atomically at least once.<br/>
             ○ 2nd capture group.<br/>
-                ○ Match a character in the set [+\-].<br/>
+                ○ Match a character in the set [+-].<br/>
             ○ 3rd capture group.<br/>
                 ○ Match a Unicode digit exactly 2 times.<br/>
             ○ 4th capture group.<br/>
@@ -1645,7 +1645,7 @@
         </member>
         <member name="T:Shapeless.Core.Extensions.ICollectionExtensions">
             <summary>
-                <see cref="T:System.Collections.Generic.ICollection`1" /> 拓展类
+                <see cref="T:System.Collections.Generic.ICollection`1" /> 扩展类
             </summary>
         </member>
         <member name="M:Shapeless.Core.Extensions.ICollectionExtensions.IsNullOrEmpty``1(System.Collections.Generic.ICollection{``0})">
@@ -1662,7 +1662,7 @@
         </member>
         <member name="T:Shapeless.Core.Extensions.JsonExtensions">
             <summary>
-                System.Text.Json 拓展类
+                System.Text.Json 扩展类
             </summary>
         </member>
         <member name="M:Shapeless.Core.Extensions.JsonExtensions.As``1(System.Text.Json.Nodes.JsonNode,System.Text.Json.JsonSerializerOptions)">
@@ -1746,7 +1746,7 @@
             ○ Match if at the beginning of the string.<br/>
             ○ Match the string "/Date(".<br/>
             ○ 1st capture group.<br/>
-                ○ Match a character in the set [+\-] atomically any number of times.<br/>
+                ○ Match a character in the set [+-] atomically any number of times.<br/>
                 ○ Match a Unicode digit atomically at least once.<br/>
             ○ Match the string ")/".<br/>
             ○ Match if at the end of the string or if before an ending newline.<br/>
@@ -1755,7 +1755,7 @@
         </member>
         <member name="T:Shapeless.Core.Extensions.ObjectExtensions">
             <summary>
-                <see cref="T:System.Object" /> 拓展类
+                <see cref="T:System.Object" /> 扩展类
             </summary>
         </member>
         <member name="M:Shapeless.Core.Extensions.ObjectExtensions.ObjectToDictionary(System.Object)">
@@ -1772,7 +1772,7 @@
         </member>
         <member name="T:Shapeless.Core.Extensions.StringExtensions">
             <summary>
-                <see cref="T:System.String" /> 拓展类
+                <see cref="T:System.String" /> 扩展类
             </summary>
         </member>
         <member name="M:Shapeless.Core.Extensions.StringExtensions.IsUrlEncodedFormFormat(System.String)">
@@ -1804,39 +1804,39 @@
             ○ Match if at the beginning of the string.<br/>
             ○ Loop greedily at least once.<br/>
                 ○ Match with 2 alternative expressions.<br/>
-                    ○ Match a character in the set [\-.0-9A-Z_a-z~].<br/>
+                    ○ Match a character in the set [-.0-9A-Z_a-z~].<br/>
                     ○ Match a sequence of expressions.<br/>
                         ○ Match '%'.<br/>
-                        ○ Match a hexadecimal digit exactly 2 times.<br/>
+                        ○ Match a character in the set [0-9A-Fa-f] exactly 2 times.<br/>
             ○ Match '='.<br/>
             ○ Loop greedily any number of times.<br/>
                 ○ Match with 2 alternative expressions.<br/>
-                    ○ Match a character in the set [+\-.0-9A-Z_a-z~].<br/>
+                    ○ Match a character in the set [+-.0-9A-Z_a-z~].<br/>
                     ○ Match a sequence of expressions.<br/>
                         ○ Match '%'.<br/>
-                        ○ Match a hexadecimal digit exactly 2 times.<br/>
+                        ○ Match a character in the set [0-9A-Fa-f] exactly 2 times.<br/>
             ○ Loop greedily any number of times.<br/>
                 ○ Match '&amp;'.<br/>
                 ○ Loop greedily at least once.<br/>
                     ○ Match with 2 alternative expressions.<br/>
-                        ○ Match a character in the set [\-.0-9A-Z_a-z~].<br/>
+                        ○ Match a character in the set [-.0-9A-Z_a-z~].<br/>
                         ○ Match a sequence of expressions.<br/>
                             ○ Match '%'.<br/>
-                            ○ Match a hexadecimal digit exactly 2 times.<br/>
+                            ○ Match a character in the set [0-9A-Fa-f] exactly 2 times.<br/>
                 ○ Match '='.<br/>
                 ○ Loop greedily any number of times.<br/>
                     ○ Match with 2 alternative expressions.<br/>
-                        ○ Match a character in the set [+\-.0-9A-Z_a-z~].<br/>
+                        ○ Match a character in the set [+-.0-9A-Z_a-z~].<br/>
                         ○ Match a sequence of expressions.<br/>
                             ○ Match '%'.<br/>
-                            ○ Match a hexadecimal digit exactly 2 times.<br/>
+                            ○ Match a character in the set [0-9A-Fa-f] exactly 2 times.<br/>
             ○ Match if at the end of the string or if before an ending newline.<br/>
             </code>
             </remarks>
         </member>
         <member name="T:Shapeless.Core.Extensions.TypeExtensions">
             <summary>
-                <see cref="T:System.Type" /> 拓展类
+                <see cref="T:System.Type" /> 扩展类
             </summary>
         </member>
         <member name="M:Shapeless.Core.Extensions.TypeExtensions.IsBasicType(System.Type)">
@@ -1901,7 +1901,7 @@
         </member>
         <member name="T:Shapeless.Core.Extensions.Utf8JsonReaderExtensions">
             <summary>
-                <see cref="T:System.Text.Json.Utf8JsonReader" /> 拓展类
+                <see cref="T:System.Text.Json.Utf8JsonReader" /> 扩展类
             </summary>
         </member>
         <member name="M:Shapeless.Core.Extensions.Utf8JsonReaderExtensions.GetRawText(System.Text.Json.Utf8JsonReader@)">
@@ -1969,7 +1969,7 @@
         </member>
         <member name="T:Shapeless.Extensions.JsonSerializerOptionsExtensions">
             <summary>
-                <see cref="T:System.Text.Json.JsonSerializerOptions" /> 拓展类
+                <see cref="T:System.Text.Json.JsonSerializerOptions" /> 扩展类
             </summary>
         </member>
         <member name="M:Shapeless.Extensions.JsonSerializerOptionsExtensions.AddClayConverters(System.Text.Json.JsonSerializerOptions)">
@@ -1982,7 +1982,7 @@
         </member>
         <member name="T:Shapeless.Extensions.ShapelessExtensions">
             <summary>
-                流变对象模块拓展类
+                流变对象模块扩展类
             </summary>
         </member>
         <member name="M:Shapeless.Extensions.ShapelessExtensions.ToClay(System.Object,Shapeless.ClayOptions)">
@@ -2229,9 +2229,9 @@
                         ○ Match a character in the set [A-Z].<br/>
                 ○ Match a sequence of expressions.<br/>
                     ○ Zero-width positive lookbehind.<br/>
-                        ○ Match an ASCII letter right-to-left.<br/>
+                        ○ Match a character in the set [A-Za-z] right-to-left.<br/>
                     ○ Zero-width positive lookahead.<br/>
-                        ○ Match any character other than an ASCII letter.<br/>
+                        ○ Match a character in the set [^A-Za-z].<br/>
                 ○ Match a sequence of expressions.<br/>
                     ○ Zero-width positive lookbehind.<br/>
                         ○ Match a Unicode digit right-to-left.<br/>
