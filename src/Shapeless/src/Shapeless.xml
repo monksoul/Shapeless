@@ -1452,6 +1452,17 @@
                 <see cref="T:System.String" />
             </returns>
         </member>
+        <member name="M:Shapeless.Clay.op_Implicit(Shapeless.Clay@)~System.Collections.Generic.Dictionary{System.String,System.Object}">
+            <summary>
+                支持 <see cref="T:Shapeless.Clay" /> 类型隐式转换为 <see cref="T:System.Collections.Generic.Dictionary`2" />
+            </summary>
+            <param name="clay">
+                <see cref="T:Shapeless.Clay" />
+            </param>
+            <returns>
+                <see cref="T:System.Collections.Generic.Dictionary`2" />
+            </returns>
+        </member>
         <member name="M:Shapeless.Clay.op_Implicit(System.String)~Shapeless.Clay">
             <summary>
                 支持 <see cref="T:System.String" /> 类型隐式转换为 <see cref="T:Shapeless.Clay" />
@@ -2075,8 +2086,6 @@
             <returns>
                 <see cref="T:Shapeless.Clay" />
             </returns>
-cref="T:Shapeless.Clay" />
-            </returns>
         </member>
         <member name="M:Shapeless.Extensions.ShapelessExtensions.ToClay(System.Object,System.Action{Shapeless.ClayOptions})">
             <summary>
@@ -2308,9 +2317,9 @@ cref="T:Shapeless.Clay" />
                         ○ Match a character in the set [A-Z].<br/>
                 ○ Match a sequence of expressions.<br/>
                     ○ Zero-width positive lookbehind.<br/>
-                        ○ Match a character in the set [A-Za-z] right-to-left.<br/>
+                        ○ Match an ASCII letter right-to-left.<br/>
                     ○ Zero-width positive lookahead.<br/>
-                        ○ Match a character in the set [^A-Za-z].<br/>
+                        ○ Match any character other than an ASCII letter.<br/>
                 ○ Match a sequence of expressions.<br/>
                     ○ Zero-width positive lookbehind.<br/>
                         ○ Match a Unicode digit right-to-left.<br/>

@@ -153,4 +153,14 @@ public class ClayOperatorTests
 
         Assert.Equal("{\"id\":1,\"name\":\"furion\"}", json);
     }
+
+    [Fact]
+    public void InDictionary_ReturnOK()
+    {
+        Dictionary<string, object?> dic = Clay.Parse("""{"id":1,"name":"furion"}""");
+
+        Assert.Equal(2, dic.Count);
+        Assert.Equal(1, dic["id"]);
+        Assert.Equal("furion", dic["name"]);
+    }
 }

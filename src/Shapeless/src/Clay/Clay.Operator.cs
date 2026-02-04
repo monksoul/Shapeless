@@ -70,6 +70,18 @@ public partial class Clay
     public static implicit operator string(in Clay clay) => clay.JsonCanvas.ToJsonString();
 
     /// <summary>
+    ///     支持 <see cref="Clay" /> 类型隐式转换为 <see cref="Dictionary{TKey,TValue}" />
+    /// </summary>
+    /// <param name="clay">
+    ///     <see cref="Clay" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="Dictionary{TKey,TValue}" />
+    /// </returns>
+    public static implicit operator Dictionary<string, object?>(in Clay clay) =>
+        clay.As<Dictionary<string, object?>>()!;
+
+    /// <summary>
     ///     支持 <see cref="string" /> 类型隐式转换为 <see cref="Clay" />
     /// </summary>
     /// <param name="str">
