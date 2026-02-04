@@ -58,6 +58,83 @@ public partial class Clay
     /// </returns>
     public static bool operator !=(Clay? left, Clay? right) => !(left == right);
 
+    /// <summary>
+    ///     支持 <see cref="Clay" /> 类型隐式转换为 <see cref="string" />
+    /// </summary>
+    /// <param name="clay">
+    ///     <see cref="Clay" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="string" />
+    /// </returns>
+    public static implicit operator string(in Clay clay) => clay.JsonCanvas.ToJsonString();
+
+    /// <summary>
+    ///     支持 <see cref="string" /> 类型隐式转换为 <see cref="Clay" />
+    /// </summary>
+    /// <param name="str">
+    ///     <see cref="string" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    public static implicit operator Clay(string? str) => Parse(str);
+
+    /// <summary>
+    ///     支持 <see cref="Stream" /> 类型隐式转换为 <see cref="Clay" />
+    /// </summary>
+    /// <param name="stream">
+    ///     <see cref="Stream" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    public static implicit operator Clay(Stream? stream) => Parse(stream);
+
+    /// <summary>
+    ///     支持 <see cref="byte" />[] 类型隐式转换为 <see cref="Clay" />
+    /// </summary>
+    /// <param name="bytes">
+    ///     <see cref="byte" />[]
+    /// </param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    public static implicit operator Clay(byte[]? bytes) => Parse(bytes);
+
+    /// <summary>
+    ///     支持 <see cref="JsonNode" /> 类型隐式转换为 <see cref="Clay" />
+    /// </summary>
+    /// <param name="jsonNode">
+    ///     <see cref="JsonNode" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    public static implicit operator Clay(JsonNode? jsonNode) => Parse(jsonNode);
+
+    /// <summary>
+    ///     支持 <see cref="Dictionary{TKey,TValue}" /> 类型隐式转换为 <see cref="Clay" />
+    /// </summary>
+    /// <param name="dic">
+    ///     <see cref="Dictionary{TKey,TValue}" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    public static implicit operator Clay(Dictionary<string, object?>? dic) => Parse(dic);
+
+    /// <summary>
+    ///     支持 <see cref="ExpandoObject" /> 类型隐式转换为 <see cref="Clay" />
+    /// </summary>
+    /// <param name="expandoObject">
+    ///     <see cref="ExpandoObject" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    public static implicit operator Clay(ExpandoObject? expandoObject) => Parse(expandoObject);
+
     /// <inheritdoc />
     public override int GetHashCode()
     {

@@ -1441,6 +1441,83 @@
                 <see cref="T:System.Boolean" />
             </returns>
         </member>
+        <member name="M:Shapeless.Clay.op_Implicit(Shapeless.Clay@)~System.String">
+            <summary>
+                支持 <see cref="T:Shapeless.Clay" /> 类型隐式转换为 <see cref="T:System.String" />
+            </summary>
+            <param name="clay">
+                <see cref="T:Shapeless.Clay" />
+            </param>
+            <returns>
+                <see cref="T:System.String" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.op_Implicit(System.String)~Shapeless.Clay">
+            <summary>
+                支持 <see cref="T:System.String" /> 类型隐式转换为 <see cref="T:Shapeless.Clay" />
+            </summary>
+            <param name="str">
+                <see cref="T:System.String" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.op_Implicit(System.IO.Stream)~Shapeless.Clay">
+            <summary>
+                支持 <see cref="T:System.IO.Stream" /> 类型隐式转换为 <see cref="T:Shapeless.Clay" />
+            </summary>
+            <param name="stream">
+                <see cref="T:System.IO.Stream" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.op_Implicit(System.Byte[])~Shapeless.Clay">
+            <summary>
+                支持 <see cref="T:System.Byte" />[] 类型隐式转换为 <see cref="T:Shapeless.Clay" />
+            </summary>
+            <param name="bytes">
+                <see cref="T:System.Byte" />[]
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.op_Implicit(System.Text.Json.Nodes.JsonNode)~Shapeless.Clay">
+            <summary>
+                支持 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 类型隐式转换为 <see cref="T:Shapeless.Clay" />
+            </summary>
+            <param name="jsonNode">
+                <see cref="T:System.Text.Json.Nodes.JsonNode" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.op_Implicit(System.Collections.Generic.Dictionary{System.String,System.Object})~Shapeless.Clay">
+            <summary>
+                支持 <see cref="T:System.Collections.Generic.Dictionary`2" /> 类型隐式转换为 <see cref="T:Shapeless.Clay" />
+            </summary>
+            <param name="dic">
+                <see cref="T:System.Collections.Generic.Dictionary`2" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.Clay.op_Implicit(System.Dynamic.ExpandoObject)~Shapeless.Clay">
+            <summary>
+                支持 <see cref="T:System.Dynamic.ExpandoObject" /> 类型隐式转换为 <see cref="T:Shapeless.Clay" />
+            </summary>
+            <param name="expandoObject">
+                <see cref="T:System.Dynamic.ExpandoObject" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
         <member name="M:Shapeless.Clay.GetHashCode">
             <inheritdoc />
         </member>
@@ -1589,7 +1666,7 @@
             ○ Match if at the beginning of the string.<br/>
             ○ Match the string "/Date(".<br/>
             ○ 1st capture group.<br/>
-                ○ Match a character in the set [+-] atomically any number of times.<br/>
+                ○ Match a character in the set [+\-] atomically any number of times.<br/>
                 ○ Match a Unicode digit atomically at least once.<br/>
             ○ Match the string ")/".<br/>
             ○ Match if at the end of the string or if before an ending newline.<br/>
@@ -1618,10 +1695,10 @@
             ○ Match if at the beginning of the string.<br/>
             ○ Match the string "/Date(".<br/>
             ○ 1st capture group.<br/>
-                ○ Match a character in the set [+-] atomically any number of times.<br/>
+                ○ Match a character in the set [+\-] atomically any number of times.<br/>
                 ○ Match a Unicode digit atomically at least once.<br/>
             ○ 2nd capture group.<br/>
-                ○ Match a character in the set [+-].<br/>
+                ○ Match a character in the set [+\-].<br/>
             ○ 3rd capture group.<br/>
                 ○ Match a Unicode digit exactly 2 times.<br/>
             ○ 4th capture group.<br/>
@@ -1746,7 +1823,7 @@
             ○ Match if at the beginning of the string.<br/>
             ○ Match the string "/Date(".<br/>
             ○ 1st capture group.<br/>
-                ○ Match a character in the set [+-] atomically any number of times.<br/>
+                ○ Match a character in the set [+\-] atomically any number of times.<br/>
                 ○ Match a Unicode digit atomically at least once.<br/>
             ○ Match the string ")/".<br/>
             ○ Match if at the end of the string or if before an ending newline.<br/>
@@ -1804,32 +1881,32 @@
             ○ Match if at the beginning of the string.<br/>
             ○ Loop greedily at least once.<br/>
                 ○ Match with 2 alternative expressions.<br/>
-                    ○ Match a character in the set [-.0-9A-Z_a-z~].<br/>
+                    ○ Match a character in the set [\-.0-9A-Z_a-z~].<br/>
                     ○ Match a sequence of expressions.<br/>
                         ○ Match '%'.<br/>
-                        ○ Match a character in the set [0-9A-Fa-f] exactly 2 times.<br/>
+                        ○ Match a hexadecimal digit exactly 2 times.<br/>
             ○ Match '='.<br/>
             ○ Loop greedily any number of times.<br/>
                 ○ Match with 2 alternative expressions.<br/>
-                    ○ Match a character in the set [+-.0-9A-Z_a-z~].<br/>
+                    ○ Match a character in the set [+\-.0-9A-Z_a-z~].<br/>
                     ○ Match a sequence of expressions.<br/>
                         ○ Match '%'.<br/>
-                        ○ Match a character in the set [0-9A-Fa-f] exactly 2 times.<br/>
+                        ○ Match a hexadecimal digit exactly 2 times.<br/>
             ○ Loop greedily any number of times.<br/>
                 ○ Match '&amp;'.<br/>
                 ○ Loop greedily at least once.<br/>
                     ○ Match with 2 alternative expressions.<br/>
-                        ○ Match a character in the set [-.0-9A-Z_a-z~].<br/>
+                        ○ Match a character in the set [\-.0-9A-Z_a-z~].<br/>
                         ○ Match a sequence of expressions.<br/>
                             ○ Match '%'.<br/>
-                            ○ Match a character in the set [0-9A-Fa-f] exactly 2 times.<br/>
+                            ○ Match a hexadecimal digit exactly 2 times.<br/>
                 ○ Match '='.<br/>
                 ○ Loop greedily any number of times.<br/>
                     ○ Match with 2 alternative expressions.<br/>
-                        ○ Match a character in the set [+-.0-9A-Z_a-z~].<br/>
+                        ○ Match a character in the set [+\-.0-9A-Z_a-z~].<br/>
                         ○ Match a sequence of expressions.<br/>
                             ○ Match '%'.<br/>
-                            ○ Match a character in the set [0-9A-Fa-f] exactly 2 times.<br/>
+                            ○ Match a hexadecimal digit exactly 2 times.<br/>
             ○ Match if at the end of the string or if before an ending newline.<br/>
             </code>
             </remarks>
@@ -1997,6 +2074,8 @@
             </param>
             <returns>
                 <see cref="T:Shapeless.Clay" />
+            </returns>
+cref="T:Shapeless.Clay" />
             </returns>
         </member>
         <member name="M:Shapeless.Extensions.ShapelessExtensions.ToClay(System.Object,System.Action{Shapeless.ClayOptions})">

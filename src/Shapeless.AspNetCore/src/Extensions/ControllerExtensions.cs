@@ -23,7 +23,7 @@ public static class ControllerExtensions
     ///     <see cref="ViewResult" />
     /// </returns>
     public static ViewResult ViewClay(this Controller controller, object? model, ClayOptions? clayOptions = null) =>
-        controller.View(Clay.Parse(model, clayOptions));
+        controller.View((object?)Clay.Parse(model, clayOptions));
 
     /// <summary>
     ///     创建一个 <see cref="ViewResult" /> 对象，并将视图模型设置为 <see cref="Clay" /> 类型

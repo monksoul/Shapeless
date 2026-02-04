@@ -81,4 +81,76 @@ public class ClayOperatorTests
             Clay.Parse("[1,2,3,true,false,{},12.3,\"string\",null,{\"id\":1,\"name\":\"furion\"}]")));
         Assert.False(Clay.AreArrayEqual(clay1, clay2));
     }
+
+    [Fact]
+    public void FromString_ReturnOK()
+    {
+        Clay clay = """{"id":1,"name":"furion"}""";
+        Assert.Equal(1, clay["id"]);
+        Assert.Equal("furion", clay["name"]);
+
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay);
+    }
+
+    [Fact]
+    public void FromByteArray_ReturnOK()
+    {
+        Clay clay = """{"id":1,"name":"furion"}"""u8.ToArray();
+        Assert.Equal(1, clay["id"]);
+        Assert.Equal("furion", clay["name"]);
+
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay);
+    }
+
+    [Fact]
+    public void FromStream_ReturnOK()
+    {
+        Clay clay = new MemoryStream("""{"id":1,"name":"furion"}"""u8.ToArray());
+        Assert.Equal(1, clay["id"]);
+        Assert.Equal("furion", clay["name"]);
+
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay);
+    }
+
+    [Fact]
+    public void FromJsonNode_ReturnOK()
+    {
+        Clay clay = JsonNode.Parse("""{"id":1,"name":"furion"}""");
+        Assert.Equal(1, clay["id"]);
+        Assert.Equal("furion", clay["name"]);
+
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay);
+    }
+
+    [Fact]
+    public void FromDictionary_ReturnOK()
+    {
+        Clay clay = new Dictionary<string, object?> { { "id", 1 }, { "name", "furion" } };
+        Assert.Equal(1, clay["id"]);
+        Assert.Equal("furion", clay["name"]);
+
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay);
+    }
+
+    [Fact]
+    public void FromExpandoObject_ReturnOK()
+    {
+        dynamic expandoObject = new ExpandoObject();
+        expandoObject.id = 1;
+        expandoObject.name = "furion";
+
+        Clay clay = (ExpandoObject)expandoObject;
+        Assert.Equal(1, clay["id"]);
+        Assert.Equal("furion", clay["name"]);
+
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay);
+    }
+
+    [Fact]
+    public void InString_ReturnOK()
+    {
+        string json = Clay.Parse("""{"id":1,"name":"furion"}""");
+
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", json);
+    }
 }
