@@ -1439,8 +1439,8 @@ public class ClayExportsTests(ITestOutputHelper output)
     public void FindNodeByPath_Invalid_Parameters()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
-        Assert.Throws<ArgumentNullException>(() => clay.FindNodeByPath(null!, out _, out _));
-        Assert.Throws<KeyNotFoundException>(() => clay.FindNodeByPath("age", out _, out _));
+        Assert.Throws<ArgumentNullException>(() => clay.FindNodeByPath(null!, out _, out _, out _));
+        Assert.Throws<KeyNotFoundException>(() => clay.FindNodeByPath("age", out _, out _, out _));
         var exception = Assert.Throws<InvalidOperationException>(() => clay.PathValue("name:firstName"));
         Assert.Equal("The identifier `name` at path `name:firstName` does not support further lookup.",
             exception.Message);
@@ -1448,7 +1448,7 @@ public class ClayExportsTests(ITestOutputHelper output)
         var clay2 = Clay.Parse("{\"id\":1,\"name\":\"furion\",\"children\":{\"id\":1,\"name\":\"furion\"}}");
         var exception2 =
             Assert.Throws<InvalidOperationException>(() =>
-                clay2.FindNodeByPath("children:name:firstName", out _, out _));
+                clay2.FindNodeByPath("children:name:firstName", out _, out _, out _));
         Assert.Equal("The identifier `name` at path `name:firstName` does not support further lookup.",
             exception2.Message);
     }
@@ -1475,24 +1475,26 @@ public class ClayExportsTests(ITestOutputHelper output)
                               }
                               """);
 
-        Assert.True(clay.FindNodeByPath("AppInfo", out var jsonNode1, out var pathSegments1));
+        Assert.True(clay.FindNodeByPath("AppInfo", out var jsonNode1, out _, out var pathSegments1));
         Assert.NotNull(jsonNode1);
         Assert.Equal(["AppInfo"], pathSegments1);
 
-        Assert.True(clay.FindNodeByPath("AppInfo:Name", out var jsonNode2, out var pathSegments2));
+        Assert.True(clay.FindNodeByPath("AppInfo:Name", out var jsonNode2, out _, out var pathSegments2));
         Assert.NotNull(jsonNode2);
         Assert.Equal(["AppInfo", "Name"], pathSegments2);
 
-        Assert.True(clay.FindNodeByPath("AppInfo:Company:Address", out var jsonNode3, out var pathSegments3));
+        Assert.True(clay.FindNodeByPath("AppInfo:Company:Address", out var jsonNode3, out _, out var pathSegments3));
         Assert.NotNull(jsonNode3);
         Assert.Equal(["AppInfo", "Company", "Address"], pathSegments3);
 
-        Assert.True(clay.FindNodeByPath("AppInfo:Company:Telephones:1", out var jsonNode4, out var pathSegments4));
+        Assert.True(
+            clay.FindNodeByPath("AppInfo:Company:Telephones:1", out var jsonNode4, out _, out var pathSegments4));
         Assert.NotNull(jsonNode4);
         Assert.Equal(["AppInfo", "Company", "Telephones", "1"], pathSegments4);
 
         clay.Rebuilt(o => { o.AllowIndexOutOfRange = true; });
-        Assert.False(clay.FindNodeByPath("AppInfo:Company:Telephones:2", out var jsonNode5, out var pathSegments5));
+        Assert.False(clay.FindNodeByPath("AppInfo:Company:Telephones:2", out var jsonNode5, out _,
+            out var pathSegments5));
         Assert.Null(jsonNode5);
         Assert.Equal(["AppInfo", "Company", "Telephones", "2"], pathSegments5);
 
@@ -1521,24 +1523,26 @@ public class ClayExportsTests(ITestOutputHelper output)
                               }
                               """);
 
-        Assert.True(clay.FindNodeByPath("$.AppInfo", out var jsonNode1, out var pathSegments1));
+        Assert.True(clay.FindNodeByPath("$.AppInfo", out var jsonNode1, out _, out var pathSegments1));
         Assert.NotNull(jsonNode1);
         Assert.Equal(["AppInfo"], pathSegments1);
 
-        Assert.True(clay.FindNodeByPath("$.AppInfo.Name", out var jsonNode2, out var pathSegments2));
+        Assert.True(clay.FindNodeByPath("$.AppInfo.Name", out var jsonNode2, out _, out var pathSegments2));
         Assert.NotNull(jsonNode2);
         Assert.Equal(["AppInfo", "Name"], pathSegments2);
 
-        Assert.True(clay.FindNodeByPath("$.AppInfo.Company.Address", out var jsonNode3, out var pathSegments3));
+        Assert.True(clay.FindNodeByPath("$.AppInfo.Company.Address", out var jsonNode3, out _, out var pathSegments3));
         Assert.NotNull(jsonNode3);
         Assert.Equal(["AppInfo", "Company", "Address"], pathSegments3);
 
-        Assert.True(clay.FindNodeByPath("$.AppInfo.Company.Telephones[1]", out var jsonNode4, out var pathSegments4));
+        Assert.True(clay.FindNodeByPath("$.AppInfo.Company.Telephones[1]", out var jsonNode4, out _,
+            out var pathSegments4));
         Assert.NotNull(jsonNode4);
         Assert.Equal(["AppInfo", "Company", "Telephones", "1"], pathSegments4);
 
         clay.Rebuilt(o => { o.AllowIndexOutOfRange = true; });
-        Assert.False(clay.FindNodeByPath("$.AppInfo.Company.Telephones[2]", out var jsonNode5, out var pathSegments5));
+        Assert.False(clay.FindNodeByPath("$.AppInfo.Company.Telephones[2]", out var jsonNode5, out _,
+            out var pathSegments5));
         Assert.Null(jsonNode5);
         Assert.Equal(["AppInfo", "Company", "Telephones", "2"], pathSegments5);
 
@@ -2778,6 +2782,10 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.Equal("中国中山市", clay2["AppInfo"]!["Company"]["Address"]["City"]);
         clay2.SetPathValue("AppInfo/Company/Telephones/0", "0760-88888882");
         Assert.Equal("0760-88888882", clay2["AppInfo"]!["Company"]["Telephones"][0]);
+
+        var model = Clay.Parse(new SetPathModel());
+        model.SetPathValue("Data2", "Furion");
+        Assert.Equal("{\"Data1\":0,\"Data2\":\"Furion\"}", model.ToJsonString());
     }
 
     [Fact]
@@ -2850,4 +2858,10 @@ public class CustomClass<T>
     public bool Success { get; set; }
     public string? Message { get; set; }
     public IList<T>? Items { get; set; }
+}
+
+public class SetPathModel
+{
+    public int Data1 { get; set; }
+    public string? Data2 { get; set; }
 }

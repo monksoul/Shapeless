@@ -918,7 +918,7 @@
             </returns>
             <exception cref="T:System.InvalidOperationException"></exception>
         </member>
-        <member name="M:Shapeless.Clay.FindNodeByPath(System.String,System.Text.Json.Nodes.JsonNode@,System.String[]@)">
+        <member name="M:Shapeless.Clay.FindNodeByPath(System.String,System.Text.Json.Nodes.JsonNode@,Shapeless.Clay@,System.String[]@)">
             <summary>
                 根据路径查找 <see cref="T:System.Text.Json.Nodes.JsonNode" /> 节点
             </summary>
@@ -927,6 +927,7 @@
             <param name="jsonNode">
                 <see cref="T:System.Text.Json.Nodes.JsonNode" />
             </param>
+            <param name="parentClay">上级 <see cref="T:Shapeless.Clay" /></param>
             <param name="pathSegments">根据路径分隔符进行分割后的数组</param>
             <returns>
                 <see cref="T:System.Boolean" />

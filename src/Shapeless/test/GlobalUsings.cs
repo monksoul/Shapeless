@@ -20,4 +20,3 @@ global using System.Text.Json.Serialization;
 global using System.Xml;
 global using System.Xml.Linq;
 global using Xunit;
-global using Xunit.Abstractions;

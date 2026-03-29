@@ -144,7 +144,7 @@ public partial class Clay : DynamicObject, IEnumerable<object?>, IFormattable, I
         // 将 JsonCanvas 转换为 JsonObject 实例
         var jsonObject = JsonCanvas.AsObject();
 
-        // 根据键获取 JSON 节点
+        // 根据键获取 JSON 节点；注意：如果键存在但值为 null，那么 jsonNode 也会为 null
         if (jsonObject.TryGetPropertyValue(identifier, out var jsonNode))
         {
             return jsonNode;
@@ -543,6 +543,7 @@ public partial class Clay : DynamicObject, IEnumerable<object?>, IFormattable, I
     internal static object? DeserializeNode(JsonNode? jsonNode, ClayOptions? options = null) =>
         jsonNode?.GetValueKind() switch
         {
+            JsonValueKind.Null => null,
             JsonValueKind.String when options?.DateJsonToDateTime == true && jsonNode.TryGetDateValue(out var dateTime)
                 => dateTime,
             JsonValueKind.String => jsonNode.GetValue<string>(),
