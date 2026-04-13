@@ -331,6 +331,13 @@ public class ClayExportsTests(ITestOutputHelper output)
                 u.DateJsonToDateTime = true;
             });
         Assert.Equal("2020-05-30T18:30:00.0000000", clay23.DateTime.ToString("O", CultureInfo.CurrentCulture));
+
+        // 枚举
+        var clay24 = Clay.Parse(new { EnumObject.A });
+        Assert.Equal("{\"A\":1}", clay24.ToJsonString());
+
+        var clay25 = Clay.Parse(EnumObject.A);
+        Assert.Equal("{\"value\":1}", clay25.ToJsonString());
     }
 
     [Fact]
@@ -377,6 +384,10 @@ public class ClayExportsTests(ITestOutputHelper output)
         dynamic clay2 = Clay.ParseFromFile(filePath,
             options => options.PropertyNameCaseInsensitive = true);
         Assert.Equal(1, clay2.Id);
+
+        var filePath2 = Path.Combine(AppContext.BaseDirectory, "test.json");
+        var clay3 = Clay.ParseFromFile(filePath2);
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay3.ToJsonString());
     }
 
     [Fact]
@@ -2864,4 +2875,10 @@ public class SetPathModel
 {
     public int Data1 { get; set; }
     public string? Data2 { get; set; }
+}
+
+public enum EnumObject
+{
+    A = 1,
+    B
 }
