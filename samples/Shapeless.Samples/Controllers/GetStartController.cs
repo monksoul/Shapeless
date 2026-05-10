@@ -337,8 +337,8 @@ public class GetStartController
 
         dynamic clay = Clay.Parse("""{"id":1,"name":"shapeless"}""");
 
-        // 遍历键值
-        foreach (KeyValuePair<string, dynamic?> item in clay) // 或使用 clay.AsEnumerateObject()
+        // 遍历键值对，item 是 KeyValuePair<string, dynamic?> 类型
+        foreach (var item in clay) // 或使用 clay.AsEnumerateObject()
         {
             Console.WriteLine($"Key: {item.Key} Value: {item.Value}");
         }

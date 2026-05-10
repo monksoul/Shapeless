@@ -326,10 +326,7 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay22.ToJsonString());
 
         dynamic clay23 =
-            Clay.Parse("""{"DateTime":"/Date(1590863400000)/"}""", u =>
-            {
-                u.DateJsonToDateTime = true;
-            });
+            Clay.Parse("""{"DateTime":"/Date(1590863400000)/"}""", u => { u.DateJsonToDateTime = true; });
         Assert.Equal("2020-05-30T18:30:00.0000000", clay23.DateTime.ToString("O", CultureInfo.CurrentCulture));
 
         // 枚举
@@ -708,6 +705,25 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.True(itemClay.Options.AllowMissingProperty);
         Assert.True(itemClay.Options.AllowIndexOutOfRange);
         Assert.True(itemClay.Options.PropertyNameCaseInsensitive);
+    }
+
+    [Fact]
+    public void Parse_WithJsonPropertyName_ReturnOK()
+    {
+        var clay = Clay.Parse(new JsonPropertyNameModel { Id = 1, Name = "Furion", Age = 30 });
+        Assert.Equal("{\"Id\":1,\"FullName\":\"Furion\",\"Age\":30}", clay.ToJsonString());
+
+        dynamic clay2 = Clay.Parse("{\"Id\":1,\"FullName\":\"Furion\",\"Age\":30}");
+        JsonPropertyNameModel model = clay2;
+        Assert.Equal(1, model.Id);
+        Assert.Equal("Furion", model.Name);
+        Assert.Equal(30, model.Age);
+
+        var model2 = Clay.Parse("{\"Id\":1,\"FullName\":\"Furion\",\"Age\":30}").As<JsonPropertyNameModel>();
+        Assert.NotNull(model2);
+        Assert.Equal(1, model2.Id);
+        Assert.Equal("Furion", model2.Name);
+        Assert.Equal(30, model2.Age);
     }
 
     [Fact]
@@ -2073,10 +2089,7 @@ public class ClayExportsTests(ITestOutputHelper output)
         clay["name"] = "百小僧";
         clay.AsReadOnly();
         Assert.True(clay.IsReadOnly);
-        Assert.Throws<InvalidOperationException>(() =>
-        {
-            clay["name"] = "百小僧";
-        });
+        Assert.Throws<InvalidOperationException>(() => { clay["name"] = "百小僧"; });
     }
 
     [Fact]
@@ -2086,10 +2099,7 @@ public class ClayExportsTests(ITestOutputHelper output)
         clay["name"] = "百小僧";
         clay.AsReadOnly();
         Assert.True(clay.IsReadOnly);
-        Assert.Throws<InvalidOperationException>(() =>
-        {
-            clay["name"] = "百小僧";
-        });
+        Assert.Throws<InvalidOperationException>(() => { clay["name"] = "百小僧"; });
         clay.AsMutable();
         Assert.False(clay.IsReadOnly);
         clay["name"] = "百小僧";
@@ -2100,7 +2110,10 @@ public class ClayExportsTests(ITestOutputHelper output)
     [InlineData(typeof(Clay.Object), true)]
     [InlineData(typeof(Clay.Array), true)]
     [InlineData(typeof(string), false)]
-    public void IsClay_ReturnOK(Type type, bool expected) => Assert.Equal(expected, Clay.IsClay(type));
+    public void IsClay_ReturnOK(Type type, bool expected)
+    {
+        Assert.Equal(expected, Clay.IsClay(type));
+    }
 
     [Fact]
     public void IsClay_WithObject_ReturnOK()
@@ -2332,8 +2345,10 @@ public class ClayExportsTests(ITestOutputHelper output)
     [InlineData("[1,2,3,]", true, true)]
     [InlineData("1,2,3]", false, false)]
     [InlineData("[1,2,3", false, false)]
-    public void IsJsonObjectOrArray_ReturnOK(string? input, bool result, bool allowTrailingCommas = false) =>
+    public void IsJsonObjectOrArray_ReturnOK(string? input, bool result, bool allowTrailingCommas = false)
+    {
         Assert.Equal(result, Clay.IsJsonObjectOrArray(input, allowTrailingCommas));
+    }
 
     [Fact]
     public void Deconstruct_ReturnOK()
@@ -2881,4 +2896,11 @@ public enum EnumObject
 {
     A = 1,
     B
+}
+
+public class JsonPropertyNameModel
+{
+    public int Id { get; set; }
+    [JsonPropertyName("FullName")] public string? Name { get; set; }
+    public int Age { get; set; }
 }
