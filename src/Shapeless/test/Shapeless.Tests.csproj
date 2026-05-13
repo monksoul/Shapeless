@@ -1,18 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
-        <ProjectReference Include="..\src\Shapeless.csproj" />
+        <ProjectReference Include="..\src\Shapeless.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="json.txt" />
+        <None Remove="json.txt"/>
         <Content Include="json.txt">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="test.json" />
+        <None Remove="test.json"/>
         <Content Include="test.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>

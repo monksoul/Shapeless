@@ -324,7 +324,7 @@ public partial class Clay
     /// <returns>
     ///     <see cref="Clay" />
     /// </returns>
-    public Clay ParseJson(string path, bool requireJsonObjectOrArrayString = true)
+    public Clay Unwrap(string path, bool requireJsonObjectOrArrayString = true)
     {
         // 根据路径查找原始值
         var rawValue = PathValue(path);
@@ -356,7 +356,7 @@ public partial class Clay
     ///     <see cref="Clay" />
     /// </returns>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public Clay ParseJson(int maxDepth = 3)
+    public Clay Unwrap(int maxDepth = 3)
     {
         // 小于或等于 0 检查
         if (maxDepth <= 0)
@@ -365,7 +365,13 @@ public partial class Clay
                 "Max depth must be greater than zero.");
         }
 
-        return ParseRecursive(this, maxDepth);
+        // 处理对象或数组类型双重序列化问题
+        var scalarValueKey = Options.ScalarValueKey;
+        var clay = IsScalarValue && IsJsonObjectOrArray(this[scalarValueKey] as string)
+            ? Unwrap(scalarValueKey)[scalarValueKey]
+            : this;
+
+        return ParseRecursive(clay, maxDepth);
 
         // 局部函数，用于执行带深度限制的解析逻辑
         Clay ParseRecursive(Clay current, int depth)

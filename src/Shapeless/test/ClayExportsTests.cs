@@ -727,23 +727,23 @@ public class ClayExportsTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void ParseJson_Invalid_Parameters()
+    public void Unwrap_Invalid_Parameters()
     {
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
-        Assert.Throws<ArgumentNullException>(() => clay.ParseJson(null!));
-        Assert.Throws<KeyNotFoundException>(() => clay.ParseJson("age"));
-        var exception = Assert.Throws<InvalidOperationException>(() => clay.ParseJson("name:firstName"));
+        Assert.Throws<ArgumentNullException>(() => clay.Unwrap(null!));
+        Assert.Throws<KeyNotFoundException>(() => clay.Unwrap("age"));
+        var exception = Assert.Throws<InvalidOperationException>(() => clay.Unwrap("name:firstName"));
         Assert.Equal("The identifier `name` at path `name:firstName` does not support further lookup.",
             exception.Message);
 
         var clay2 = Clay.Parse("{\"id\":1,\"name\":\"furion\",\"children\":{\"id\":1,\"name\":\"furion\"}}");
-        var exception2 = Assert.Throws<InvalidOperationException>(() => clay2.ParseJson("children:name:firstName"));
+        var exception2 = Assert.Throws<InvalidOperationException>(() => clay2.Unwrap("children:name:firstName"));
         Assert.Equal("The identifier `name` at path `name:firstName` does not support further lookup.",
             exception2.Message);
     }
 
     [Fact]
-    public void ParseJson_ReturnOK()
+    public void Unwrap_ReturnOK()
     {
         var clay = Clay.Parse("""
                               {
@@ -753,7 +753,7 @@ public class ClayExportsTests(ITestOutputHelper output)
                                   "ReferCredOpers": "[{\"Did\":144362906,\"CredOperNumber\":200709397004,\"CredOperStep\":3,\"IntervType\":\"Co-Borrower\"},{\"Did\":144362906,\"CredOperNumber\":200709397004,\"CredOperStep\":3,\"IntervType\":\"Vehicle Owner\"}]",
                                   "Data":"{\"Id\":1,\"Name\":\"Furion\"}"
                               }
-                              """).ParseJson("ReferCredOpers").ParseJson("Data");
+                              """).Unwrap("ReferCredOpers").Unwrap("Data");
 
         Assert.Equal(
             "{\"EntityNumber\":207053412,\"FullName\":\"TestDataEntity\",\"EntityType\":\"Corporation\",\"ReferCredOpers\":[{\"Did\":144362906,\"CredOperNumber\":200709397004,\"CredOperStep\":3,\"IntervType\":\"Co-Borrower\"},{\"Did\":144362906,\"CredOperNumber\":200709397004,\"CredOperStep\":3,\"IntervType\":\"Vehicle Owner\"}],\"Data\":{\"Id\":1,\"Name\":\"Furion\"}}",
@@ -777,15 +777,15 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.Equal(1, data!.Id);
         Assert.Equal("Furion", data.Name);
 
-        var clay2 = Clay.Parse("""{"id":1,"name":"Furion"}""").ParseJson("name");
+        var clay2 = Clay.Parse("""{"id":1,"name":"Furion"}""").Unwrap("name");
         Assert.Equal("{\"id\":1,\"name\":\"Furion\"}", clay2.ToJsonString());
 
-        var clay3 = Clay.Parse("""{"id":1,"name":"\"Furion\""}""").ParseJson("name", false);
+        var clay3 = Clay.Parse("""{"id":1,"name":"\"Furion\""}""").Unwrap("name", false);
         Assert.Equal("""{"id":1,"name":{"value":"Furion"}}""", clay3.ToJsonString());
     }
 
     [Fact]
-    public void ParseJson_WithoutParameters_Invalid_Parameters()
+    public void Unwrap_WithoutParameters_Invalid_Parameters()
     {
         var clay = Clay.Parse("""
                               {
@@ -797,13 +797,13 @@ public class ClayExportsTests(ITestOutputHelper output)
                               }
                               """);
 
-        var exception = Assert.Throws<ArgumentOutOfRangeException>(() => clay.ParseJson(0));
+        var exception = Assert.Throws<ArgumentOutOfRangeException>(() => clay.Unwrap(0));
         Assert.Equal("Max depth must be greater than zero. (Parameter 'maxDepth')", exception.Message);
-        Assert.Throws<ArgumentOutOfRangeException>(() => clay.ParseJson(-1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => clay.Unwrap(-1));
     }
 
     [Fact]
-    public void ParseJson_WithoutParameters_ReturnOK()
+    public void Unwrap_WithoutParameters_ReturnOK()
     {
         var clay = Clay.Parse("""
                               {
@@ -813,19 +813,27 @@ public class ClayExportsTests(ITestOutputHelper output)
                                   "ReferCredOpers": "[{\"Did\":144362906,\"CredOperNumber\":200709397004,\"CredOperStep\":3,\"IntervType\":\"Co-Borrower\"},{\"Did\":144362906,\"CredOperNumber\":200709397004,\"CredOperStep\":3,\"IntervType\":\"Vehicle Owner\"}]",
                                   "Data":"{\"Id\":1,\"Name\":\"Furion\"}"
                               }
-                              """).ParseJson();
+                              """).Unwrap();
 
         Assert.Equal(
             "{\"EntityNumber\":207053412,\"FullName\":\"TestDataEntity\",\"EntityType\":\"Corporation\",\"ReferCredOpers\":[{\"Did\":144362906,\"CredOperNumber\":200709397004,\"CredOperStep\":3,\"IntervType\":\"Co-Borrower\"},{\"Did\":144362906,\"CredOperNumber\":200709397004,\"CredOperStep\":3,\"IntervType\":\"Vehicle Owner\"}],\"Data\":{\"Id\":1,\"Name\":\"Furion\"}}",
             clay.ToJsonString());
 
-        var clay2 = Clay.Parse(BuildNestedJson(2)).ParseJson();
+        var clay2 = Clay.Parse(BuildNestedJson(2)).Unwrap();
         Assert.Equal("{\"level1\":{\"level2\":{\"value\":\"final\"}}}", clay2.ToJsonString());
 
-        var clay3 = Clay.Parse(BuildNestedJson(10)).ParseJson(10);
+        var clay3 = Clay.Parse(BuildNestedJson(10)).Unwrap(10);
         Assert.Equal(
             "{\"level1\":{\"level2\":{\"level3\":{\"level4\":{\"level5\":{\"level6\":{\"level7\":{\"level8\":{\"level9\":{\"level10\":{\"value\":\"final\"}}}}}}}}}}}",
             clay3.ToJsonString());
+
+        var clay4 = Clay
+            .Parse(
+                "\"{\\\"accessExpire\\\":\\\"2027-04-21 12:57:06\\\",\\\"accessToken\\\":\\\"0069070c82f04948886d1f471b6ff484\\\",\\\"clientId\\\":\\\"d3f7edeb097543a9be3ca30f49d1d833\\\",\\\"code\\\":\\\"aeb72f35c9db407aafa4241f2daa0f22\\\",\\\"refreshExpire\\\":\\\"2027-05-21 12:57:06\\\",\\\"refreshToken\\\":\\\"1832a0c2d76f4edb88f661c00a69595d\\\"}\"")
+            .Unwrap();
+        Assert.Equal(
+            "{\"accessExpire\":\"2027-04-21 12:57:06\",\"accessToken\":\"0069070c82f04948886d1f471b6ff484\",\"clientId\":\"d3f7edeb097543a9be3ca30f49d1d833\",\"code\":\"aeb72f35c9db407aafa4241f2daa0f22\",\"refreshExpire\":\"2027-05-21 12:57:06\",\"refreshToken\":\"1832a0c2d76f4edb88f661c00a69595d\"}",
+            clay4.ToJsonString());
     }
 
     [Fact]
@@ -2110,10 +2118,7 @@ public class ClayExportsTests(ITestOutputHelper output)
     [InlineData(typeof(Clay.Object), true)]
     [InlineData(typeof(Clay.Array), true)]
     [InlineData(typeof(string), false)]
-    public void IsClay_ReturnOK(Type type, bool expected)
-    {
-        Assert.Equal(expected, Clay.IsClay(type));
-    }
+    public void IsClay_ReturnOK(Type type, bool expected) => Assert.Equal(expected, Clay.IsClay(type));
 
     [Fact]
     public void IsClay_WithObject_ReturnOK()
@@ -2345,10 +2350,8 @@ public class ClayExportsTests(ITestOutputHelper output)
     [InlineData("[1,2,3,]", true, true)]
     [InlineData("1,2,3]", false, false)]
     [InlineData("[1,2,3", false, false)]
-    public void IsJsonObjectOrArray_ReturnOK(string? input, bool result, bool allowTrailingCommas = false)
-    {
+    public void IsJsonObjectOrArray_ReturnOK(string? input, bool result, bool allowTrailingCommas = false) =>
         Assert.Equal(result, Clay.IsJsonObjectOrArray(input, allowTrailingCommas));
-    }
 
     [Fact]
     public void Deconstruct_ReturnOK()

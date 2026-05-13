@@ -15,6 +15,7 @@ public class ClayTests(ITestOutputHelper output)
         var clay = new Clay(JsonNode.Parse("{\"id\":1,\"name\":\"Furion\"}"));
         Assert.NotNull(clay.Options);
         Assert.NotNull(clay.JsonCanvas);
+        Assert.False(clay.IsScalarValue);
         Assert.True(clay.IsObject);
         Assert.False(clay.IsArray);
         Assert.Equal(ClayType.Object, clay.Type);
@@ -24,6 +25,7 @@ public class ClayTests(ITestOutputHelper output)
         var clay2 = new Clay(JsonNode.Parse("[]"));
         Assert.NotNull(clay2.Options);
         Assert.NotNull(clay2.JsonCanvas);
+        Assert.False(clay2.IsScalarValue);
         Assert.False(clay2.IsObject);
         Assert.True(clay2.IsArray);
         Assert.Equal(ClayType.Array, clay2.Type);
@@ -33,10 +35,12 @@ public class ClayTests(ITestOutputHelper output)
 
         var clay3 = new Clay(JsonValue.Create(true));
         Assert.NotNull(clay3.JsonCanvas);
+        Assert.True(clay3.IsScalarValue);
         Assert.Equal("{\"value\":true}", clay3.JsonCanvas.ToJsonString());
 
         var clay4 = new Clay(JsonValue.Create("furion"), new ClayOptions { PropertyNameCaseInsensitive = true });
         Assert.NotNull(clay4.JsonCanvas);
+        Assert.True(clay4.IsScalarValue);
         Assert.Equal("{\"value\":\"furion\"}", clay4.JsonCanvas.ToJsonString());
         Assert.Equal("furion", clay4["Value"]);
     }

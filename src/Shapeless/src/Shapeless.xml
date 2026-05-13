@@ -54,6 +54,12 @@
             </summary>
             <remarks>用于作为 <see cref="T:Shapeless.Clay" /> 的核心数据容器。</remarks>
         </member>
+        <member name="P:Shapeless.Clay.IsScalarValue">
+            <summary>
+                是否是非对象和非数组类型值
+            </summary>
+            <remarks>默认值为：<c>false</c></remarks>
+        </member>
         <member name="P:Shapeless.Clay.DelegateMap">
             <summary>
                 单一对象自定义委托字典
@@ -686,7 +692,7 @@
                 <see cref="T:Shapeless.Clay" />
             </returns>
         </member>
-        <member name="M:Shapeless.Clay.ParseJson(System.String,System.Boolean)">
+        <member name="M:Shapeless.Clay.Unwrap(System.String,System.Boolean)">
             <summary>
                 二次解析指定路径的双重 JSON 序列化字符串
             </summary>
@@ -697,7 +703,7 @@
                 <see cref="T:Shapeless.Clay" />
             </returns>
         </member>
-        <member name="M:Shapeless.Clay.ParseJson(System.Int32)">
+        <member name="M:Shapeless.Clay.Unwrap(System.Int32)">
             <summary>
                 二次解析双重 JSON 序列化字符串
             </summary>
@@ -1354,7 +1360,7 @@
         <member name="M:Shapeless.Clay.ArrayIndexPatternRegex">
             <remarks>
             Pattern:<br/>
-            <code>\[(\d+)\]</code><br/>
+            <code>\\[(\\d+)\\]</code><br/>
             Explanation:<br/>
             <code>
             ○ Match '['.<br/>
@@ -1670,7 +1676,7 @@
         <member name="M:Shapeless.Core.Converters.Json.FlexibleDateTimeConverter.Regex">
             <remarks>
             Pattern:<br/>
-            <code>^/Date\(([+-]*\d+)\)/$</code><br/>
+            <code>^/Date\\(([+-]*\\d+)\\)/$</code><br/>
             Options:<br/>
             <code>RegexOptions.CultureInvariant</code><br/>
             Explanation:<br/>
@@ -1699,7 +1705,7 @@
         <member name="M:Shapeless.Core.Converters.Json.FlexibleDateTimeOffsetConverter.Regex">
             <remarks>
             Pattern:<br/>
-            <code>^/Date\(([+-]*\d+)([+-])(\d{2})(\d{2})\)/$</code><br/>
+            <code>^/Date\\(([+-]*\\d+)([+-])(\\d{2})(\\d{2})\\)/$</code><br/>
             Options:<br/>
             <code>RegexOptions.CultureInvariant</code><br/>
             Explanation:<br/>
@@ -1827,7 +1833,7 @@
         <member name="M:Shapeless.Core.Extensions.JsonExtensions.Regex">
             <remarks>
             Pattern:<br/>
-            <code>^/Date\(([+-]*\d+)\)/$</code><br/>
+            <code>^/Date\\(([+-]*\\d+)\\)/$</code><br/>
             Options:<br/>
             <code>RegexOptions.CultureInvariant</code><br/>
             Explanation:<br/>
@@ -2301,7 +2307,7 @@
         <member name="M:Shapeless.PascalCaseNamingPolicy.WordBoundaryRegex">
             <remarks>
             Pattern:<br/>
-            <code>(?&lt;=[A-Z])(?=[A-Z][a-z])|(?&lt;=[^A-Z])(?=[A-Z])|(?&lt;=[A-Za-z])(?=[^A-Za-z])|(?&lt;=\d)(?=\D)|(?&lt;=\D)(?=\d)</code><br/>
+            <code>(?&lt;=[A-Z])(?=[A-Z][a-z])|(?&lt;=[^A-Z])(?=[A-Z])|(?&lt;=[A-Za-z])(?=[^A-Za-z])|(?&lt;=\\d)(?=\\D)|(?&lt;=\\D)(?=\\d)</code><br/>
             Explanation:<br/>
             <code>
             ○ Match with 5 alternative expressions, atomically.<br/>
@@ -2519,6 +2525,10 @@
         </member>
         <member name="M:System.Text.RegularExpressions.Generated.Utilities.StackPush(System.Int32[]@,System.Int32@,System.Int32,System.Int32)">
             <summary>Pushes 2 values onto the backtracking stack.</summary>
+        </member>
+    </members>
+</doc>
+tack.</summary>
         </member>
     </members>
 </doc>

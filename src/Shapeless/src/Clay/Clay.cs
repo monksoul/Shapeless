@@ -31,13 +31,15 @@ public partial class Clay : DynamicObject, IEnumerable<object?>, IFormattable, I
         // 创建 JsonNode 选项
         var (jsonNodeOptions, jsonDocumentOptions) = CreateJsonNodeOptions(Options);
 
-        // 处理非对象和非数组类型的 JSON 节点
-        var jsonCanvas = jsonNode.GetValueKind() is JsonValueKind.Object or JsonValueKind.Array
+        // 判断 JSON 是否是对象或数组类型
+        var isJsonObjectOrArray = jsonNode.GetValueKind() is JsonValueKind.Object or JsonValueKind.Array;
+
+        JsonCanvas = isJsonObjectOrArray
             ? jsonNode
+            // 处理非对象和非数组类型的 JSON 节点
             : JsonNode.Parse($"{{\"{Options.ScalarValueKey}\":{jsonNode.ToJsonString()}}}", jsonNodeOptions,
                 jsonDocumentOptions)!;
-
-        JsonCanvas = jsonCanvas;
+        IsScalarValue = !isJsonObjectOrArray;
 
         IsObject = JsonCanvas is JsonObject;
         IsArray = JsonCanvas is JsonArray;
@@ -54,6 +56,12 @@ public partial class Clay : DynamicObject, IEnumerable<object?>, IFormattable, I
     /// </summary>
     /// <remarks>用于作为 <see cref="Clay" /> 的核心数据容器。</remarks>
     internal JsonNode JsonCanvas { get; private set; }
+
+    /// <summary>
+    ///     是否是非对象和非数组类型值
+    /// </summary>
+    /// <remarks>默认值为：<c>false</c></remarks>
+    internal bool IsScalarValue { get; }
 
     /// <summary>
     ///     单一对象自定义委托字典
