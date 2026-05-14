@@ -335,6 +335,9 @@ public class ClayExportsTests(ITestOutputHelper output)
 
         var clay25 = Clay.Parse(EnumObject.A);
         Assert.Equal("{\"value\":1}", clay25.ToJsonString());
+
+        var clay26 = Clay.Parse(JsonSerializer.Serialize(new { id = 1, name = "furion" }));
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay26.ToJsonString());
     }
 
     [Fact]
@@ -834,6 +837,9 @@ public class ClayExportsTests(ITestOutputHelper output)
         Assert.Equal(
             "{\"accessExpire\":\"2027-04-21 12:57:06\",\"accessToken\":\"0069070c82f04948886d1f471b6ff484\",\"clientId\":\"d3f7edeb097543a9be3ca30f49d1d833\",\"code\":\"aeb72f35c9db407aafa4241f2daa0f22\",\"refreshExpire\":\"2027-05-21 12:57:06\",\"refreshToken\":\"1832a0c2d76f4edb88f661c00a69595d\"}",
             clay4.ToJsonString());
+
+        var clay5 = Clay.Parse(JsonSerializer.Serialize("{\"id\":1,\"name\":\"furion\"}")).Unwrap();
+        Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay5.ToJsonString());
     }
 
     [Fact]
