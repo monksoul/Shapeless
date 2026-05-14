@@ -87,6 +87,74 @@ public partial class Clay
         AddEvent(eventName, new ClayEventHandler(handler));
 
     /// <summary>
+    ///     移除事件订阅
+    /// </summary>
+    /// <param name="eventName">事件名。可选值：Changing、Changed、Removing 和 Removed。</param>
+    /// <param name="handler">
+    ///     <see cref="ClayEventHandler" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    /// <exception cref="ArgumentException"></exception>
+    public Clay RemoveEvent(string eventName, ClayEventHandler handler)
+    {
+        // 空检查
+        ArgumentException.ThrowIfNullOrWhiteSpace(eventName);
+        ArgumentNullException.ThrowIfNull(handler);
+
+        switch (eventName)
+        {
+            case nameof(Changing):
+                Changing -= handler;
+                break;
+            case nameof(Changed):
+                Changed -= handler;
+                break;
+            case nameof(Removing):
+                Removing -= handler;
+                break;
+            case nameof(Removed):
+                Removed -= handler;
+                break;
+            default:
+                throw new ArgumentException($"Unknown event name: `{eventName}`.", eventName);
+        }
+
+        return this;
+    }
+
+    /// <summary>
+    ///     移除事件订阅
+    /// </summary>
+    /// <param name="eventName">事件名。可选值：Changing、Changed、Removing 和 Removed。</param>
+    /// <param name="handler">
+    ///     <see cref="ClayEventHandler" />
+    /// </param>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    /// <exception cref="ArgumentException"></exception>
+    public Clay RemoveEvent(string eventName, Action<dynamic, ClayEventArgs> handler) =>
+        RemoveEvent(eventName, new ClayEventHandler(handler));
+
+    /// <summary>
+    ///     移除所有事件订阅
+    /// </summary>
+    /// <returns>
+    ///     <see cref="Clay" />
+    /// </returns>
+    public Clay ClearAllEvents()
+    {
+        Changing = null;
+        Changed = null;
+        Removing = null;
+        Removed = null;
+
+        return this;
+    }
+
+    /// <summary>
     ///     触发数据变更之前事件
     /// </summary>
     /// <param name="identifier">标识符，可以是键（字符串）或索引（整数）或索引运算符（Index）或范围运算符（Range）</param>

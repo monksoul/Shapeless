@@ -166,4 +166,152 @@ public class ClayEventsTests
 
         Assert.Equal(["Changing", "Changed", "Removing", "Removed"], events);
     }
+
+    [Fact]
+    public void RemoveEvent_Invalid_Parameters()
+    {
+        var clay = new Clay();
+
+        Assert.Throws<ArgumentNullException>(() => clay.RemoveEvent(null!, (ClayEventHandler)null!));
+        Assert.Throws<ArgumentException>(() => clay.RemoveEvent(string.Empty, (ClayEventHandler)null!));
+        Assert.Throws<ArgumentException>(() => clay.RemoveEvent(" ", (ClayEventHandler)null!));
+
+        Assert.Throws<ArgumentNullException>(() => clay.RemoveEvent("Changing", (ClayEventHandler)null!));
+        var exception =
+            Assert.Throws<ArgumentException>(() => clay.RemoveEvent("Test", new ClayEventHandler((_, _) => { })));
+        Assert.Equal("Unknown event name: `Test`. (Parameter 'Test')", exception.Message);
+
+        Assert.Throws<ArgumentException>(() => clay.RemoveEvent(null!, (Action<dynamic, ClayEventArgs>)null!));
+    }
+
+    [Fact]
+    public void RemoveEvent_ReturnOK()
+    {
+        var clay = new Clay();
+        var events = new List<string>();
+
+        var changingHandler = new ClayEventHandler((_, _) =>
+        {
+            events.Add(nameof(clay.Changing));
+        });
+        var changedHandler = new ClayEventHandler((_, _) =>
+        {
+            events.Add(nameof(clay.Changed));
+        });
+        var removingHandler = new ClayEventHandler((_, _) =>
+        {
+            events.Add(nameof(clay.Removing));
+        });
+        var removedHandler = new ClayEventHandler((_, _) =>
+        {
+            events.Add(nameof(clay.Removed));
+        });
+
+        clay.AddEvent(nameof(Clay.Changing), changingHandler).AddEvent(nameof(Clay.Changed), changedHandler)
+            .AddEvent(nameof(Clay.Removing), removingHandler).AddEvent(nameof(Clay.Removed), removedHandler);
+
+        clay.OnChanging("name");
+        clay.OnChanged(0);
+        clay.OnRemoving("name");
+        clay.OnRemoved(0);
+
+        Assert.Equal(["Changing", "Changed", "Removing", "Removed"], events);
+
+        clay.RemoveEvent(nameof(Clay.Changing), changingHandler).RemoveEvent(nameof(Clay.Changed), changedHandler)
+            .RemoveEvent(nameof(Clay.Removing), removingHandler).RemoveEvent(nameof(Clay.Removed), removedHandler);
+
+        clay.OnChanging("name");
+        clay.OnChanged(0);
+        clay.OnRemoving("name");
+        clay.OnRemoved(0);
+
+        Assert.Equal(["Changing", "Changed", "Removing", "Removed"], events);
+    }
+
+    [Fact]
+    public void RemoveEvent_WithAction_ReturnOK()
+    {
+        var clay = new Clay();
+        var events = new List<string>();
+
+        var changingHandler = new Action<dynamic, ClayEventArgs>((_, _) =>
+        {
+            events.Add(nameof(clay.Changing));
+        });
+        var changedHandler = new Action<dynamic, ClayEventArgs>((_, _) =>
+        {
+            events.Add(nameof(clay.Changed));
+        });
+        var removingHandler = new Action<dynamic, ClayEventArgs>((_, _) =>
+        {
+            events.Add(nameof(clay.Removing));
+        });
+        var removedHandler = new Action<dynamic, ClayEventArgs>((_, _) =>
+        {
+            events.Add(nameof(clay.Removed));
+        });
+
+        clay.AddEvent(nameof(Clay.Changing), changingHandler).AddEvent(nameof(Clay.Changed), changedHandler)
+            .AddEvent(nameof(Clay.Removing), removingHandler).AddEvent(nameof(Clay.Removed), removedHandler);
+
+        clay.OnChanging("name");
+        clay.OnChanged(0);
+        clay.OnRemoving("name");
+        clay.OnRemoved(0);
+
+        Assert.Equal(["Changing", "Changed", "Removing", "Removed"], events);
+
+        clay.RemoveEvent(nameof(Clay.Changing), changingHandler).RemoveEvent(nameof(Clay.Changed), changedHandler)
+            .RemoveEvent(nameof(Clay.Removing), removingHandler).RemoveEvent(nameof(Clay.Removed), removedHandler);
+
+        clay.OnChanging("name");
+        clay.OnChanged(0);
+        clay.OnRemoving("name");
+        clay.OnRemoved(0);
+
+        Assert.Equal(["Changing", "Changed", "Removing", "Removed"], events);
+    }
+
+    [Fact]
+    public void ClearAllEvents_ReturnOK()
+    {
+        var clay = new Clay();
+        var events = new List<string>();
+
+        var changingHandler = new ClayEventHandler((_, _) =>
+        {
+            events.Add(nameof(clay.Changing));
+        });
+        var changedHandler = new ClayEventHandler((_, _) =>
+        {
+            events.Add(nameof(clay.Changed));
+        });
+        var removingHandler = new ClayEventHandler((_, _) =>
+        {
+            events.Add(nameof(clay.Removing));
+        });
+        var removedHandler = new ClayEventHandler((_, _) =>
+        {
+            events.Add(nameof(clay.Removed));
+        });
+
+        clay.AddEvent(nameof(Clay.Changing), changingHandler).AddEvent(nameof(Clay.Changed), changedHandler)
+            .AddEvent(nameof(Clay.Removing), removingHandler).AddEvent(nameof(Clay.Removed), removedHandler);
+
+        clay.OnChanging("name");
+        clay.OnChanged(0);
+        clay.OnRemoving("name");
+        clay.OnRemoved(0);
+
+        Assert.Equal(["Changing", "Changed", "Removing", "Removed"], events);
+
+        clay.ClearAllEvents();
+
+        clay.OnChanging("name");
+        clay.OnChanged(0);
+        clay.OnRemoving("name");
+        clay.OnRemoved(0);
+
+        Assert.Equal(["Changing", "Changed", "Removing", "Removed"], events);
+    }
 }
