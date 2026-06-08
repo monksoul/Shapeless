@@ -387,17 +387,18 @@ public partial class Clay
             var snapshot = current.AsEnumerable().ToArray();
             foreach (var (key, value) in snapshot)
             {
-                // 仅当值为字符串且表示 JSON 对象（{}）或数组（[]）时才解析
-                if (value is not string jsonString || !IsJsonObjectOrArray(jsonString))
+                switch (value)
                 {
-                    continue;
+                    // 仅当值为字符串且表示 JSON 对象（{}）或数组（[]）时才解析
+                    case string jsonString when IsJsonObjectOrArray(jsonString):
+                        // 执行解析并更新当前键值
+                        current.Set(key, Parse(jsonString, current.Options));
+                        ParseRecursive((Clay)DeserializeNode(current.FindNode(key), current.Options)!, depth - 1);
+                        break;
+                    case Clay nestedClay:
+                        ParseRecursive(nestedClay, depth);
+                        break;
                 }
-
-                // 执行解析并更新当前键值
-                current.Set(key, Parse(jsonString, current.Options));
-
-                // 递归处理（包括刚解析出来的），由于 Parse 返回的是包含 JsonNode 克隆副本的新流变对象，因此需要重新查询
-                ParseRecursive((Clay)DeserializeNode(current.FindNode(key), current.Options)!, depth - 1);
             }
 
             return current;
