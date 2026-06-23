@@ -58,28 +58,10 @@ public class ClayOperatorTests
 
         var clay6 = new Clay.Object { ["id"] = 1, ["name"] = "furion" };
         Assert.Equal(clay1.GetHashCode(), clay6.GetHashCode());
-    }
 
-    [Fact]
-    public void AreObjectEqual_ReturnOK()
-    {
-        var clay1 = Clay.Parse("""{"id":1,"name":"furion"}""");
-        var clay2 = Clay.Parse("""{"name":"furion","id":1,}""");
-        var clay3 = Clay.Parse("""{"name":"furion","id":1,"age":30}""");
-
-        Assert.True(Clay.AreObjectEqual(clay1, clay2));
-        Assert.False(Clay.AreObjectEqual(clay2, clay3));
-    }
-
-    [Fact]
-    public void AreArrayEqual_ReturnOK()
-    {
-        var clay1 = Clay.Parse("[1,2,3,true,false,{},12.3,\"string\",null,{\"id\":1,\"name\":\"furion\"}]");
-        var clay2 = Clay.Parse("[1,2,3,true,false,{},12.3,\"string\",{\"id\":1,\"name\":\"furion\"},null]");
-
-        Assert.True(Clay.AreArrayEqual(clay1,
-            Clay.Parse("[1,2,3,true,false,{},12.3,\"string\",null,{\"id\":1,\"name\":\"furion\"}]")));
-        Assert.False(Clay.AreArrayEqual(clay1, clay2));
+        var clay7 = Clay.Parse("[1,2,3]");
+        var clay8 = Clay.Parse("[1,3,2]");
+        Assert.NotEqual(clay7.GetHashCode(), clay8.GetHashCode());
     }
 
     [Fact]

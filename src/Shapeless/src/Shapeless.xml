@@ -1573,34 +1573,6 @@
         <member name="M:Shapeless.Clay.GetHashCode">
             <inheritdoc />
         </member>
-        <member name="M:Shapeless.Clay.AreObjectEqual(Shapeless.Clay,Shapeless.Clay)">
-            <summary>
-                检查两个单一对象实例是否相等
-            </summary>
-            <param name="clay1">
-                <see cref="T:Shapeless.Clay" />
-            </param>
-            <param name="clay2">
-                <see cref="T:Shapeless.Clay" />
-            </param>
-            <returns>
-                <see cref="T:System.Boolean" />
-            </returns>
-        </member>
-        <member name="M:Shapeless.Clay.AreArrayEqual(Shapeless.Clay,Shapeless.Clay)">
-            <summary>
-                检查两个集合或数组实例是否相等
-            </summary>
-            <param name="clay1">
-                <see cref="T:Shapeless.Clay" />
-            </param>
-            <param name="clay2">
-                <see cref="T:Shapeless.Clay" />
-            </param>
-            <returns>
-                <see cref="T:System.Boolean" />
-            </returns>
-        </member>
         <member name="F:Shapeless.Clay._getCSharpInvokeMemberBinderTypeArguments">
             <summary>
                 获取 <see cref="T:System.Dynamic.InvokeMemberBinder" /> 类型的 <c>TypeArguments</c> 属性访问器
@@ -2406,9 +2378,7 @@
             <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
         </member>
         <member name="T:System.Text.RegularExpressions.Generated.ArrayIndexPatternRegex_0.RunnerFactory.Runner">
-            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
-        </member>
-        <member name="M:System.Text.RegularExpressions.Generated.ArrayIndexPatternRegex_0.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expressystem.Text.RegularExpressions.Generated.ArrayIndexPatternRegex_0.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
             <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
             <param name="inputSpan">The text being scanned by the regular expression.</param>
         </member>
@@ -2450,7 +2420,7 @@
             <returns>true if a possible match was found; false if no more matches are possible.</returns>
         </member>
         <member name="M:System.Text.RegularExpressions.Generated.Regex_1.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
-            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summarye.runtextpos is a match for the regular expression.</summary>
             <param name="inputSpan">The text being scanned by the regular expression.</param>
             <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
         </member>

@@ -23,7 +23,7 @@ public partial class Clay : DynamicObject, IEnumerable<object?>, IFormattable, I
     internal Clay(JsonNode? jsonNode, ClayOptions? options = null)
     {
         // 空检查
-        ArgumentNullException.ThrowIfNull(jsonNode, "obj");
+        ArgumentNullException.ThrowIfNull(jsonNode);
 
         // 初始化 ClayOptions
         Options = options ?? ClayOptions.Default;

@@ -24,7 +24,7 @@ public partial class Clay
             return false;
         }
 
-        return IsObject ? AreObjectEqual(this, other) : AreArrayEqual(this, other);
+        return JsonNode.DeepEquals(JsonCanvas, other.JsonCanvas);
     }
 
     /// <inheritdoc />
@@ -151,79 +151,72 @@ public partial class Clay
     public override int GetHashCode()
     {
         // 初始化 HashCode 实例
-        var hash = new HashCode();
+        var hashCode = new HashCode();
 
-        if (IsObject)
+        // 递归计算 JsonCanvas 哈希值
+        // ReSharper disable once NonReadonlyMemberInGetHashCode
+        ComputeHash(JsonCanvas, ref hashCode);
+
+        return hashCode.ToHashCode();
+
+        // 递归计算 JsonNode 哈希值
+        static void ComputeHash(JsonNode? jsonNode, ref HashCode hash)
         {
-            // 预处理键值对（排序）
-            var sortedEntries = AsEnumerateObject().OrderBy(kvp => kvp.Key, StringComparer.Ordinal);
-
-            // 遍历键值对集合
-            foreach (var (key, value) in sortedEntries)
+            // 空检查
+            if (jsonNode is null)
             {
-                // 递归计算键和值的哈希码
-                hash.Add(key?.GetHashCode() ?? 0);
-                hash.Add(value?.GetHashCode() ?? 0);
+                hash.Add(0);
+                return;
+            }
+
+            // 根据 JSON 值的种类分别计算哈希值
+            switch (jsonNode.GetValueKind())
+            {
+                // 对象
+                case JsonValueKind.Object:
+                    // 预处理键值对（按键名排序）
+                    var sortedProperties = jsonNode.AsObject().OrderBy(p => p.Key, StringComparer.Ordinal);
+
+                    // 遍历所有键值对，递归计算哈希
+                    foreach (var (key, value) in sortedProperties)
+                    {
+                        hash.Add(key);
+                        ComputeHash(value, ref hash);
+                    }
+
+                    break;
+                // 数组
+                case JsonValueKind.Array:
+                    // 遍历数组每一项，按顺序递归计算
+                    foreach (var item in jsonNode.AsArray())
+                    {
+                        ComputeHash(item, ref hash);
+                    }
+
+                    break;
+                // 字符串
+                case JsonValueKind.String:
+                    hash.Add(jsonNode.GetValue<string>());
+                    break;
+                // 数值
+                case JsonValueKind.Number:
+                    hash.Add(jsonNode.GetValue<decimal>());
+                    break;
+                // True
+                case JsonValueKind.True:
+                    hash.Add(true);
+                    break;
+                // False
+                case JsonValueKind.False:
+                    hash.Add(false);
+                    break;
+                // 其他类型
+                case JsonValueKind.Null:
+                case JsonValueKind.Undefined:
+                default:
+                    hash.Add(0);
+                    break;
             }
         }
-        else
-        {
-            // 遍历集合或数组集合
-            foreach (var value in AsEnumerateArray())
-            {
-                // 递归计算元素的哈希码
-                hash.Add(value?.GetHashCode() ?? 0);
-            }
-        }
-
-        return hash.ToHashCode();
-    }
-
-    /// <summary>
-    ///     检查两个单一对象实例是否相等
-    /// </summary>
-    /// <param name="clay1">
-    ///     <see cref="Clay" />
-    /// </param>
-    /// <param name="clay2">
-    ///     <see cref="Clay" />
-    /// </param>
-    /// <returns>
-    ///     <see cref="bool" />
-    /// </returns>
-    internal static bool AreObjectEqual(Clay clay1, Clay clay2) =>
-        clay1.Count == clay2.Count && clay1.All((dynamic? item) =>
-            clay2.HasProperty(item?.Key) && object.Equals(item?.Value, clay2[item?.Key]));
-
-    /// <summary>
-    ///     检查两个集合或数组实例是否相等
-    /// </summary>
-    /// <param name="clay1">
-    ///     <see cref="Clay" />
-    /// </param>
-    /// <param name="clay2">
-    ///     <see cref="Clay" />
-    /// </param>
-    /// <returns>
-    ///     <see cref="bool" />
-    /// </returns>
-    internal static bool AreArrayEqual(Clay clay1, Clay clay2)
-    {
-        // 检查集合或数组长度是否相等
-        if (clay1.Count != clay2.Count)
-        {
-            return false;
-        }
-
-        // 遍历检查每一项是否相等
-        for (var i = 0; i < clay1.Count; i++)
-        {
-            if (!Equals(clay1[i], clay2[i]))
-            {
-                return false;
-            }
-        }
-
-        return true;
     }
 }
