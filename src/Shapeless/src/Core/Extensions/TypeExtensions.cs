@@ -175,7 +175,20 @@ internal static class TypeExtensions
     internal static Func<object, object?> CreatePropertyGetter(this Type type, PropertyInfo propertyInfo)
     {
         // 空检查
+        ArgumentNullException.ThrowIfNull(type);
         ArgumentNullException.ThrowIfNull(propertyInfo);
+
+        // 获取属性的获取方法，并允许非公开访问
+        var getMethod = propertyInfo.GetGetMethod(true);
+
+        // 空检查
+        ArgumentNullException.ThrowIfNull(getMethod);
+
+        // 检查属性是否是静态属性
+        if (getMethod.IsStatic)
+        {
+            throw new ArgumentException("Property getter must be an instance method.", nameof(propertyInfo));
+        }
 
         // 创建一个新的动态方法，并为其命名，命名格式为类型全名_获取_属性名
         var dynamicMethod = new DynamicMethod(
@@ -188,12 +201,6 @@ internal static class TypeExtensions
 
         // 获取动态方法的 IL 生成器
         var ilGenerator = dynamicMethod.GetILGenerator();
-
-        // 获取属性的获取方法，并允许非公开访问
-        var getMethod = propertyInfo.GetGetMethod(true);
-
-        // 空检查
-        ArgumentNullException.ThrowIfNull(getMethod);
 
         // 将目标对象加载到堆栈上
         ilGenerator.Emit(OpCodes.Ldarg_0);
