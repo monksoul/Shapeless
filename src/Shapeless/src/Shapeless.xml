@@ -1394,7 +1394,7 @@
         <member name="M:Shapeless.Clay.ArrayIndexPatternRegex">
             <remarks>
             Pattern:<br/>
-            <code>\\[(\\d+)\\]</code><br/>
+            <code>\[(\d+)\]</code><br/>
             Explanation:<br/>
             <code>
             ○ Match '['.<br/>
@@ -1682,7 +1682,7 @@
         <member name="M:Shapeless.Core.Converters.Json.FlexibleDateTimeConverter.Regex">
             <remarks>
             Pattern:<br/>
-            <code>^/Date\\(([+-]*\\d+)\\)/$</code><br/>
+            <code>^/Date\(([+-]*\d+)\)/$</code><br/>
             Options:<br/>
             <code>RegexOptions.CultureInvariant</code><br/>
             Explanation:<br/>
@@ -1711,7 +1711,7 @@
         <member name="M:Shapeless.Core.Converters.Json.FlexibleDateTimeOffsetConverter.Regex">
             <remarks>
             Pattern:<br/>
-            <code>^/Date\\(([+-]*\\d+)([+-])(\\d{2})(\\d{2})\\)/$</code><br/>
+            <code>^/Date\(([+-]*\d+)([+-])(\d{2})(\d{2})\)/$</code><br/>
             Options:<br/>
             <code>RegexOptions.CultureInvariant</code><br/>
             Explanation:<br/>
@@ -1839,7 +1839,7 @@
         <member name="M:Shapeless.Core.Extensions.JsonExtensions.Regex">
             <remarks>
             Pattern:<br/>
-            <code>^/Date\\(([+-]*\\d+)\\)/$</code><br/>
+            <code>^/Date\(([+-]*\d+)\)/$</code><br/>
             Options:<br/>
             <code>RegexOptions.CultureInvariant</code><br/>
             Explanation:<br/>
@@ -1859,12 +1859,16 @@
                 <see cref="T:System.Object" /> 扩展类
             </summary>
         </member>
-        <member name="M:Shapeless.Core.Extensions.ObjectExtensions.ObjectToDictionary(System.Object)">
+        <member name="M:Shapeless.Core.Extensions.ObjectExtensions.ObjectToDictionary(System.Object,System.Boolean)">
             <summary>
                 将对象转换为 <see cref="T:System.Collections.Generic.IDictionary`2" /> 类型对象
             </summary>
             <param name="obj">
                 <see cref="T:System.Object" />
+            </param>
+            <param name="returnPropertyInfo">
+                当无法通过已知类型转换而回退到反射读取公开属性时，如果为 <c>true</c> 则字典的值将保存 <see cref="T:System.Reflection.PropertyInfo" />
+                对象，否则保存属性的实际值。默认值为 <c>false</c>
             </param>
             <returns>
                 <see cref="T:System.Collections.Generic.IDictionary`2" />
@@ -2313,7 +2317,7 @@
         <member name="M:Shapeless.PascalCaseNamingPolicy.WordBoundaryRegex">
             <remarks>
             Pattern:<br/>
-            <code>(?&lt;=[A-Z])(?=[A-Z][a-z])|(?&lt;=[^A-Z])(?=[A-Z])|(?&lt;=[A-Za-z])(?=[^A-Za-z])|(?&lt;=\\d)(?=\\D)|(?&lt;=\\D)(?=\\d)</code><br/>
+            <code>(?&lt;=[A-Z])(?=[A-Z][a-z])|(?&lt;=[^A-Z])(?=[A-Z])|(?&lt;=[A-Za-z])(?=[^A-Za-z])|(?&lt;=\d)(?=\D)|(?&lt;=\D)(?=\d)</code><br/>
             Explanation:<br/>
             <code>
             ○ Match with 5 alternative expressions, atomically.<br/>
@@ -2531,6 +2535,12 @@
         </member>
         <member name="M:System.Text.RegularExpressions.Generated.Utilities.StackPush(System.Int32[]@,System.Int32@,System.Int32,System.Int32)">
             <summary>Pushes 2 values onto the backtracking stack.</summary>
+        </member>
+    </members>
+</doc>
+members>
+</doc>
+tack.</summary>
         </member>
     </members>
 </doc>
