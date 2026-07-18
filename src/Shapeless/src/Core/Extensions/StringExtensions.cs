@@ -123,6 +123,9 @@ internal static partial class StringExtensions
         return root;
     }
 
+    /// <summary>
+    ///     URL 编码格式验证正则表达式
+    /// </summary>
     [GeneratedRegex(
         "^(?:(?:[a-zA-Z0-9-._~]|%[0-9A-Fa-f]{2})+=(?:[a-zA-Z0-9-._~+]|%[0-9A-Fa-f]{2})*)(?:&(?:[a-zA-Z0-9-._~]|%[0-9A-Fa-f]{2})+=(?:[a-zA-Z0-9-._~+]|%[0-9A-Fa-f]{2})*)*$",
         RegexOptions.IgnorePatternWhitespace)]
