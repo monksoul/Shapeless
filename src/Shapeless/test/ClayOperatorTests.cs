@@ -44,6 +44,24 @@ public class ClayOperatorTests
     }
 
     [Fact]
+    public void Operator_Plus_ReturnOK()
+    {
+        var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
+        var clay2 = Clay.Parse("{\"id\":2,\"age\":30}");
+        var clay3 = Clay.Parse("{\"age\":31,\"address\":\"广东省中山市\"}");
+
+        var clay4 = clay + clay2 + clay3;
+        Assert.Equal("{\"id\":2,\"name\":\"furion\",\"age\":31,\"address\":\"广东省中山市\"}", clay4.ToJsonString());
+
+        var array = Clay.Parse("[1,2,3]");
+        var array2 = Clay.Parse("[2,3,4]");
+        var array3 = Clay.Parse("[true,{\"id\":1,\"name\":\"furion\"}]");
+
+        var array4 = array + array2 + array3;
+        Assert.Equal("[1,2,3,2,3,4,true,{\"id\":1,\"name\":\"furion\"}]", array4.ToJsonString());
+    }
+
+    [Fact]
     public void GetHashCode_ReturnOK()
     {
         var clay1 = Clay.Parse("""{"id":1,"name":"furion"}""");

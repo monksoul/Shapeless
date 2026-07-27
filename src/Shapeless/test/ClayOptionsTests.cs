@@ -28,6 +28,15 @@ public class ClayOptionsTests
         Assert.True(flexible.PropertyNameCaseInsensitive);
         Assert.True(flexible.AllowMissingProperty);
         Assert.True(flexible.AllowIndexOutOfRange);
+
+        Assert.NotNull(ClayOptions.Lenient);
+        var lenient = ClayOptions.Lenient;
+        Assert.True(lenient.PropertyNameCaseInsensitive);
+        Assert.True(lenient.AllowMissingProperty);
+        Assert.True(lenient.AllowIndexOutOfRange);
+        Assert.True(lenient.AutoCreateNestedObjects);
+        Assert.True(lenient.AutoCreateNestedArrays);
+        Assert.True(lenient.AutoExpandArrayWithNulls);
     }
 
     [Fact]
