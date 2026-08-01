@@ -22,6 +22,7 @@ public class ClayOptionsTests
             ClayOptions.Default.JsonSerializerOptions.NumberHandling);
         Assert.Equal(JavaScriptEncoder.UnsafeRelaxedJsonEscaping, ClayOptions.Default.JsonSerializerOptions.Encoder);
         Assert.True(ClayOptions.Default.JsonSerializerOptions.AllowTrailingCommas);
+        Assert.NotNull(ClayOptions.Default.JsonSerializerOptions.TypeInfoResolver);
 
         Assert.NotNull(ClayOptions.Flexible);
         var flexible = ClayOptions.Flexible;
