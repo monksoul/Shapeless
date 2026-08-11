@@ -4,7 +4,7 @@
 
 namespace Shapeless.Tests;
 
-public class ClayEnumerableTests(ITestOutputHelper output)
+public class ClayEnumerableTests
 {
     [Fact]
     public void Count_ReturnOK()
@@ -108,13 +108,13 @@ public class ClayEnumerableTests(ITestOutputHelper output)
         dynamic clay3 = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
         foreach (KeyValuePair<string, dynamic?> item in clay3)
         {
-            output.WriteLine(item.Key);
+            Console.WriteLine(item.Key);
         }
 
         dynamic clay4 = Clay.Parse("[1,2,3]");
         foreach (var item in clay4)
         {
-            output.WriteLine(item?.ToString());
+            Console.WriteLine(item?.ToString());
         }
     }
 
@@ -144,7 +144,7 @@ public class ClayEnumerableTests(ITestOutputHelper output)
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
         foreach (var item in clay.AsEnumerateObject())
         {
-            output.WriteLine(item.Key);
+            Console.WriteLine(item.Key);
         }
     }
 
@@ -163,7 +163,7 @@ public class ClayEnumerableTests(ITestOutputHelper output)
         var clay = Clay.Parse("[1,2,3]");
         foreach (var item in clay.AsEnumerateArray())
         {
-            output.WriteLine(item?.ToString());
+            Console.WriteLine(item?.ToString());
         }
     }
 
@@ -195,19 +195,19 @@ public class ClayEnumerableTests(ITestOutputHelper output)
         var clay = Clay.Parse("{\"id\":1,\"name\":\"furion\"}");
         clay.ForEach(item =>
         {
-            output.WriteLine($"Value:{item}");
+            Console.WriteLine($"Value:{item}");
         });
 
         clay.ForEach(u =>
         {
-            output.WriteLine($"Key: {u?.Key}, Value:{u?.Value}");
+            Console.WriteLine($"Key: {u?.Key}, Value:{u?.Value}");
         });
         Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay.ToJsonString());
 
         var array = Clay.Parse("[1,2,3]");
         array.ForEach(u =>
         {
-            output.WriteLine($"Value:{u}");
+            Console.WriteLine($"Value:{u}");
         });
 
         Assert.Equal("[1,2,3]", array.ToJsonString());

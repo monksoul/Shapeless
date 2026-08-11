@@ -16,6 +16,7 @@ internal static partial class StringExtensions
     /// <returns>
     ///     <see cref="bool" />
     /// </returns>
+    /// <exception cref="ArgumentException"></exception>
     internal static bool IsUrlEncodedFormFormat(this string output)
     {
         // 空检查

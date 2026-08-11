@@ -4,7 +4,7 @@
 
 namespace Shapeless.Tests;
 
-public class ClayExportsTests(ITestOutputHelper output)
+public class ClayExportsTests
 {
     [Fact]
     public void New_ReturnOK()
@@ -687,7 +687,7 @@ public class ClayExportsTests(ITestOutputHelper output)
                               ]
                               """);
         var duration = stopwatch.ElapsedMilliseconds;
-        output.WriteLine(duration.ToString());
+        Console.WriteLine(duration.ToString());
 
         stopwatch.Stop();
         Assert.NotNull(clay);

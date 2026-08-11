@@ -1885,6 +1885,7 @@
             <returns>
                 <see cref="T:System.Boolean" />
             </returns>
+            <exception cref="T:System.ArgumentException"></exception>
         </member>
         <member name="M:Shapeless.Core.Extensions.StringExtensions.ParseUrlEncodedFormToJsonObject(System.String)">
             <summary>

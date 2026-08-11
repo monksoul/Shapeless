@@ -4,7 +4,7 @@
 
 namespace Shapeless.Tests;
 
-public class ClayTests(ITestOutputHelper output)
+public class ClayTests
 {
     [Fact]
     public void New_Invalid_Parameters() => Assert.Throws<ArgumentNullException>(() => new Clay((JsonNode?)null));
@@ -416,7 +416,7 @@ public class ClayTests(ITestOutputHelper output)
         var j = 0;
         clay.Changing += (_, args) =>
         {
-            output.WriteLine(args.Identifier.ToString());
+            Console.WriteLine(args.Identifier.ToString());
             i++;
         };
 
@@ -903,7 +903,7 @@ public class ClayTests(ITestOutputHelper output)
         var j = 0;
         clay.Changing += (_, args) =>
         {
-            output.WriteLine(args.Identifier.ToString());
+            Console.WriteLine(args.Identifier.ToString());
             i++;
         };
 

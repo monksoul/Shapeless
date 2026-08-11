@@ -71,6 +71,8 @@ internal static class ObjectExtensions
                 return jsonElement.EnumerateObject().ToDictionary<JsonProperty, object, object?>(
                     jsonProperty => jsonProperty.Name,
                     jsonProperty => jsonProperty.Value);
+            case JsonNode jsonNode when jsonNode.GetValueKind() == JsonValueKind.Object:
+                return jsonNode.AsObject().ToDictionary(object (u) => u.Key, object? (u) => u.Value);
         }
 
         // 检查类型是否是键值对集合类型

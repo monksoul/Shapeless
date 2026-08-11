@@ -4,7 +4,7 @@
 
 namespace Shapeless.AspNetCore.Tests;
 
-public class ClayBinderProviderTests(ITestOutputHelper output)
+public class ClayBinderProviderTests
 {
     [Fact]
     public async Task GetBinder_ReturnOK()
@@ -13,7 +13,7 @@ public class ClayBinderProviderTests(ITestOutputHelper output)
         var urls = new[] { "--urls", $"http://localhost:{port}" };
         var builder = WebApplication.CreateBuilder(urls);
 
-        builder.Services.AddControllers().AddJsonOptions(options => { }).AddClayOptions(options =>
+        builder.Services.AddControllers().AddJsonOptions(_ => { }).AddClayOptions(options =>
         {
             options.KeyValueJsonToObject = true;
         });
@@ -28,7 +28,7 @@ public class ClayBinderProviderTests(ITestOutputHelper output)
 
         app.MapControllers();
 
-        await app.StartAsync();
+        await app.StartAsync(TestContext.Current.CancellationToken);
 
         var httpClient = app.Services.GetRequiredService<IHttpClientFactory>().CreateClient();
         var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, new Uri($"http://localhost:{port}/test"));
@@ -36,14 +36,14 @@ public class ClayBinderProviderTests(ITestOutputHelper output)
             new StringContent("{\"id\":1,\"name\":\"furion\"}", Encoding.UTF8,
                 new MediaTypeHeaderValue("application/json"));
 
-        var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
-        var content = await httpResponseMessage.Content.ReadAsStringAsync();
-        output.WriteLine(content);
+        var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage, TestContext.Current.CancellationToken);
+        var content = await httpResponseMessage.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+        Console.WriteLine(content);
         httpResponseMessage.EnsureSuccessStatusCode();
-        var str = await httpResponseMessage.Content.ReadAsStringAsync();
+        var str = await httpResponseMessage.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
         Assert.Equal("{\"id\":1,\"name\":\"furion\"}", str);
 
-        await app.StopAsync();
+        await app.StopAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -61,7 +61,7 @@ public class ClayBinderProviderTests(ITestOutputHelper output)
         await using var app = builder.Build();
         app.MapControllers();
 
-        await app.StartAsync();
+        await app.StartAsync(TestContext.Current.CancellationToken);
 
         var httpClient = app.Services.GetRequiredService<IHttpClientFactory>().CreateClient();
         var httpRequestMessage =
@@ -69,12 +69,12 @@ public class ClayBinderProviderTests(ITestOutputHelper output)
         httpRequestMessage.Content =
             new StringContent("""{"id":1,"name":"Furion"}""", new MediaTypeHeaderValue("application/json"));
 
-        var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
+        var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage, TestContext.Current.CancellationToken);
         httpResponseMessage.EnsureSuccessStatusCode();
-        var str = await httpResponseMessage.Content.ReadAsStringAsync();
+        var str = await httpResponseMessage.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
         Assert.Equal("""{"id":1,"name":"Furion"}""", str);
 
-        await app.StopAsync();
+        await app.StopAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -92,7 +92,7 @@ public class ClayBinderProviderTests(ITestOutputHelper output)
         await using var app = builder.Build();
         app.MapControllers();
 
-        await app.StartAsync();
+        await app.StartAsync(TestContext.Current.CancellationToken);
 
         var httpClient = app.Services.GetRequiredService<IHttpClientFactory>().CreateClient();
         var httpRequestMessage =
@@ -100,11 +100,11 @@ public class ClayBinderProviderTests(ITestOutputHelper output)
         httpRequestMessage.Content =
             new StringContent("""{"id":1,"name":"Furion"}""", new MediaTypeHeaderValue("application/json"));
 
-        var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
+        var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage, TestContext.Current.CancellationToken);
         httpResponseMessage.EnsureSuccessStatusCode();
-        var str = await httpResponseMessage.Content.ReadAsStringAsync();
+        var str = await httpResponseMessage.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
         Assert.Equal("""{"id":1,"name":"Furion"}""", str);
 
-        await app.StopAsync();
+        await app.StopAsync(TestContext.Current.CancellationToken);
     }
 }
