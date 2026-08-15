@@ -1394,7 +1394,7 @@
         <member name="M:Shapeless.Clay.ArrayIndexPatternRegex">
             <remarks>
             Pattern:<br/>
-            <code>\\[(\\d+)\\]</code><br/>
+            <code>\[(\d+)\]</code><br/>
             Explanation:<br/>
             <code>
             ○ Match '['.<br/>
@@ -1696,7 +1696,7 @@
         <member name="M:Shapeless.Core.Converters.Json.FlexibleDateTimeConverter.Regex">
             <remarks>
             Pattern:<br/>
-            <code>^/Date\\(([+-]*\\d+)\\)/$</code><br/>
+            <code>^/Date\(([+-]*\d+)\)/$</code><br/>
             Options:<br/>
             <code>RegexOptions.CultureInvariant</code><br/>
             Explanation:<br/>
@@ -1725,7 +1725,7 @@
         <member name="M:Shapeless.Core.Converters.Json.FlexibleDateTimeOffsetConverter.Regex">
             <remarks>
             Pattern:<br/>
-            <code>^/Date\\(([+-]*\\d+)([+-])(\\d{2})(\\d{2})\\)/$</code><br/>
+            <code>^/Date\(([+-]*\d+)([+-])(\d{2})(\d{2})\)/$</code><br/>
             Options:<br/>
             <code>RegexOptions.CultureInvariant</code><br/>
             Explanation:<br/>
@@ -1836,7 +1836,7 @@
         <member name="M:Shapeless.Core.Extensions.JsonExtensions.Regex">
             <remarks>
             Pattern:<br/>
-            <code>^/Date\\(([+-]*\\d+)\\)/$</code><br/>
+            <code>^/Date\(([+-]*\d+)\)/$</code><br/>
             Options:<br/>
             <code>RegexOptions.CultureInvariant</code><br/>
             Explanation:<br/>
@@ -2321,7 +2321,7 @@
         <member name="M:Shapeless.PascalCaseNamingPolicy.WordBoundaryRegex">
             <remarks>
             Pattern:<br/>
-            <code>(?&lt;=[A-Z])(?=[A-Z][a-z])|(?&lt;=[^A-Z])(?=[A-Z])|(?&lt;=[A-Za-z])(?=[^A-Za-z])|(?&lt;=\\d)(?=\\D)|(?&lt;=\\D)(?=\\d)</code><br/>
+            <code>(?&lt;=[A-Z])(?=[A-Z][a-z])|(?&lt;=[^A-Z])(?=[A-Z])|(?&lt;=[A-Za-z])(?=[^A-Za-z])|(?&lt;=\d)(?=\D)|(?&lt;=\D)(?=\d)</code><br/>
             Explanation:<br/>
             <code>
             ○ Match with 5 alternative expressions, atomically.<br/>
@@ -2539,10 +2539,6 @@
         </member>
         <member name="M:System.Text.RegularExpressions.Generated.Utilities.StackPush(System.Int32[]@,System.Int32@,System.Int32,System.Int32)">
             <summary>Pushes 2 values onto the backtracking stack.</summary>
-        </member>
-    </members>
-</doc>
-tack.</summary>
         </member>
     </members>
 </doc>
