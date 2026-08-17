@@ -1808,6 +1808,11 @@ public class ClayExportsTests
         Assert.Equal("2020-05-30T18:30:00.0000000", unixEpoch.DateTime.ToString("O", CultureInfo.CurrentCulture));
         Assert.Equal("2020-05-30T11:30:00.0000000-07:00",
             unixEpoch.DateTimeOffset.ToString("O", CultureInfo.CurrentCulture));
+
+        var clay6 = Clay.Parse("""{"Timestamp":1.7828352E12}""");
+        var scientificNotation = clay6.As<ScientificNotationClass>();
+        Assert.NotNull(scientificNotation);
+        Assert.Equal(1782835200000L, scientificNotation.Timestamp);
     }
 
     [Fact]
@@ -2915,6 +2920,11 @@ public class UnixEpochDateClass
 {
     public DateTime DateTime { get; set; }
     public DateTimeOffset DateTimeOffset { get; set; }
+}
+
+public class ScientificNotationClass
+{
+    public long Timestamp { get; set; }
 }
 
 public class CustomClass<T>
