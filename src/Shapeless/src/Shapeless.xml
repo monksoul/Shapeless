@@ -1470,7 +1470,7 @@
         </member>
         <member name="M:Shapeless.Clay.op_Inequality(Shapeless.Clay,Shapeless.Clay)">
             <summary>
-                重载 != 运算符
+             重载 != 运算符
             </summary>
             <param name="left">
                 <see cref="T:Shapeless.Clay" />
@@ -1682,6 +1682,27 @@
         <member name="M:Shapeless.ObjectToClayJsonConverter.Write(System.Text.Json.Utf8JsonWriter,System.Object,System.Text.Json.JsonSerializerOptions)">
             <inheritdoc />
         </member>
+        <member name="T:Shapeless.Core.Converters.Json.EnumJsonConverter">
+            <summary>
+                枚举 JSON 序列化转换器
+            </summary>
+            <remarks>支持将 JSON 数字、字符串数字（如 "1"）或枚举名称（忽略大小写）反序列化为枚举。</remarks>
+        </member>
+        <member name="P:Shapeless.Core.Converters.Json.EnumJsonConverter.WriteAsString">
+            <summary>
+                控制序列化时是否将枚举输出为字符串（枚举名称）
+            </summary>
+            <remarks>默认值为：<c>false</c>。</remarks>
+        </member>
+        <member name="M:Shapeless.Core.Converters.Json.EnumJsonConverter.CanConvert(System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="M:Shapeless.Core.Converters.Json.EnumJsonConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <inheritdoc />
+        </member>
+        <member name="M:Shapeless.Core.Converters.Json.EnumJsonConverter.Write(System.Text.Json.Utf8JsonWriter,System.Object,System.Text.Json.JsonSerializerOptions)">
+            <inheritdoc />
+        </member>
         <member name="T:Shapeless.Core.Converters.Json.FlexibleDateTimeConverter">
             <summary>
                 <see cref="T:System.DateTime" /> JSON 序列化转换器
@@ -1696,7 +1717,7 @@
         <member name="M:Shapeless.Core.Converters.Json.FlexibleDateTimeConverter.Regex">
             <remarks>
             Pattern:<br/>
-            <code>^/Date\\(([+-]*\\d+)\\)/$</code><br/>
+            <code>^/Date\(([+-]*\d+)\)/$</code><br/>
             Options:<br/>
             <code>RegexOptions.CultureInvariant</code><br/>
             Explanation:<br/>
@@ -1704,9 +1725,10 @@
             ○ Match if at the beginning of the string.<br/>
             ○ Match the string "/Date(".<br/>
             ○ 1st capture group.<br/>
-                ○ Match a character in the set [+-] atomically any number of times.<br/>
+                ○ Match a character in the set [+\-] atomically any number of times.<br/>
                 ○ Match a Unicode digit atomically at least once.<br/>
             ○ Match the string ")/".<br/>
+    
             ○ Match if at the end of the string or if before an ending newline.<br/>
             </code>
             </remarks>
@@ -2468,8 +2490,7 @@
         </member>
         <member name="M:System.Text.RegularExpressions.Generated.Regex_1.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
             <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
-            <param name="inputSpan">The text being scanned by the regular expression.</param>
-            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+            <param name="inputSpan">The text being scannr expression matches at the current position; otherwise, false.</returns>
         </member>
         <member name="T:System.Text.RegularExpressions.Generated.Regex_2">
             <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the Regex method.</summary>
@@ -2516,6 +2537,7 @@
             <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
         </member>
         <member name="M:System.Text.RegularExpressions.Generated.UrlEncodedFormFormatRegex_3.RunnerFactory.CreateInstance">
+            <summary>Creates armFormatRegex_3.RunnerFactory.CreateInstance">
             <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
         </member>
         <member name="T:System.Text.RegularExpressions.Generated.UrlEncodedFormFormatRegex_3.RunnerFactory.Runner">
