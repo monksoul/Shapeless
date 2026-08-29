@@ -338,6 +338,10 @@ public class ClayExportsTests
 
         var clay26 = Clay.Parse(JsonSerializer.Serialize(new { id = 1, name = "furion" }));
         Assert.Equal("{\"id\":1,\"name\":\"furion\"}", clay26.ToJsonString());
+
+        var dateTime = DateTime.Parse("2026-08-30T05:02:14.1904858+08:00");
+        var clay27 = Clay.Parse(new { id = 1, dateTime });
+        Assert.Equal("{\"id\":1,\"dateTime\":\"2026-08-30T05:02:14.1904858+08:00\"}", clay27.ToJsonString());
     }
 
     [Fact]
