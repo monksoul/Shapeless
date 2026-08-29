@@ -11,7 +11,7 @@ public class ShapelessMvcBuilderExtensionsTests
     {
         var builder = WebApplication.CreateBuilder();
 
-        Assert.Throws<ArgumentNullException>(() => builder.Services.AddControllers().AddJsonOptions(null!));
+        Assert.Throws<ArgumentNullException>(() => builder.Services.AddControllers().AddClayOptions(null!));
     }
 
     [Fact]
@@ -23,6 +23,8 @@ public class ShapelessMvcBuilderExtensionsTests
         {
             options.KeyValueJsonToObject = true;
         });
+
+        Assert.Single(builder.Services, u => u.ServiceType == typeof(IClay));
 
         using var app = builder.Build();
 
@@ -36,10 +38,14 @@ public class ShapelessMvcBuilderExtensionsTests
 
         var mvcOptions = app.Services.GetRequiredService<IOptions<MvcOptions>>().Value;
         Assert.Single(mvcOptions.ModelBinderProviders.OfType<ClayBinderProvider>());
+
+        var clay = app.Services.GetRequiredService<IClay>();
+        Assert.NotNull(clay);
+        Assert.True(clay is InternalClay);
     }
 
     [Fact]
-    public void AddClayOptions_Repeat_ReturnOK()
+    public void AddClayOptions_Duplicate_ReturnOK()
     {
         var builder = WebApplication.CreateBuilder();
 
@@ -50,6 +56,8 @@ public class ShapelessMvcBuilderExtensionsTests
         {
             options.KeyValueJsonToObject = true;
         });
+
+        Assert.Single(builder.Services, u => u.ServiceType == typeof(IClay));
 
         using var app = builder.Build();
 
@@ -70,6 +78,7 @@ public class ShapelessMvcBuilderExtensionsTests
         var builder = WebApplication.CreateBuilder();
 
         builder.Services.AddControllers().AddClayOptions();
+        Assert.Single(builder.Services, u => u.ServiceType == typeof(IClay));
 
         using var app = builder.Build();
 

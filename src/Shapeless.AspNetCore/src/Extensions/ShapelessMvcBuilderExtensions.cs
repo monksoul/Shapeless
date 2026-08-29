@@ -18,7 +18,12 @@ public static class ShapelessMvcBuilderExtensions
     /// <returns>
     ///     <see cref="IMvcBuilder" />
     /// </returns>
-    public static IMvcBuilder AddClayOptions(this IMvcBuilder builder) => builder.AddClayOptions(_ => { });
+    public static IMvcBuilder AddClayOptions(this IMvcBuilder builder)
+    {
+        builder.Services.AddClayOptions();
+
+        return builder;
+    }
 
     /// <summary>
     ///     添加 <see cref="Clay" /> 配置
@@ -32,23 +37,7 @@ public static class ShapelessMvcBuilderExtensions
     /// </returns>
     public static IMvcBuilder AddClayOptions(this IMvcBuilder builder, Action<ClayOptions> configure)
     {
-        // 空检查
-        ArgumentNullException.ThrowIfNull(configure);
-
-        // 配置 JsonOptions 选项，添加 ClayJsonConverter 和 ObjectToClayJsonConverter 转换器
-        builder.Services.Configure<JsonOptions>(options => options.JsonSerializerOptions.AddClayConverters());
-
-        // 配置 ClayOptions 选项服务
-        builder.Services.Configure(configure);
-
-        // 添加 Clay 模型绑定提供器
-        builder.Services.Configure<MvcOptions>(options =>
-        {
-            if (!options.ModelBinderProviders.OfType<ClayBinderProvider>().Any())
-            {
-                options.ModelBinderProviders.Insert(0, new ClayBinderProvider());
-            }
-        });
+        builder.Services.AddClayOptions(configure);
 
         return builder;
     }

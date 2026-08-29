@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <Description>Furion 框架流变对象模块。</Description>
+        <Description>Shapeless 是一个高性能的 C# 开源库，提供类似 JavaScript JSON 的灵活操作体验，支持动态的增删查改和 Linq、Lambda 表达式查询，极大地简化了运行时对象的构建与操作，同时保持了简洁性和强大的性能表现。</Description>
         <PackageTags>Furion;ASP.NET;dotNET China;Cross Platform;百小僧;Monk;MonkSoul;Core;Clay;ClayObject;Dynamic;DynamicObject;ExpandoObject;Shapeless</PackageTags>
     </PropertyGroup>
 

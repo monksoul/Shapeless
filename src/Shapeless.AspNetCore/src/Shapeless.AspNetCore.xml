@@ -70,6 +70,146 @@
         <member name="M:Shapeless.ClayBinderProvider.GetBinder(Microsoft.AspNetCore.Mvc.ModelBinding.ModelBinderProviderContext)">
             <inheritdoc />
         </member>
+        <member name="T:Shapeless.IClay">
+            <summary>
+                流变对象接口
+            </summary>
+        </member>
+        <member name="M:Shapeless.IClay.Create(Shapeless.ClayOptions)">
+            <summary>
+                创建 <see cref="T:Shapeless.Clay" />
+            </summary>
+            <param name="options">
+                <see cref="T:Shapeless.ClayOptions" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.IClay.Create(Shapeless.ClayType,Shapeless.ClayOptions)">
+            <summary>
+                创建 <see cref="T:Shapeless.Clay" />
+            </summary>
+            <param name="clayType">
+                <see cref="T:Shapeless.ClayType" />
+            </param>
+            <param name="options">
+                <see cref="T:Shapeless.ClayOptions" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.IClay.EmptyObject(Shapeless.ClayOptions)">
+            <summary>
+                创建空的单一对象
+            </summary>
+            <param name="options">
+                <see cref="T:Shapeless.ClayOptions" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.IClay.EmptyArray(Shapeless.ClayOptions)">
+            <summary>
+                创建空的集合或数组
+            </summary>
+            <param name="options">
+                <see cref="T:Shapeless.ClayOptions" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.IClay.Parse(System.Object,Shapeless.ClayOptions)">
+            <summary>
+                将对象转换为 <see cref="T:Shapeless.Clay" /> 实例
+            </summary>
+            <param name="obj">
+                <see cref="T:System.Object" />
+            </param>
+            <param name="options">
+                <see cref="T:Shapeless.ClayOptions" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.IClay.Parse(System.Text.Json.Utf8JsonReader@,Shapeless.ClayOptions)">
+            <summary>
+                将 <see cref="T:System.Text.Json.Utf8JsonReader" /> 转换为 <see cref="T:Shapeless.Clay" /> 实例
+            </summary>
+            <param name="utf8JsonReader">
+                <see cref="T:System.Text.Json.Utf8JsonReader" />
+            </param>
+            <param name="options">
+                <see cref="T:Shapeless.ClayOptions" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.IClay.ParseFromFile(System.String,Shapeless.ClayOptions)">
+            <summary>
+                从文件中读取数据并转换为 <see cref="T:Shapeless.Clay" /> 实例
+            </summary>
+            <param name="path">文件路径</param>
+            <param name="options">
+                <see cref="T:Shapeless.ClayOptions" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
+        <member name="T:Shapeless.InternalClay">
+            <summary>
+                流变对象内部实现类
+            </summary>
+            <param name="clayOptions">
+                <see cref="T:Shapeless.ClayOptions" />
+            </param>
+        </member>
+        <member name="M:Shapeless.InternalClay.#ctor(Microsoft.Extensions.Options.IOptionsMonitor{Shapeless.ClayOptions})">
+            <summary>
+                流变对象内部实现类
+            </summary>
+            <param name="clayOptions">
+                <see cref="T:Shapeless.ClayOptions" />
+            </param>
+        </member>
+        <member name="M:Shapeless.InternalClay.Create(Shapeless.ClayOptions)">
+            <inheritdoc />
+        </member>
+        <member name="M:Shapeless.InternalClay.Create(Shapeless.ClayType,Shapeless.ClayOptions)">
+            <inheritdoc />
+        </member>
+        <member name="M:Shapeless.InternalClay.EmptyObject(Shapeless.ClayOptions)">
+            <inheritdoc />
+        </member>
+        <member name="M:Shapeless.InternalClay.EmptyArray(Shapeless.ClayOptions)">
+            <inheritdoc />
+        </member>
+        <member name="M:Shapeless.InternalClay.Parse(System.Object,Shapeless.ClayOptions)">
+            <inheritdoc />
+        </member>
+        <member name="M:Shapeless.InternalClay.Parse(System.Text.Json.Utf8JsonReader@,Shapeless.ClayOptions)">
+            <inheritdoc />
+        </member>
+        <member name="M:Shapeless.InternalClay.ParseFromFile(System.String,Shapeless.ClayOptions)">
+            <inheritdoc />
+        </member>
+        <member name="M:Shapeless.InternalClay.GetOptions(Shapeless.ClayOptions)">
+            <summary>
+                获取 <see cref="T:Shapeless.ClayOptions" />
+            </summary>
+            <param name="options">
+                <see cref="T:Shapeless.ClayOptions" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.ClayOptions" />
+            </returns>
+        </member>
         <member name="T:Microsoft.AspNetCore.Mvc.ControllerExtensions">
             <summary>
                 <see cref="T:Microsoft.AspNetCore.Mvc.Controller" /> 扩展类
@@ -132,6 +272,34 @@
             <param name="configure">自定义配置委托</param>
             <returns>
                 <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder" />
+            </returns>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.ShapelessServiceCollectionExtensions">
+            <summary>
+                流变对象模块 <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> 扩展类
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.ShapelessServiceCollectionExtensions.AddClayOptions(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+                添加 <see cref="T:Shapeless.Clay" /> 配置
+            </summary>
+            <param name="services">
+                <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />
+            </param>
+            <returns>
+                <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />
+            </returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.ShapelessServiceCollectionExtensions.AddClayOptions(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Shapeless.ClayOptions})">
+            <summary>
+                添加 <see cref="T:Shapeless.Clay" /> 配置
+            </summary>
+            <param name="services">
+                <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />
+            </param>
+            <param name="configure">自定义配置委托</param>
+            <returns>
+                <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />
             </returns>
         </member>
     </members>
