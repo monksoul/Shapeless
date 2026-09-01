@@ -1394,7 +1394,7 @@
         <member name="M:Shapeless.Clay.ArrayIndexPatternRegex">
             <remarks>
             Pattern:<br/>
-            <code>\\[(\\d+)\\]</code><br/>
+            <code>\[(\d+)\]</code><br/>
             Explanation:<br/>
             <code>
             ○ Match '['.<br/>
@@ -1637,6 +1637,98 @@
                 流变对象事件委托
             </summary>
         </member>
+        <member name="T:Shapeless.IClay">
+            <summary>
+                流变对象接口
+            </summary>
+        </member>
+        <member name="M:Shapeless.IClay.Create(Shapeless.ClayOptions)">
+            <summary>
+                创建 <see cref="T:Shapeless.Clay" />
+            </summary>
+            <param name="options">
+                <see cref="T:Shapeless.ClayOptions" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.IClay.Create(Shapeless.ClayType,Shapeless.ClayOptions)">
+            <summary>
+                创建 <see cref="T:Shapeless.Clay" />
+            </summary>
+            <param name="clayType">
+                <see cref="T:Shapeless.ClayType" />
+            </param>
+            <param name="options">
+                <see cref="T:Shapeless.ClayOptions" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.IClay.EmptyObject(Shapeless.ClayOptions)">
+            <summary>
+                创建空的单一对象
+            </summary>
+            <param name="options">
+                <see cref="T:Shapeless.ClayOptions" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.IClay.EmptyArray(Shapeless.ClayOptions)">
+            <summary>
+                创建空的集合或数组
+            </summary>
+            <param name="options">
+                <see cref="T:Shapeless.ClayOptions" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.IClay.Parse(System.Object,Shapeless.ClayOptions)">
+            <summary>
+                将对象转换为 <see cref="T:Shapeless.Clay" /> 实例
+            </summary>
+            <param name="obj">
+                <see cref="T:System.Object" />
+            </param>
+            <param name="options">
+                <see cref="T:Shapeless.ClayOptions" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.IClay.Parse(System.Text.Json.Utf8JsonReader@,Shapeless.ClayOptions)">
+            <summary>
+                将 <see cref="T:System.Text.Json.Utf8JsonReader" /> 转换为 <see cref="T:Shapeless.Clay" /> 实例
+            </summary>
+            <param name="utf8JsonReader">
+                <see cref="T:System.Text.Json.Utf8JsonReader" />
+            </param>
+            <param name="options">
+                <see cref="T:Shapeless.ClayOptions" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
+        <member name="M:Shapeless.IClay.ParseFromFile(System.String,Shapeless.ClayOptions)">
+            <summary>
+                从文件中读取数据并转换为 <see cref="T:Shapeless.Clay" /> 实例
+            </summary>
+            <param name="path">文件路径</param>
+            <param name="options">
+                <see cref="T:Shapeless.ClayOptions" />
+            </param>
+            <returns>
+                <see cref="T:Shapeless.Clay" />
+            </returns>
+        </member>
         <member name="T:Shapeless.ClayType">
             <summary>
                 流变对象的基本类型
@@ -1665,7 +1757,7 @@
         <member name="M:Shapeless.ClayJsonConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
             <inheritdoc />
         </member>
-        <member name="M:Shapeless.ClayJsonConverter.Write(System.Text.Json.Utf8JsonWriter,Shapeless.Clay,System.Text.Json.JsonSerializerOptions)">
+        <member name="M:ShaShapeless.ClayJsonConverter.Write(System.Text.Json.Utf8JsonWriter,Shapeless.Clay,System.Text.Json.JsonSerializerOptions)">
             <inheritdoc />
         </member>
         <member name="T:Shapeless.ObjectToClayJsonConverter">
@@ -1740,7 +1832,7 @@
                 <see cref="T:System.DateTimeOffset" /> JSON 序列化转换器
             </summary>
         </member>
-        <member name="M:Shapeless.Core.Converters.Json.FlexibleDateTimeOffsetConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+        <member name="M:Shapelese.Converters.Json.FlexibleDateTimeOffsetConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
             <inheritdoc />
         </member>
         <member name="M:Shapeless.Core.Converters.Json.FlexibleDateTimeOffsetConverter.Write(System.Text.Json.Utf8JsonWriter,System.DateTimeOffset,System.Text.Json.JsonSerializerOptions)">
@@ -1749,7 +1841,7 @@
         <member name="M:Shapeless.Core.Converters.Json.FlexibleDateTimeOffsetConverter.Regex">
             <remarks>
             Pattern:<br/>
-            <code>^/Date\\(([+-]*\\d+)([+-])(\\d{2})(\\d{2})\\)/$</code><br/>
+            <code>^/Date\(([+-]*\d+)([+-])(\d{2})(\d{2})\)/$</code><br/>
             Options:<br/>
             <code>RegexOptions.CultureInvariant</code><br/>
             Explanation:<br/>
@@ -1757,10 +1849,10 @@
             ○ Match if at the beginning of the string.<br/>
             ○ Match the string "/Date(".<br/>
             ○ 1st capture group.<br/>
-                ○ Match a character in the set [+-] atomically any number of times.<br/>
+                ○ Match a character in the set [+\-] atomically any number of times.<br/>
                 ○ Match a Unicode digit atomically at least once.<br/>
             ○ 2nd capture group.<br/>
-                ○ Match a character in the set [+-].<br/>
+                ○ Match a character in the set [+\-].<br/>
             ○ 3rd capture group.<br/>
                 ○ Match a Unicode digit exactly 2 times.<br/>
             ○ 4th capture group.<br/>
@@ -1897,7 +1989,7 @@
         <member name="M:Shapeless.Core.Extensions.JsonExtensions.Regex">
             <remarks>
             Pattern:<br/>
-            <code>^/Date\\(([+-]*\\d+)\\)/$</code><br/>
+            <code>^/Date\(([+-]*\d+)\)/$</code><br/>
             Options:<br/>
             <code>RegexOptions.CultureInvariant</code><br/>
             Explanation:<br/>
@@ -1905,7 +1997,7 @@
             ○ Match if at the beginning of the string.<br/>
             ○ Match the string "/Date(".<br/>
             ○ 1st capture group.<br/>
-                ○ Match a character in the set [+-] atomically any number of times.<br/>
+                ○ Match a character in the set [+\-] atomically any number of times.<br/>
                 ○ Match a Unicode digit atomically at least once.<br/>
             ○ Match the string ")/".<br/>
             ○ Match if at the end of the string or if before an ending newline.<br/>
@@ -1967,7 +2059,7 @@
             <code>
             ○ Match if at the beginning of the string.<br/>
             ○ Loop greedily at least once.<br/>
-       �� Match with 2 alternative expressions.<br/>
+                ○ Match with 2 alternative expressions.<br/>
                     ○ Match a character in the set [\-.0-9A-Z_a-z~].<br/>
                     ○ Match a sequence of expressions.<br/>
                         ○ Match '%'.<br/>
@@ -2239,6 +2331,9 @@
                 指示标识符是否存在
             </summary>
         </member>
+        �是否存在
+            </summary>
+        </member>
         <member name="T:Shapeless.Utf8StringWriter">
             <summary>
                 <c>UTF-8</c> 格式的 <see cref="T:System.IO.StringWriter" />
@@ -2382,7 +2477,7 @@
         <member name="M:Shapeless.PascalCaseNamingPolicy.WordBoundaryRegex">
             <remarks>
             Pattern:<br/>
-            <code>(?&lt;=[A-Z])(?=[A-Z][a-z])|(?&lt;=[^A-Z])(?=[A-Z])|(?&lt;=[A-Za-z])(?=[^A-Za-z])|(?&lt;=\d)(?=\D)|(?&lt;=\D)(?=\d)</code><br/>
+            <code>(?&lt;=[A-Z])(?=[A-Z][a-z])|(?&lt;=[^A-Z])(?=[A-Z])|(?&lt;=[A-Za-z])(?=[^A-Za-z])|(?&lt;=\\d)(?=\\D)|(?&lt;=\\D)(?=\\d)</code><br/>
             Explanation:<br/>
             <code>
             ○ Match with 5 alternative expressions, atomically.<br/>
@@ -2399,9 +2494,9 @@
                         ○ Match a character in the set [A-Z].<br/>
                 ○ Match a sequence of expressions.<br/>
                     ○ Zero-width positive lookbehind.<br/>
-                        ○ Match an ASCII letter right-to-left.<br/>
+                        ○ Match a character in the set [A-Za-z] right-to-left.<br/>
                     ○ Zero-width positive lookahead.<br/>
-                        ○ Match any character other than an ASCII letter.<br/>
+                        ○ Match a character in the set [^A-Za-z].<br/>
                 ○ Match a sequence of expressions.<br/>
                     ○ Zero-width positive lookbehind.<br/>
                         ○ Match a Unicode digit right-to-left.<br/>
@@ -2600,12 +2695,6 @@
         </member>
         <member name="M:System.Text.RegularExpressions.Generated.Utilities.StackPush(System.Int32[]@,System.Int32@,System.Int32,System.Int32)">
             <summary>Pushes 2 values onto the backtracking stack.</summary>
-        </member>
-    </members>
-</doc>
-members>
-</doc>
-tack.</summary>
         </member>
     </members>
 </doc>
